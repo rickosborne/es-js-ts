@@ -1,0 +1,9 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"name": "@rickosborne/js-es-ts",
+	"license": "CC-BY-NC-SA-4.0",
+	"private": true
+}

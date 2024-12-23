@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = tab
+indent_style = tab
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+max_line_length = off
+
+[{*.js,*.cjs,*.mjs}]
+ij_javascript_use_double_quotes = true
+ij_javascript_force_quote_style = true
+ij_javascript_spaces_within_brackets = true
+ij_javascript_spaces_within_array_initializer_brackets = true
+ij_javascript_enforce_trailing_comma = whenmultiline
+
+[{*.ts,*.tsx,*.mts}]
+ij_typescript_force_quote_style = true
+ij_typescript_use_double_quotes = true
+ij_typescript_spaces_within_brackets = true
+ij_typescript_spaces_within_array_initializer_brackets = true
+ij_typescript_enforce_trailing_comma = whenmultiline
