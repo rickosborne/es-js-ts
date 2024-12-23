@@ -3,7 +3,7 @@
 		"name": "Rick Osborne",
 		"url": "https://rickosborne.org"
 	},
-	"description": "Rick Osborne's JS/ES/TS Tools",
+	"description": "Rick Osborne's collection of type definitions which I've found helpful across many projects.",
 	"devDependencies": {
 	},
 	"engines": {
