@@ -5,6 +5,8 @@ Individual packages are published under [@rickosborne/*] on npm.
 
 [@rickosborne/*]: https://www.npmjs.com/~rickosborne
 
+* [typical](./typical) - Useful type helpers and type declarations
+
 ## License
 
 All content here is licensed as [CC-BY-NC-SA-4.0] unless otherwise noted.
