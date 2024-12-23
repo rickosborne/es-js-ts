@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"outDir": "dist/esm",
+		"target": "ESNext"
+	},
+	"exclude": [
+		"**/dist/**",
+		"**/node_modules/**",
+		"**/.cache/**",
+		"**/.idea/**",
+		"**/.nyc_output/**",
+		"**/coverage/**",
+		"**/*.test.ts"
+	],
+	"extends": "./tsconfig.json",
+	"ts-node": {
+		"esm": true
+	}
+}

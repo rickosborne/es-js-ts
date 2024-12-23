@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"outDir": "dist/cjs",
+		"target": "ES6"
+	},
+	"exclude": [
+		"**/dist/**",
+		"**/node_modules/**",
+		"**/.cache/**",
+		"**/.idea/**",
+		"**/.nyc_output/**",
+		"**/coverage/**",
+		"**/*.test.ts"
+	],
+	"extends": "./tsconfig.json"
+}

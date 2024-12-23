@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": false,
+		"outDir": "dist/types"
+	},
+	"exclude": [
+		"**/dist/**",
+		"**/node_modules/**",
+		"**/.cache/**",
+		"**/.idea/**",
+		"**/.nyc_output/**",
+		"**/coverage/**",
+		"**/*.test.ts"
+	],
+	"extends": "./tsconfig.json"
+}

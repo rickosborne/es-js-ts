@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="module-template" type="mocha-javascript-test-runner" nameIsGenerated="true">
+    <node-interpreter>project</node-interpreter>
+    <node-options />
+    <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
+    <working-directory>$PROJECT_DIR$/module-template</working-directory>
+    <pass-parent-env>true</pass-parent-env>
+    <ui>bdd</ui>
+    <extra-mocha-options />
+    <test-kind>SUITE</test-kind>
+    <test-file>$PROJECT_DIR$/module-template/__test__/setup.test.ts</test-file>
+    <test-names>
+      <name value="module-template" />
+    </test-names>
+    <method v="2" />
+  </configuration>
+</component>

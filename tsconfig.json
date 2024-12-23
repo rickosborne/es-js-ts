@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": false,
+		"forceConsistentCasingInFileNames": true,
+		"module": "None",
+		"moduleResolution": "Node",
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"outDir": "dist",
+		"sourceMap": true,
+		"strict": false,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true
+	},
+	"extends": "@tsconfig/node22/tsconfig.json"
+}

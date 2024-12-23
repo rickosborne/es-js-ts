@@ -1,4 +1,4 @@
-# Rick's JS/ES/TS Tools
+# Rick Osborne's JS/ES/TS Tools
 
 This monorepo contains some of my Javascript/EcmaScript/TypeScript modules.
 Individual packages are published under [@rickosborne/*] on npm.
