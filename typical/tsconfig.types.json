@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": false,
+		"outDir": "dist/types"
+	},
+	"extends": "../tsconfig.types.json"
+}
