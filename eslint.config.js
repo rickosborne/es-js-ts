@@ -9,11 +9,12 @@ const stylistic = require("@stylistic/eslint-plugin-js");
 const fs = require("node:fs");
 const requireExtensions = require("eslint-plugin-require-extensions");
 const markdown = require("eslint-plugin-markdown");
+const path = require("node:path");
 
 /**
  * Load the `ignores` definitions from the `.gitignore` instead of replicating it.
  */
-const ignores = fs.readFileSync(".gitignore", { encoding: "utf-8" })
+const ignores = fs.readFileSync(path.join(__dirname, ".gitignore"), { encoding: "utf-8" })
 	.split("\n")
 	// remove comments
 	.map((line) => line.replace(/#.*$/g, "").trim())

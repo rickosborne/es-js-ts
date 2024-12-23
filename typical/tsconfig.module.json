@@ -4,5 +4,5 @@
 		"outDir": "dist/esm",
 		"target": "ESNext"
 	},
-	"extends": "../tsconfig.module.json",
+	"extends": "../tsconfig.module.json"
 }
