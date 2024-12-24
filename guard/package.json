@@ -3,9 +3,10 @@
 		"name": "Rick Osborne",
 		"url": "https://rickosborne.org"
 	},
-	"description": "Rick Osborne's collection of type definitions which I've found helpful across many projects.",
-	"devDependencies": {
+	"dependencies": {
+		"@rickosborne/typical": "*"
 	},
+	"description": "Rick Osborne's collection of type guards.",
 	"engines": {
 		"node": ">=14"
 	},
@@ -23,8 +24,7 @@
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"license": "CC-BY-NC-SA-4.0",
 	"main": "dist/cjs/index.js",
-	"module": "dist/esm/index.js",
-	"name": "@rickosborne/typical",
+	"name": "@rickosborne/guard",
 	"private": false,
 	"publishConfig": {
 		"access": "public"
@@ -35,13 +35,14 @@
 	},
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
+		"check-exports": "tsx ../scripts/check-exports.ts guard",
 		"clean": "rm -rf ./dist",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"prebuild": "npm run clean && npm run type-check",
-		"prepub": "npm run build && npm run lint",
-		"prepub:dry-run": "npm run build && npm run lint",
-		"prepublish": "npm run build && npm run lint",
+		"prepub": "npm run prepublish",
+		"prepub:dry-run": "npm run prepublish",
+		"prepublish": "npm run build && npm run lint && npm run check-exports",
 		"pub": "npm publish",
 		"pub:dry-run": "npm publish --dry-run",
 		"reinstall": "rm -rf ./node_modules && npm ci",
@@ -51,6 +52,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"types": "dist/types/index.d.ts",
-	"version": "2024.12.24"
+	"version": "2024.12.23"
 }

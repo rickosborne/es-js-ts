@@ -56,6 +56,9 @@
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},
 	"scripts": {
+		"build-all": "tsx scripts/build-all.ts",
+		"check-exports": "tsx scripts/check-exports.ts",
+		"lint": "eslint .",
 		"reinstall": "rm -rf ./node_modules && npm ci",
 		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
 		"test": "mocha",

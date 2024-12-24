@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"esModuleInterop": false,
 		"forceConsistentCasingInFileNames": true,
 		"module": "None",
@@ -9,6 +10,13 @@
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"outDir": "dist",
+		"paths": {
+			"@rickosborne/foundation": ["foundation"],
+			"@rickosborne/guard": ["guard"],
+			"@rickosborne/typical": ["typical"]
+		},
+		"resolveJsonModule": false,
+		"rootDir": ".",
 		"sourceMap": true,
 		"strict": false,
 		"strictBindCallApply": true,

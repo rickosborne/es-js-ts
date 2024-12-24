@@ -10,8 +10,12 @@
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"outDir": "dist",
+		"paths": {
+			"@rickosborne/guard": ["./node_modules/@rickosborne/guard/dist/types/"],
+			"@rickosborne/typical": ["./node_modules/@rickosborne/typical/dist/types/"]
+		},
 		"resolveJsonModule": false,
-		"rootDir": "..",
+		"rootDir": ".",
 		"sourceMap": true,
 		"strict": false,
 		"strictBindCallApply": true,

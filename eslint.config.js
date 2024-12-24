@@ -23,6 +23,8 @@ const ignores = fs.readFileSync(path.join(__dirname, ".gitignore"), { encoding: 
 	// Turn trailing slashes into globs
 	.map((line) => line.endsWith("/") ? line.concat("*") : line);
 
+ignores.push("**/package-lock.json");
+
 console.debug("eslint ignores: ", ignores);
 
 module.exports = [
@@ -67,6 +69,7 @@ module.exports = [
 		rules: {
 			...c.rules,
 			"@typescript-eslint/consistent-type-definitions": [ "error", "type" ],
+			"@typescript-eslint/no-inferrable-types": "off",
 		},
 	})),
 	{
@@ -132,7 +135,7 @@ module.exports = [
 		},
 	},
 	{
-		files: [ "package.json", "package-lock.json" ],
+		files: [ "**/package.json", "**/package-lock.json" ],
 		rules: {
 			"jsonc/sort-keys": [
 				"error",
