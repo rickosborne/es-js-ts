@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"declaration": true,
 		"emitDeclarationOnly": false,
+		"noEmit": false,
 		"outDir": "dist/types"
 	},
 	"exclude": [

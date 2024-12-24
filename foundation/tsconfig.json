@@ -1,27 +1,8 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
-		"esModuleInterop": false,
-		"forceConsistentCasingInFileNames": true,
-		"module": "None",
-		"moduleResolution": "Node",
-		"noImplicitAny": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"outDir": "dist",
-		"paths": {
-			"@rickosborne/guard": ["./node_modules/@rickosborne/guard/dist/types/"],
-			"@rickosborne/typical": ["./node_modules/@rickosborne/typical/dist/types/"]
-		},
-		"resolveJsonModule": false,
-		"rootDir": ".",
-		"sourceMap": true,
-		"strict": false,
-		"strictBindCallApply": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": true
+		"noEmit": true,
+		"rootDir": "."
 	},
-	"extends": "@tsconfig/node22/tsconfig.json"
+	"extends": "../tsconfig.json"
 }

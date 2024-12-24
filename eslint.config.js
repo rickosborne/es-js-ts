@@ -25,7 +25,7 @@ const ignores = fs.readFileSync(path.join(__dirname, ".gitignore"), { encoding: 
 
 ignores.push("**/package-lock.json");
 
-console.debug("eslint ignores: ", ignores);
+// console.debug("eslint ignores: ", ignores);
 
 module.exports = [
 	{
@@ -98,14 +98,15 @@ module.exports = [
 			"sort-keys": "off",
 		},
 	},
-	// markdown.configs.recommended,
+	// ...markdown.configs.recommended,
 	{
-		files: [ "**/*.md" ],
+		files: [ "**/*.md", "**/*.md/*.ts" ],
 		processor: "markdown/markdown",
+		...tse.configs.disableTypeChecked,
 	},
 	// {
-	// 	files: [ "**/*.md/*.ts" ],
-	// 	...tse.configs.disableTypeChecked,
+	// 	files: [ "**/*.md" ],
+	//	...tse.configs.disableTypeChecked,
 	// },
 	{
 		rules: {

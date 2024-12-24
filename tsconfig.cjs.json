@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "CommonJS",
+		"noEmit": false,
 		"outDir": "dist/cjs",
 		"target": "ES6"
 	},
