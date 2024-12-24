@@ -9,6 +9,10 @@ Individual packages are published under [@rickosborne/*] on npm.
 * [guard](./guard) - Type guards for some of those types
 * [foundation](./foundation) - Basic data structures and algorithms
 
+## Notes
+
+* [monorepo](./notes/monorepo.md) — How I have TypeScript + multiple modules/packages set up here.
+
 ## License
 
 All content here is licensed as [CC-BY-NC-SA-4.0] unless otherwise noted.
