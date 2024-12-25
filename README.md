@@ -5,9 +5,9 @@ Individual packages are published under [@rickosborne/*] on npm.
 
 [@rickosborne/*]: https://www.npmjs.com/~rickosborne
 
-* [typical](./typical) - Useful type helpers and type declarations
-* [guard](./guard) - Type guards for some of those types
-* [foundation](./foundation) - Basic data structures and algorithms
+* [typical](./typical/README.md) - Useful type helpers and type declarations
+* [guard](./guard/README.md) - Type guards for some of those types
+* [foundation](./foundation/README.md) - Basic data structures and algorithms
 
 ## Notes
 

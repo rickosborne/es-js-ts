@@ -4,8 +4,6 @@
 		"url": "https://rickosborne.org"
 	},
 	"description": "Rick Osborne's collection of type definitions which I've found helpful across many projects.",
-	"devDependencies": {
-	},
 	"engines": {
 		"node": ">=14"
 	},
@@ -36,8 +34,10 @@
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"clean": "rm -rf ./dist",
+		"doc": "typedoc",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
+		"postbuild": "npm run doc",
 		"prebuild": "npm run clean && npm run type-check",
 		"prepub": "npm run build && npm run lint",
 		"prepub:dry-run": "npm run build && npm run lint",
@@ -52,5 +52,5 @@
 		"upgrade:check": "npm-check-updates"
 	},
 	"types": "dist/types/index.d.ts",
-	"version": "2024.12.26"
+	"version": "2024.12.27"
 }

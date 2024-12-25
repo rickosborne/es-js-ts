@@ -2,29 +2,18 @@ import * as console from "node:console";
 import { readFileSync, readdirSync } from "node:fs";
 import * as path from "node:path";
 import * as process from "node:process";
-import { dirExists } from "./shared/dir-exists.js";
 import { fileExists } from "./shared/file-exists.js";
+import { getModuleNames } from "./shared/module-names.js";
+import { fromRoot, projectRoot } from "./shared/project-root.js";
 
-const args = process.argv.slice(2);
-
-let moduleNames: string[];
-if (args.length === 0) {
-	moduleNames = readdirSync(".", { encoding: "utf-8", withFileTypes: true })
-		.filter((de) => de.isDirectory() && !de.name.startsWith(".") && fileExists(de.name, "package.json") && dirExists(de.name, "ts"))
-		.map((de) => de.name)
-		.sort();
-} else {
-	moduleNames = args;
-}
+const moduleNames = getModuleNames();
 
 let exitCode: number = 0;
 
-const rootDir = path.resolve(__dirname, "..");
-
 moduleNames.forEach((moduleName) => {
 	console.log(`📦 ${ moduleName }`);
-	const tsDir = path.join(rootDir, moduleName, "ts");
-	const indexPath = path.join(tsDir, "index.ts");
+	const tsDir = path.join(projectRoot, moduleName, "ts");
+	const indexPath = path.join(projectRoot, moduleName, "index.ts");
 	if (fileExists(indexPath)) {
 		const needFiles = new Set<string>(readdirSync(tsDir, { encoding: "utf-8", recursive: true, withFileTypes: true })
 			.filter((de) => de.isFile() && de.name.endsWith(".ts") && de.name !== "index.ts" && !de.name.endsWith(".test.ts"))
@@ -33,7 +22,7 @@ moduleNames.forEach((moduleName) => {
 		readFileSync(indexPath, { encoding: "utf-8" })
 			.split("\n")
 			.map((line) => {
-				const match = /^export \* from "\.\/([^"]+?)(?:\.js)?"/.exec(line);
+				const match = /^export \* from "\.\/ts\/([^"]+?)(?:\.js)?"/.exec(line);
 				if (match?.[ 1 ] != null) {
 					return match[ 1 ];
 				}
@@ -46,13 +35,13 @@ moduleNames.forEach((moduleName) => {
 		if (needFiles.size > 0) {
 			exitCode = 1;
 			needFiles.forEach((name) => {
-				console.error(`   ⚠️ Missing export: export * from "./${ name }.js"`);
+				console.error(`   ⚠️ Missing: export * from "./ts/${ name }.js"`);
 			});
 		} else {
-			console.log(`   ✅ Looks okay: ${ path.relative(rootDir, indexPath) }`);
+			console.log(`   ✅ Looks okay: ${ fromRoot(indexPath) }`);
 		}
 	} else {
-		console.error(`   ⚠️ Missing file: ${ path.relative(rootDir, indexPath) }`);
+		console.error(`   ⚠️ Missing file: ${ fromRoot(indexPath) }`);
 		exitCode = 1;
 	}
 });

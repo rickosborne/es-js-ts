@@ -1,12 +1,11 @@
 import { execSync } from "node:child_process";
 import * as console from "node:console";
-import { readdirSync } from "node:fs";
 import * as path from "node:path";
 import * as process from "node:process";
-import { fileExists } from "./shared/file-exists.js";
+import { getModuleNames } from "./shared/module-names.js";
+import { projectNamespace, projectRoot, withoutNamespace } from "./shared/project-root.js";
 import { readPackageJson } from "./shared/read-file.js";
 
-const namespacePrefix = "@rickosborne/";
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
@@ -18,8 +17,6 @@ const command = args.shift()!;
 
 console.log(`⚡️ Run all: ${ command } ${ args.map((a) => JSON.stringify(a)).join(" ") }\n`);
 
-const rootDir = path.join(__dirname, "..");
-
 type ModuleDecl = {
 	deferCount: number;
 	dependsOn: string[];
@@ -27,10 +24,7 @@ type ModuleDecl = {
 	packageName: string;
 }
 
-const moduleNames = readdirSync(rootDir, { encoding: "utf-8", withFileTypes: true })
-	.filter((de) => de.isDirectory() && !de.name.startsWith(".") && fileExists(path.join(de.name, "package.json")))
-	.map((de) => de.name)
-	.sort();
+const moduleNames = getModuleNames(args);
 
 const modules = moduleNames.map((moduleName): ModuleDecl | undefined => {
 	const pkg = readPackageJson(moduleName);
@@ -38,7 +32,7 @@ const modules = moduleNames.map((moduleName): ModuleDecl | undefined => {
 		return undefined;
 	}
 	const dependsOn = Object.keys(pkg.dependencies ?? {}).concat(Object.keys(pkg.devDependencies ?? {}))
-		.filter((name) => name.startsWith(namespacePrefix) && moduleNames.includes(name.substring(namespacePrefix.length)))
+		.filter((name) => name.startsWith(projectNamespace) && withoutNamespace(name))
 		.sort();
 	// console.debug(`${moduleName} depends on: ${dependsOn.length === 0 ? "(nothing)" : dependsOn.map((name) => name.substring(namespacePrefix.length)).join(" ")}`);
 	return { deferCount: 0, dependsOn, moduleName, packageName: pkg.name };
@@ -79,7 +73,7 @@ while (modules.length > 0) {
 	} else {
 		console.log(`📦 ${ mod.moduleName }`);
 		execSync(`npm run ${ command } -- ${ args.map((a) => JSON.stringify(a)).join(" ") }`, {
-			cwd: path.join(rootDir, mod.moduleName),
+			cwd: path.join(projectRoot, mod.moduleName),
 			encoding: "utf-8",
 			env: process.env,
 			stdio: "inherit",

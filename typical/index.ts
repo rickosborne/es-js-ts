@@ -1,1 +1,3 @@
-export * from "./ts/index.js";
+export * from "./ts/comparator.js";
+export * from "./ts/predicate.js";
+export * from "./ts/resolve.js";

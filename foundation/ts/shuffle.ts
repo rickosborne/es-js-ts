@@ -4,15 +4,15 @@ export type ShuffleConfig<T> = {
 	 */
 	into?: T[] | undefined;
 	/**
-	 * Generate a random float in the range {@code [0..1)}.
+	 * Generate a random float in the range <kbd>[0..1)</kbd>.
 	 */
 	random01?: () => number;
 }
 
 /**
  * Fisher-Yates shuffle.
- * Defaults to in-place sorting, but can sort into a new one via {@code into}.
- * @see https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+ * Defaults to in-place sorting, but can sort into a new one via <kbd>into</kbd>.
+ * @see {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle|Fisher-Yates shuffle on Wikipedia}
  */
 export const shuffle = <T>(
 	list: T[],

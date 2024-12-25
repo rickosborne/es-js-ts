@@ -1,10 +1,10 @@
 /**
  * A function which compares two values and returns
  * the order in which they should be sorted.
- * Negative values mean {@code a} should be sorted
- * before {@code b}, while positive values mean the
+ * Negative values mean <kbd>a</kbd> should be sorted
+ * before <kbd>b</kbd>, while positive values mean the
  * reverse.  Zero means the two values are equivalent.
- * @return {number} Negative for {@code a lt b}, positive for {@code a gt b}, and zero for {@code a eq b}.
+ * @return {number} Negative for <kbd>a lt b</kbd>, positive for <kbd>a gt b</kbd>, and zero for <kbd>a eq b</kbd>.
  */
 export type Comparator<T> = (a: T, b: T) => number;
 

@@ -4,7 +4,7 @@
 		"url": "https://rickosborne.org"
 	},
 	"dependencies": {
-		"@rickosborne/typical": "2024.12.26"
+		"@rickosborne/typical": "2024.12.27"
 	},
 	"description": "Rick Osborne's collection of type guards.",
 	"engines": {
@@ -37,8 +37,10 @@
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"check-exports": "tsx ../scripts/check-exports.ts guard",
 		"clean": "rm -rf ./dist",
+		"doc": "typedoc",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
+		"postbuild": "npm run doc",
 		"prebuild": "npm run clean && npm run type-check",
 		"prepub": "npm run prepublish",
 		"prepub:dry-run": "npm run prepublish",
@@ -52,5 +54,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2024.12.25"
+	"version": "2024.12.27"
 }

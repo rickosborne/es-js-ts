@@ -1,10 +1,19 @@
+import { hasOwn } from "@rickosborne/guard";
 import type { UnaryPredicate } from "@rickosborne/typical";
 import { addProperty } from "./add-property.js";
 
-type IntGenerator = Generator<number, void, undefined> & {
+/**
+ * Mixin for a generator which also has the ability to bundle
+ * its output into an array.
+ */
+export type IntGenerator = Generator<number, void, undefined> & {
 	toArray(): number[];
 };
-type IntGeneratorTo = {
+
+/**
+ * Partial for the last step of an {@link IntRange} builder.
+ */
+export type IntGeneratorTo = {
 	/**
 	 * End before this number.
 	 */
@@ -56,6 +65,9 @@ export const intRange: IntRange = {
 			}
 		};
 		const addToArray = (gen: Generator<number, void, undefined>): IntGenerator => {
+			if (hasOwn(gen, "toArray", (f) => typeof f === "function")) {
+				return gen as IntGenerator;
+			}
 			return addProperty(gen, "toArray", {
 				configurable: false,
 				enumerable: false,

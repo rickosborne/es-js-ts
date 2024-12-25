@@ -1,0 +1,20 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": [
+		"typical",
+		"guard",
+		"foundation"
+	],
+	"includeVersion": true,
+	"outputs": [
+		{
+			"name": "markdown",
+			"path": "dist"
+		}
+	],
+	"plugin": [
+		"typedoc-plugin-markdown"
+	],
+	"treatValidationWarningsAsErrors": true,
+	"treatWarningsAsErrors": true
+}

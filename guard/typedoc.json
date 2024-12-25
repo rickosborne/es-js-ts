@@ -1,0 +1,18 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": [
+		"index.ts"
+	],
+	"extends": [
+		"../typedoc.json"
+	],
+	"intentionallyNotExported": [
+	],
+	"mergeReadme": true,
+	"outputs": [
+		{
+			"name": "markdown",
+			"path": "dist"
+		}
+	]
+}

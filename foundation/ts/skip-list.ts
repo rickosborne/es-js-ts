@@ -1,15 +1,18 @@
 import type { Queue } from "./queue.js";
 import type { Comparator } from "@rickosborne/typical";
 
+/**
+ * @internal
+ */
 type SkipNode<T> = {
 	forward: (SkipNode<T> | undefined)[];
 	value: T;
 }
 
 export class SkipList<T> implements Queue<T> {
-	protected readonly root: SkipNode<T>;
-	protected level: number = 0;
-	protected count: number = 0;
+	private readonly root: SkipNode<T>;
+	private level: number = 0;
+	private count: number = 0;
 
 	public constructor(
 		protected readonly comparator: Comparator<T>,
