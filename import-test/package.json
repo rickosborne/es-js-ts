@@ -1,0 +1,28 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "2024.12.26",
+		"@rickosborne/guard": "2024.12.25",
+		"@rickosborne/typical": "2024.12.26"
+	},
+	"description": "Private project with its own configuration used for testing published modules",
+	"devDependencies": {
+		"@tsconfig/node22": "22.0.0",
+		"@types/node": "22.10.2",
+		"tsx": "4.19.2",
+		"typescript": "5.7.2"
+	},
+	"engines": {
+		"node": ">=14"
+	},
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/import-test",
+	"private": true,
+	"scripts": {
+		"test": "tsx test.ts"
+	},
+	"version": "2024.12.24"
+}
