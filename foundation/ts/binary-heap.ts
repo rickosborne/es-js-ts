@@ -18,6 +18,12 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		this.up(this.count);
 	}
 
+	public addAll(values: Iterable<T>): void {
+		for (const value of values) {
+			this.add(value);
+		}
+	}
+
 	protected down(index: number): void {
 		let i = index;
 		let current: T = this.items[index];
@@ -122,6 +128,10 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 			}
 			currentIndex = parentIndex;
 		}
+	}
+
+	public get unsorted(): T[] {
+		return this.items.slice(1);
 	}
 
 	public* values(): Generator<T, void, undefined> {

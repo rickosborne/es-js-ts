@@ -27,6 +27,7 @@ const testType = <T>(
 
 	it("starts empty", () => {
 		expectArrayToBe([], "initial size");
+		expect(queue.take()).eq(undefined);
 	});
 
 	it("adds 1", () => {

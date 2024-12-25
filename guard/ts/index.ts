@@ -1,3 +1,4 @@
+export * from "./assert-defined.js";
 export * from "./has-array.js";
 export * from "./has-number.js";
 export * from "./has-own.js";

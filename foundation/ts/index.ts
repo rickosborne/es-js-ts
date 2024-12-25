@@ -1,6 +1,7 @@
 export * from "./binary-heap.js";
 export * from "./binary-index-of.js";
 export * from "./comparator.js";
+export * from "./int-range.js";
 export * from "./linked-list.js";
 export * from "./priority-array.js";
 export * from "./priority-linked-list.js";

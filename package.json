@@ -60,6 +60,7 @@
 		"check-exports": "tsx scripts/check-exports.ts",
 		"clean-all": "tsx scripts/run-all.ts clean",
 		"lint": "eslint .",
+		"lint:fix": "eslint --fix .",
 		"reinstall": "rm -rf ./node_modules && npm ci",
 		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
 		"test": "mocha",
