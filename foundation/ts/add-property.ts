@@ -1,4 +1,4 @@
-import type { Resolve } from "@rickosborne/typical/ts/index.js";
+import type { Resolve } from "@rickosborne/typical";
 
 export type ReadOnlyPropertyDescriptor = {
 	writable: false;

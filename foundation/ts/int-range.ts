@@ -1,4 +1,4 @@
-import type { UnaryPredicate } from "@rickosborne/typical/ts";
+import type { UnaryPredicate } from "@rickosborne/typical";
 import { addProperty } from "./add-property.js";
 
 type IntGenerator = Generator<number, void, undefined> & {

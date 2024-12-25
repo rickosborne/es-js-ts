@@ -1,3 +1,4 @@
+export * from "./add-property.js";
 export * from "./binary-heap.js";
 export * from "./binary-index-of.js";
 export * from "./comparator.js";
@@ -7,4 +8,5 @@ export * from "./priority-array.js";
 export * from "./priority-linked-list.js";
 export * from "./priority-queue.js";
 export * from "./queue.js";
+export * from "./shuffle.js";
 export * from "./skip-list.js";

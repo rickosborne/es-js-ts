@@ -52,5 +52,5 @@
 		"upgrade:check": "npm-check-updates"
 	},
 	"types": "dist/types/index.d.ts",
-	"version": "2024.12.25"
+	"version": "2024.12.26"
 }
