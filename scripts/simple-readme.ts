@@ -1,9 +1,9 @@
 import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
 import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
+import * as process from "node:process";
 // noinspection ES6PreferShortImport
 import { comparatorBuilder } from "../foundation/ts/comparator.js";
-import * as process from "node:process";
 import { fileExists } from "./shared/file-exists.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { projectRoot, rootPlus } from "./shared/project-root.js";
@@ -37,7 +37,7 @@ const mdFromDocComment = (doc: tsdoc.DocComment): string | undefined => {
 				if (id === "") {
 					throw new Error(`No member identifier`);
 				}
-				return `[${id}](#api-${slug(id)})`;
+				return `[${ id }](#api-${ slug(id) })`;
 			}
 			return "??? @link ???";
 		} else if (node instanceof tsdoc.DocParagraph) {
@@ -87,7 +87,9 @@ for (const moduleName of getModuleNames({
 	const api = new ApiModel().loadPackage(config.apiJsonFilePath);
 	const baseReadMe = readFile(rootPlus(moduleName, "README.md"));
 	const md: string[] = [ "***", "", "## API", "" ];
-	const membersByKind = api.members[ 0 ].members.toSorted(itemSorter).reduce((items, item) => {
+	const sortedMembers = Array.from(api.members[ 0 ].members)
+		.sort(itemSorter);
+	const membersByKind = sortedMembers.reduce((items, item) => {
 		let existing = items.get(item.kind);
 		if (existing == null) {
 			existing = [];
@@ -97,9 +99,9 @@ for (const moduleName of getModuleNames({
 		return items;
 	}, new Map<ApiItemKind, ApiItem[]>());
 	for (const [ kind, members ] of membersByKind.entries()) {
-		md.push(`### ${ kind }${ kind.endsWith("s") ? "es" : "s"}`, "");
+		md.push(`### ${ kind }${ kind.endsWith("s") ? "es" : "s" }`, "");
 		for (const member of members) {
-			md.push(`#### ${ member.displayName }`, "", `<a id="api-${slug(member.displayName)}"></a>`, "");
+			md.push(`#### ${ member.displayName }`, "", `<a id="api-${ slug(member.displayName) }"></a>`, "");
 			if (member instanceof ApiDeclaredItem) {
 				md.push("```typescript", member.excerpt.text.replace(/^export /, ""), "```", "");
 			}

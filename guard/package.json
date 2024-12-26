@@ -27,7 +27,7 @@
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"check-exports": "tsx ../scripts/check-exports.ts guard",
-		"clean": "rimraf ./dist",
+		"clean": "rimraf ./dist && rimraf ./temp",
 		"doc": "tsx ../scripts/simple-readme.ts guard",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
