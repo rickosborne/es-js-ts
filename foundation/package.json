@@ -4,8 +4,8 @@
 		"url": "https://rickosborne.org"
 	},
 	"dependencies": {
-		"@rickosborne/guard": "2024.12.28",
-		"@rickosborne/typical": "2024.12.28"
+		"@rickosborne/guard": "2024.12.29",
+		"@rickosborne/typical": "2024.12.29"
 	},
 	"description": "Rick Osborne's collection of basic data structures and algorithms.",
 	"engines": {
@@ -58,5 +58,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2024.12.28"
+	"version": "2024.12.29"
 }
