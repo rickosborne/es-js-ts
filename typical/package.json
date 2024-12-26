@@ -7,6 +7,12 @@
 	"engines": {
 		"node": ">=14"
 	},
+	"exports": {
+		".": {
+			"types": "./index.ts",
+			"default": "./index.ts"
+		}
+	},
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"keywords": [
 		"typescript",
@@ -29,9 +35,9 @@
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run repackage && npm run doc",
 		"prebuild": "npm run clean && npm run type-check",
-		"prepub": "npm run build && npm run lint",
-		"prepub:dry-run": "npm run build && npm run lint",
-		"prepublish": "npm run build && npm run lint",
+		"prepub": "npm run prepublish2",
+		"prepub:dry-run": "npm run prepublish2",
+		"prepublish2": "npm run build && npm run lint",
 		"pub": "npm publish ./dist",
 		"pub:dry-run": "npm publish --dry-run ./dist",
 		"reinstall": "rimraf ./node_modules && npm ci",
@@ -42,6 +48,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"typings": "./dist/types/index.d.ts",
 	"version": "2024.12.32"
 }

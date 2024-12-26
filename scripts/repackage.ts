@@ -23,21 +23,31 @@ for (const moduleName of moduleNames) {
 	console.log(`📦 ${ moduleName } => ${ fromRoot(distPackagePath) }`);
 	fs.mkdirSync(distDir, { recursive: true });
 	const errors: string[] = [];
-	if (inheritDependencies) {
-		for (const depKey of DEPENDENCIES_KEYS) {
-			const rootDeps = rootPackage[ depKey ];
-			if (rootDeps == null) continue;
-			let target: Record<string, string> | undefined = pkg[ depKey ];
-			if (target == null) {
-				target = {};
-				pkg[ depKey ] = target;
+	for (const depKey of DEPENDENCIES_KEYS) {
+		let target: Record<string, string> | undefined = pkg[ depKey ];
+		if (target == null && !inheritDependencies) {
+			continue;
+		}
+		if (target != null) {
+			for (const [ name, version ] of Object.entries(target)) {
+				if (name.startsWith(projectNamespace) && version.startsWith("file:../")) {
+					target[name] = rootPackage.version;
+				}
 			}
-			for (const [ name, rootVersion ] of Object.entries(rootDeps)) {
-				const moduleVersion = target[ name ];
-				if (moduleVersion == null) {
-					target[ name ] = rootVersion;
-				} else if (rootVersion != moduleVersion) {
-					errors.push(`   In ${ depKey }: ${ name } has version ${ moduleVersion } versus root ${ rootVersion }`);
+		} else {
+			target = {};
+			pkg[ depKey ] = target;
+		}
+		if (inheritDependencies) {
+			const rootDeps = rootPackage[ depKey ];
+			if (rootDeps != null) {
+				for (const [ name, rootVersion ] of Object.entries(rootDeps)) {
+					const moduleVersion = target[ name ];
+					if (moduleVersion == null) {
+						target[ name ] = rootVersion;
+					} else if (rootVersion != moduleVersion) {
+						errors.push(`   In ${ depKey }: ${ name } has version ${ moduleVersion } versus root ${ rootVersion }`);
+					}
 				}
 			}
 		}

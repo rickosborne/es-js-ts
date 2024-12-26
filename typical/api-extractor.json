@@ -3,6 +3,7 @@
 	"apiReport": {
 		"enabled": false,
 		"reportFolder": "<projectFolder>/dist/",
+		"reportTempFolder": "<projectFolder>/build/api/",
 		"reportVariants": [
 			"public"
 		]
@@ -11,6 +12,7 @@
 		"@rickosborne/*"
 	],
 	"docModel": {
+		"apiJsonFilePath": "<projectFolder>/build/api/api.json",
 		"enabled": true,
 		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/typical"
 	},
@@ -28,5 +30,8 @@
 			}
 		}
 	},
-	"newlineKind": "lf"
+	"newlineKind": "lf",
+	"tsdocMetadata": {
+		"tsdocMetadataFilePath": "<projectFolder>/dist/tsdoc-metadata.json"
+	}
 }

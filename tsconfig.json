@@ -11,9 +11,15 @@
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
 		"paths": {
-			"@rickosborne/foundation": ["foundation"],
-			"@rickosborne/guard": ["guard"],
-			"@rickosborne/typical": ["typical"]
+			"@rickosborne/foundation": [
+				"foundation/ts/index.ts"
+			],
+			"@rickosborne/guard": [
+				"guard/ts/index.ts"
+			],
+			"@rickosborne/typical": [
+				"typical/ts/index.ts"
+			]
 		},
 		"resolveJsonModule": false,
 		"rootDir": ".",

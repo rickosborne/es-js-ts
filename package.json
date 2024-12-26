@@ -36,39 +36,24 @@
 	"engines": {
 		"node": ">=14"
 	},
-	"exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js",
-			"default": "./dist/esm/index.js"
-		}
-	},
-	"files": [
-		"dist"
-	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"license": "CC-BY-NC-SA-4.0",
-	"main": "dist/cjs/index.js",
 	"name": "@rickosborne/js-es-ts",
 	"private": true,
-	"publishConfig": {
-		"access": "public"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},
 	"scripts": {
-		"build": "tsx scripts/run-all.ts build",
+		"build": "npm run --workspaces --if-present build",
 		"check-exports": "tsx scripts/check-exports.ts",
-		"clean": "tsx scripts/run-all.ts clean",
-		"doc": "tsx scripts/run-all.ts doc",
+		"clean": "npm run --workspaces --if-present clean",
+		"doc": "npm run --workspaces --if-present doc",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run doc",
-		"pub": "tsx scripts/run-all.ts pub:dry-run",
-		"pub:commit": "tsx scripts/run-all.ts pub",
+		"pub": "npm run --workspaces --if-present pub:dry-run",
+		"pub:commit": "npm run --workspaces --if-present pub",
 		"reinstall": "rimraf ./node_modules && npm ci",
 		"reinstall:full": "rimraf ./node_modules package-lock.json && npm install",
 		"release": "tsx scripts/bump-version.ts --dry-run",
@@ -78,5 +63,11 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2024.12.32"
+	"version": "2024.12.32",
+	"workspaces": [
+		"typical",
+		"guard",
+		"foundation",
+		"module-template"
+	]
 }

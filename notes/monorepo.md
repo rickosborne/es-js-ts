@@ -19,9 +19,9 @@ Do-not-wants:
 
 - Yes, I know about [Lerna](https://lerna.js.org/) and [Nx](https://nx.dev/).
   I'd prefer to not add any more tooling than plain old npm.
-- I also know about [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces).
+- ~~I also know about [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces).
   They don't offer much more than nested `package.json` files, which also work fine without workspaces.
-  Meh.
+  Meh.~~
 
 ## Status
 
@@ -32,12 +32,85 @@ Eh.  Not amazing.
 I know I need distinct `tsconfig` files for ESM + CJS + types.
 That's fine.
 
-~~But there doesn't seem to be a simple way to have a single set of those `tsconfig` files for the root, but then be able to build each module into its own `{module}/dist` directory.
-_And_ have `import ... from "@rickosborne/moduleName";` work all over the place.~~
+### Update 2024-12-26
 
-~~The problem seems to come down to some magic combination of `extends`, `baseUrl` and `paths` which I haven't figured out yet.~~
+Okay, after much, _much_ fiddling, it seems I have sound the magic words.
+It's basically what is listed below in [Update 2024-12-23](#update-2024-12-23) but with a few extras.
 
-_Update 2024-12-23_
+I had originally _not_ wanted to install the modules as dependencies of the top-level `package.json` ... but it turns out this is almost the easiest solution.
+Basically, just add something like this to your top-level `package.json`:
+
+```json
+{
+	"workspaces": [
+		"typical",
+		"guard",
+		"foundation"
+	]
+}
+```
+
+**Do not** add the modules to a top-level `dependencies` map.
+Only add the paths / directory names to the `workspaces` list.
+
+The order is important: npm isn't going to try to do any dependency resolution on those module-level `package.json` files to figure out a "correct" order, so you just need to hard-code it.
+
+That little bit of magic makes it so that `npm ci` (or `npm install`, initially) will automagically `npm link` your modules.
+
+In each module, make sure you have an `index.ts` which has an `export` for each published type/var, and then in its `package.json`'s `exports` block you should have _exactly_:
+
+```json
+{
+	"dependencies": {
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"exports": {
+		".": {
+			"default": "./index.ts",
+			"types": "./index.ts"
+		}
+	}
+}
+```
+
+In that file, ***do not*** include `require` or `import` values.
+You don't need them for `tsc`, and they will just confuse things.
+
+When you want to publish a module, you'll need to generate a new module-level `dist/package.json` which takes out the references to `index.ts` files and includes only `.js`, and swaps out the `file:` versions for release values:
+
+```json
+{
+	"dependencies": {
+		"@rickosborne/guard": "2024.12.32",
+		"@rickosborne/typical": "2024.12.32"
+	},
+	"exports": {
+		".": {
+			"default": "./esm/index.js",
+			"import": "./esm/index.js",
+			"require": "./cjs/index.js",
+			"types": "./types/index.d.ts"
+		}
+	},
+	"main": "cjs/index.js",
+	"module": "esm/index.js",
+	"types": "types/index.d.ts",
+	"typings": "types/index.d.ts"
+}
+```
+
+With all this in place, tsc seems happy (going through `index.ts` export aggregators) and node seems happy.
+
+_In theory_ if you have a simple enough setup, you could also use [`customConditions`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#customconditions) in the `tsconfig`.
+However, the fine print is that you _must_ set `moduleResolution` to `NodeNext` to use it, which means you can't export CJS via `module: "CommonJS"`.
+
+You'll also run into warnings from `api-extractor` about the wrong kind of file being imported.
+Basically, because you want tsc to go through the live `index.ts` file instead of the generated `dist/types/index.d.ts`, `api-extractor` doesn't like that.
+However, if you disable the warning, it _seems_ to work just fine.
+We'll see how long that lasts.
+
+### Update 2024-12-23
 
 I _think_ I have this a little more reasonable now.
 It's still a bit more complex than I would like ... but 🤷.
@@ -170,9 +243,15 @@ Set up `paths` and `baseUrl` in your root-level `tsconfig.json`, like:
 		"baseUrl": ".",
 		"moduleResolution": "Node",
 		"paths": {
-			"@rickosborne/foundation": ["foundation"],
-			"@rickosborne/guard": ["guard"],
-			"@rickosborne/typical": ["typical"]
+			"@rickosborne/foundation": [
+				"foundation/ts/index.ts"
+			],
+			"@rickosborne/guard": [
+				"guard/ts/index.ts"
+			],
+			"@rickosborne/typical": [
+				"typical/ts/index.ts"
+			]
 		}
 	}
 }
@@ -182,55 +261,3 @@ The format here is critical.
 Some online resources will tell you to use paths like `node_modules/@rickosborne/guard/dist/types` but I couldn't get that to work reliably.
 
 (You could, in theory, use something like `@rickosborne/*` and then just `"./*"`, but I have some packages which are not in this repo, so this is easier for me.)
-
-The second part is with `npm link`.
-Before `npm link` can work correctly, make sure each of your module-level `package.json` files has a namespaced `name`.
-That is, it should look like `"name": "@rickosborne/guard"` and not just `"name": "guard"`.
-It's _probably_ already set up like this if you have publishing working.
-
-Then, in each of your modules, `cd (moduleName)` into the module directory and then `npm link` by itself.
-This sets up the module to be consumed elsewhere.
-
-For example:
-
-```shell
-cd typical
-npm link
-# Now @rickosborne/typical can be referenced elsewhere
-cd ../guard
-npm link
-# ... and now @rickosborne/guard can be referenced
-```
-
-Once all your modules are ready to be referenced, go back through each of your modules again and link the dependencies.
-The part that the npm docs don't mention so well is that if you have multiple dependencies, they all _must_ be linked at once with one command:
-
-```shell
-# In each module ...
-cd foundation
-# DO NOT do this:
-#   npm link @rickosborne/typical
-#   npm link @rickosborne/guard
-# Instead, do this:
-npm link @rickosborne/typical @rickosborne/guard
-```
-
-You can tell if this worked correctly by going into your module-level `node_modules/@rickosborne` directory.
-The entries there should be symlinks, _not_ real directories.
-If they are real directories, then they are managed by `npm install` and _not_ `npm link`, and it will end in tears.
-
-Repeat this for each module with dependencies.
-
-When you make a new module, or change dependencies, unfortunately you will need to recreate the full/new list, and not just add/remove.
-So, for example, if I added another dependency I'd need to run something like:
-
-```shell
-npm link @rickosborne/typical @rickosborne/guard @rickosborne/command
-```
-
-Annoying, but manageable.
-You could probably even have a script to check these for you so you can't forget.
-
-Also, _do not_ link your modules into the root-level `node_modules`.
-This seems to confuse `tsc` a bit.
-

@@ -4,9 +4,9 @@
 		"url": "https://rickosborne.org"
 	},
 	"dependencies": {
-		"@rickosborne/foundation": "2024.12.30",
-		"@rickosborne/guard": "2024.12.30",
-		"@rickosborne/typical": "2024.12.30"
+		"@rickosborne/foundation": "2024.12.32",
+		"@rickosborne/guard": "2024.12.32",
+		"@rickosborne/typical": "2024.12.32"
 	},
 	"description": "Private project with its own configuration used for testing published modules",
 	"devDependencies": {
@@ -24,5 +24,5 @@
 	"scripts": {
 		"test": "tsx test.ts"
 	},
-	"version": "2024.12.30"
+	"version": "2024.12.32"
 }

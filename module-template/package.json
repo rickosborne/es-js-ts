@@ -9,23 +9,14 @@
 	},
 	"exports": {
 		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js",
-			"default": "./dist/esm/index.js"
+			"types": "./index.ts",
+			"default": "./index.ts"
 		}
 	},
-	"files": [
-		"dist"
-	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"license": "CC-BY-NC-SA-4.0",
-	"main": "dist/cjs/index.js",
 	"name": "@rickosborne/module-template",
 	"private": true,
-	"publishConfig": {
-		"access": "public"
-	},
 	"repository": {
 		"directory": "module-template",
 		"type": "git",
