@@ -4,7 +4,7 @@
 		"url": "https://rickosborne.org"
 	},
 	"dependencies": {
-		"@rickosborne/typical": "2024.12.29"
+		"@rickosborne/typical": "2024.12.30"
 	},
 	"description": "Rick Osborne's collection of type guards.",
 	"engines": {
@@ -56,5 +56,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2024.12.29"
+	"version": "2024.12.30"
 }
