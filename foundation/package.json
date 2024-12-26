@@ -49,7 +49,7 @@
 		"prepub:dry-run": "npm run prepublish",
 		"prepublish": "npm run build && npm run lint && npm run check-exports",
 		"pub": "npm publish ./dist",
-		"pub:dry-run": "npm publish --dry-run",
+		"pub:dry-run": "npm publish --dry-run ./dist",
 		"reinstall": "rm -rf ./node_modules && npm ci",
 		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
 		"repackage": "tsx ../scripts/repackage.ts foundation",

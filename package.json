@@ -66,6 +66,8 @@
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run doc",
+		"pub": "tsx scripts/run-all.ts pub:dry-run",
+		"pub:commit": "tsx scripts/run-all.ts pub",
 		"reinstall": "rm -rf ./node_modules && npm ci",
 		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
 		"release": "tsx scripts/bump-version.ts --dry-run",
