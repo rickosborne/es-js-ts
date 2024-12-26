@@ -99,6 +99,7 @@ if (updatedModules.length === 0) {
 		const rootPkg = readPackageJson(rootPkgPath);
 		rootPkg.version = bumped;
 		writePackageJson(rootPkg, rootPkgPath);
+		execSync("npm install", { encoding: "utf-8", stdio: "inherit" });
 		console.log(`🏷️ Tagging as v${ bumped }`);
 		execSync(`git commit -a -m "v${ bumped }"`, { encoding: "utf-8", stdio: "inherit" });
 		execSync(`git tag -s -m "v${ bumped }" "v${ bumped }"`, { encoding: "utf-8", stdio: "inherit" });

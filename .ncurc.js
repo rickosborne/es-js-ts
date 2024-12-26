@@ -14,15 +14,25 @@
  * @property {SemVer} upgradedVersionSemver     Upgraded version in semantic versioning format.
  */
 
+const holdBack = {
+	"@types/chai": 4,
+	"@eslint/js": 8,
+	"@stylistic/eslint-plugin-js": 1,
+	"@typescript-eslint/eslint-plugin": 6,
+	"@typescript-eslint/parser": 6,
+	chai: 4,
+	eslint: 8,
+};
+
 /** Filter out non-major version updates.
-  * @param {string} name        The name of the dependency.
-  * @param {Plan} plan
-  * @returns {boolean}                 Return true if the upgrade should be kept, otherwise it will be ignored.
+ * @param {string} name        The name of the dependency.
+ * @param {Plan} plan
+ * @returns {boolean}                 Return true if the upgrade should be kept, otherwise it will be ignored.
  */
 function filterResults(name, plan) {
-	// noinspection RedundantIfStatementJS
-	if ((name === "chai") && parseInt(plan.upgradedVersionSemver.major) > 4) {
-		return false;
+	const maybeMajor = holdBack[name];
+	if (maybeMajor != null) {
+		return parseInt(plan.upgradedVersionSemver.major) <= maybeMajor;
 	}
 	return true;
 }
