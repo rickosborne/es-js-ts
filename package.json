@@ -60,8 +60,6 @@
 	},
 	"scripts": {
 		"build": "tsx scripts/run-all.ts build",
-		"bump-version": "tsx scripts/bump-version.ts --dry-run",
-		"bump-version:commit": "tsx scripts/bump-version.ts",
 		"check-exports": "tsx scripts/check-exports.ts",
 		"clean": "tsx scripts/run-all.ts clean",
 		"doc": "tsx scripts/run-all.ts doc",
@@ -70,6 +68,8 @@
 		"postbuild": "npm run doc",
 		"reinstall": "rm -rf ./node_modules && npm ci",
 		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
+		"release": "tsx scripts/bump-version.ts --dry-run",
+		"release:commit": "tsx scripts/bump-version.ts",
 		"test": "mocha",
 		"test:coverage": "nyc mocha",
 		"type-check": "tsc --noEmit",

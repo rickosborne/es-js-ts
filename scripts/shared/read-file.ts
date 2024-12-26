@@ -7,6 +7,9 @@ export const readJson = <T>(path: string) => JSON.parse(readFile(path)) as T;
 export type PackageJsonLike = {
 	dependencies?: Record<string, string>;
 	devDependencies?: Record<string, string>;
+	exports?: Record<string, Record<string, string>>;
+	files?: string[];
+	main?: string;
 	name: string;
 	peerDependencies?: Record<string, string>;
 	scripts?: Record<string, string>;

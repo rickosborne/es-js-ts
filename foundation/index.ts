@@ -2,6 +2,7 @@ export * from "./ts/add-property.js";
 export * from "./ts/binary-heap.js";
 export * from "./ts/binary-index-of.js";
 export * from "./ts/comparator.js";
+export * from "./ts/deep-sort.js";
 export * from "./ts/int-range.js";
 export * from "./ts/linked-list.js";
 export * from "./ts/priority-array.js";

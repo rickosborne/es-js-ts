@@ -1,11 +1,12 @@
+import { execSync } from "node:child_process";
+import * as path from "node:path";
 import { SemVer } from "semver";
 import { isDryRun } from "./shared/dry-run.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { ownDependencies } from "./shared/own-dependencies.js";
-import { fromRoot, projectNamespace, projectRoot } from "./shared/project-root.js";
+import { projectNamespace, projectRoot, rootPlus } from "./shared/project-root.js";
 import { DEPENDENCIES_KEYS, type PackageJsonLike, readPackageJson } from "./shared/read-file.js";
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { writePackageJson } from "./shared/write-package-json.js";
 
 const moduleNames = getModuleNames();
 const versionForModule = new Map<string, SemVer>();
@@ -40,7 +41,7 @@ moduleNames.forEach((moduleName) => {
 	const deps = ownDependencies(pkg.devDependencies, pkg.dependencies, pkg.peerDependencies);
 	dependenciesForModule.set(moduleName, deps);
 });
-console.log(`⌚️ Latest of modules: ${sharedVersion.toString()}`);
+console.log(`⌚️ Latest of modules: ${ sharedVersion.toString() }`);
 sharedVersion = new SemVer(sharedVersion.toString()).inc("patch");
 if (preferred.compare(sharedVersion) > 0) {
 	sharedVersion = preferred;
@@ -82,7 +83,7 @@ moduleNames.forEach((moduleName) => {
 if (updatedModules.length === 0) {
 	console.log(`✅ No bumps required.`);
 } else {
-	console.log(`👊 Bumps: ${updatedModules.join(" ")}`);
+	console.log(`👊 Bumps: ${ updatedModules.join(" ") }`);
 	if (isDryRun) {
 		console.log(`🌵 Dry run.  Will not save changes.`);
 	} else {
@@ -91,10 +92,15 @@ if (updatedModules.length === 0) {
 			if (pkg == null) {
 				throw new Error(`No package: ${ moduleName }`);
 			}
-			const json = JSON.stringify(pkg, undefined, "\t").concat("\n");
 			const filePath = path.join(projectRoot, moduleName, "package.json");
-			console.log(`✏️ Update ${fromRoot(filePath)}`);
-			fs.writeFileSync(filePath, json, { encoding: "utf-8" });
+			writePackageJson(pkg, filePath);
 		}
+		const rootPkgPath = rootPlus("package.json");
+		const rootPkg = readPackageJson(rootPkgPath);
+		rootPkg.version = bumped;
+		writePackageJson(rootPkg, rootPkgPath);
+		console.log(`🏷️ Tagging as v${ bumped }`);
+		execSync(`git commit -a -m "v${ bumped }"`, { encoding: "utf-8", stdio: "inherit" });
+		execSync(`git tag -s -m "v${ bumped }" "v${ bumped }"`, { encoding: "utf-8", stdio: "inherit" });
 	}
 }

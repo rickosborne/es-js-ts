@@ -9,3 +9,5 @@ export const withNamespace = (moduleName: string): string => moduleName.startsWi
 export const withoutNamespace = (packageName: string): string => packageName.startsWith(projectNamespace) ? packageName.substring(projectNamespace.length) : packageName;
 
 export const fromRoot = (fullPath: string) => path.relative(projectRoot, fullPath);
+
+export const rootPlus = (...pathParts: string[]) => path.resolve(projectRoot, ...pathParts);
