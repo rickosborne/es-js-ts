@@ -30,6 +30,7 @@
 		"access": "public"
 	},
 	"repository": {
+		"directory": "guard",
 		"type": "git",
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},

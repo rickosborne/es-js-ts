@@ -12,7 +12,7 @@ export type ShuffleConfig<T> = {
 /**
  * Fisher-Yates shuffle.
  * Defaults to in-place sorting, but can sort into a new one via <kbd>into</kbd>.
- * @see {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle|Fisher-Yates shuffle on Wikipedia}
+ * @see {@link https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle Fisher-Yates shuffle on Wikipedia}
  */
 export const shuffle = <T>(
 	list: T[],

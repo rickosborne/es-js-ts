@@ -28,6 +28,7 @@
 		"access": "public"
 	},
 	"repository": {
+		"directory": "typical",
 		"type": "git",
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},

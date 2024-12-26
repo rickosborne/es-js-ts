@@ -1,12 +1,14 @@
 {
 	"$schema": "https://typedoc.org/schema.json",
 	"cleanOutputDir": false,
+	"disableSources": true,
 	"entryPoints": [
 		"typical",
 		"guard",
 		"foundation"
 	],
 	"includeVersion": true,
+	"outputFileStrategy": "modules",
 	"outputs": [
 		{
 			"name": "markdown",
@@ -17,5 +19,6 @@
 		"typedoc-plugin-markdown"
 	],
 	"treatValidationWarningsAsErrors": true,
-	"treatWarningsAsErrors": true
+	"treatWarningsAsErrors": true,
+	"useCodeBlocks": true
 }

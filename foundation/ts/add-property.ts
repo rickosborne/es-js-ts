@@ -147,7 +147,7 @@ export type PropertiesFromDescriptors<R extends Record<string, TypedPropertyDesc
 
 /**
  * A more type-friendly version of <kbd>Object.defineProperty</kbd>.
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty|Object.defineProperty on MDN}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty Object.defineProperty on MDN}
  */
 export const addProperty = <T, K extends string, V, D extends TypedPropertyDescriptor<V>>(target: T, key: K, descriptor: D): Resolve<T & PropertyFromDescriptor<K, D>> => {
 	return Object.defineProperty(target, key, descriptor) as Resolve<T & PropertyFromDescriptor<K, D>>;
@@ -155,7 +155,7 @@ export const addProperty = <T, K extends string, V, D extends TypedPropertyDescr
 
 /**
  * A more type-friendly version of <kbd>Object.defineProperties</kbd>.
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties|Object.defineProperties on MDN}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperties Object.defineProperties on MDN}
  */
 export const addProperties = <T, K extends string, R extends Record<K, TypedPropertyDescriptor<unknown>>>(target: T, descriptors: R): Resolve<T & PropertiesFromDescriptors<R>> => {
 	return Object.defineProperties(target, descriptors) as Resolve<T & PropertiesFromDescriptors<R>>;
