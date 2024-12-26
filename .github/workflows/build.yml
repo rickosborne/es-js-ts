@@ -21,6 +21,16 @@ jobs:
                 with:
                     node-version: "${{ matrix.node-version }}"
                     cache: "npm"
+            -   working-directory: ./typical
+                run: npm link
+            -   working-directory: ./guard
+                run: npm link
+            -   working-directory: ./foundation
+                run: npm link
+            -   working-directory: ./guard
+                run: npm link @rickosborne/typical
+            -   working-directory: ./foundation
+                run: npm link @rickosborne/typical @rickosborne/guard
             -   run: "npm ci"
             -   run: "npm run build"
             -   run: "npm test"
