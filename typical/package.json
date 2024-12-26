@@ -19,6 +19,11 @@
 		"dist"
 	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"type definitions",
+		"type declarations"
+	],
 	"license": "CC-BY-NC-SA-4.0",
 	"main": "dist/cjs/index.js",
 	"module": "dist/esm/index.js",
@@ -35,7 +40,7 @@
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"clean": "rm -rf ./dist",
-		"doc": "typedoc",
+		"doc": "tsx ../scripts/simple-readme.ts typical",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run repackage && npm run doc",

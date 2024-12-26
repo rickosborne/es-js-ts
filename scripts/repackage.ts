@@ -46,6 +46,8 @@ for (const moduleName of moduleNames) {
 	delete pkg.devDependencies;
 	delete pkg.files;
 	delete pkg.scripts;
+	pkg.types = "types/index.d.ts";
+	pkg.typings = "types/index.d.ts";
 	if (errors.length === 0) {
 		console.log("   ✅ Looks okay.");
 		rewrites.push(() => {

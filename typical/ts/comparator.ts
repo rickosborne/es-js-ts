@@ -4,7 +4,7 @@
  * Negative values mean <kbd>a</kbd> should be sorted
  * before <kbd>b</kbd>, while positive values mean the
  * reverse.  Zero means the two values are equivalent.
- * @return {number} Negative for <kbd>a lt b</kbd>, positive for <kbd>a gt b</kbd>, and zero for <kbd>a eq b</kbd>.
+ * @returns Negative for <kbd>a lt b</kbd>, positive for <kbd>a gt b</kbd>, and zero for <kbd>a eq b</kbd>.
  */
 export type Comparator<T> = (a: T, b: T) => number;
 

@@ -24,7 +24,7 @@ type ModuleDecl = {
 	packageName: string;
 }
 
-const moduleNames = getModuleNames(args);
+const moduleNames = getModuleNames({ args });
 
 const modules = moduleNames.map((moduleName): ModuleDecl | undefined => {
 	const pkg = readPackageJson(moduleName);

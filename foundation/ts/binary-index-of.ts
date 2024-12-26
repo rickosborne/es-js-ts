@@ -19,12 +19,12 @@ export type BinaryIndexOfConfig = {
 	 * When a value is found, step back and compare until the first
 	 * occurrence of that value is found.  Will always cause extra
 	 * comparisons.
-	 * @default false
+	 * @defaultValue false
 	 */
 	firstNonUnique?: boolean;
 	/**
 	 * Left-most index to check.  Inclusive.
-	 * @default 0
+	 * @defaultValue 0
 	 */
 	initialLeft?: number;
 	/**
@@ -39,7 +39,7 @@ export type BinaryIndexOfConfig = {
 	 * insert at the front or append to the back.
 	 * But it can just add extra comparisons for small arrays, or
 	 * arrays where most values will be in the middle.
-	 * @default false
+	 * @defaultValue false
 	 */
 	rangeCheck?: boolean;
 };

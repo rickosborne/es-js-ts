@@ -22,6 +22,11 @@
 		"dist"
 	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"guards",
+		"type guards"
+	],
 	"license": "CC-BY-NC-SA-4.0",
 	"main": "dist/cjs/index.js",
 	"name": "@rickosborne/guard",
@@ -38,7 +43,7 @@
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"check-exports": "tsx ../scripts/check-exports.ts guard",
 		"clean": "rm -rf ./dist",
-		"doc": "typedoc",
+		"doc": "tsx ../scripts/simple-readme.ts guard",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run repackage && npm run doc",

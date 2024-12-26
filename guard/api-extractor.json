@@ -1,0 +1,32 @@
+{
+	"$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+	"apiReport": {
+		"enabled": false,
+		"reportFolder": "<projectFolder>/dist/",
+		"reportVariants": [
+			"public"
+		]
+	},
+	"bundledPackages": [
+		"@rickosborne/*"
+	],
+	"docModel": {
+		"enabled": true,
+		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/guard"
+	},
+	"dtsRollup": {
+		"enabled": false
+	},
+	"mainEntryPointFilePath": "<projectFolder>/dist/types/index.d.ts",
+	"messages": {
+		"extractorMessageReporting": {
+			"ae-forgotten-export": {
+				"logLevel": "none"
+			},
+			"ae-missing-release-tag": {
+				"logLevel": "none"
+			}
+		}
+	},
+	"newlineKind": "lf"
+}

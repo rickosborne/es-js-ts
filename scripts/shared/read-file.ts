@@ -13,6 +13,8 @@ export type PackageJsonLike = {
 	name: string;
 	peerDependencies?: Record<string, string>;
 	scripts?: Record<string, string>;
+	types?: string;
+	typings?: string;
 	version: string;
 }
 

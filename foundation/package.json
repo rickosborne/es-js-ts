@@ -23,6 +23,11 @@
 		"dist"
 	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"algorithms",
+		"data structures"
+	],
 	"license": "CC-BY-NC-SA-4.0",
 	"main": "dist/cjs/index.js",
 	"name": "@rickosborne/foundation",
@@ -39,8 +44,8 @@
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
 		"check-exports": "tsx ../scripts/check-exports.ts foundation",
-		"clean": "rm -rf ./dist",
-		"doc": "typedoc",
+		"clean": "rimraf ./dist",
+		"doc": "tsx ../scripts/simple-readme.ts foundation",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"postbuild": "npm run repackage && npm run doc",
@@ -50,8 +55,8 @@
 		"prepublish": "npm run build && npm run lint && npm run check-exports",
 		"pub": "npm publish ./dist",
 		"pub:dry-run": "npm publish --dry-run ./dist",
-		"reinstall": "rm -rf ./node_modules && npm ci",
-		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
+		"reinstall": "rimraf ./node_modules && npm ci",
+		"reinstall:full": "rimraf ./node_modules package-lock.json && npm install",
 		"repackage": "tsx ../scripts/repackage.ts foundation",
 		"test": "mocha",
 		"test:coverage": "nyc mocha",

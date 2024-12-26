@@ -1,9 +1,7 @@
-import * as console from "node:console";
-import * as fs from "node:fs";
 // noinspection ES6PreferShortImport
 import { deepSort } from "../../foundation/ts/deep-sort.js";
-import { fromRoot } from "./project-root.js";
 import type { PackageJsonLike } from "./read-file.js";
+import { writeText } from "./write-file.js";
 
 export const writePackageJson = (
 	pkg: PackageJsonLike,
@@ -26,6 +24,5 @@ export const writePackageJson = (
 	if (modifyJson != null) {
 		json = modifyJson(json);
 	}
-	console.log(`✏️ Write: ${ fromRoot(fullPath) }`);
-	fs.writeFileSync(fullPath, json, { encoding: "utf-8" });
+	writeText(fullPath, json);
 };
