@@ -7,17 +7,6 @@
 	"engines": {
 		"node": ">=14"
 	},
-	"exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js",
-			"default": "./dist/esm/index.js"
-		}
-	},
-	"files": [
-		"dist"
-	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"keywords": [
 		"typescript",
@@ -25,13 +14,8 @@
 		"type declarations"
 	],
 	"license": "CC-BY-NC-SA-4.0",
-	"main": "dist/cjs/index.js",
-	"module": "dist/esm/index.js",
 	"name": "@rickosborne/typical",
-	"private": false,
-	"publishConfig": {
-		"access": "public"
-	},
+	"private": true,
 	"repository": {
 		"directory": "typical",
 		"type": "git",
@@ -39,7 +23,7 @@
 	},
 	"scripts": {
 		"build": "tsc -b tsconfig.cjs.json tsconfig.module.json tsconfig.types.json && cp ../static/esm-package.json dist/esm/package.json && cp ../static/cjs-package.json dist/cjs/package.json",
-		"clean": "rm -rf ./dist",
+		"clean": "rimraf ./dist",
 		"doc": "tsx ../scripts/simple-readme.ts typical",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
@@ -50,14 +34,14 @@
 		"prepublish": "npm run build && npm run lint",
 		"pub": "npm publish ./dist",
 		"pub:dry-run": "npm publish --dry-run ./dist",
-		"reinstall": "rm -rf ./node_modules && npm ci",
-		"reinstall:full": "rm -rf ./node_modules package-lock.json && npm install",
+		"reinstall": "rimraf ./node_modules && npm ci",
+		"reinstall:full": "rimraf ./node_modules package-lock.json && npm install",
 		"repackage": "tsx ../scripts/repackage.ts typical",
 		"test": "mocha",
 		"test:coverage": "nyc mocha",
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"types": "dist/types/index.d.ts",
+	"typings": "./dist/types/index.d.ts",
 	"version": "2024.12.31"
 }

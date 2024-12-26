@@ -2,11 +2,10 @@ import * as console from "node:console";
 import * as fs from "node:fs";
 import * as process from "node:process";
 // noinspection ES6PreferShortImport
-// noinspection ES6PreferShortImport
 import { hasOwn } from "../guard/ts/has-own.js";
 import { isDryRun } from "./shared/dry-run.js";
 import { getModuleNames } from "./shared/module-names.js";
-import { fromRoot, projectRoot, rootPlus } from "./shared/project-root.js";
+import { fromRoot, projectNamespace, projectRoot, rootPlus } from "./shared/project-root.js";
 import { DEPENDENCIES_KEYS, readPackageJson } from "./shared/read-file.js";
 import { writePackageJson } from "./shared/write-package-json.js";
 
@@ -46,8 +45,22 @@ for (const moduleName of moduleNames) {
 	delete pkg.devDependencies;
 	delete pkg.files;
 	delete pkg.scripts;
+	pkg.main = "cjs/index.js";
+	pkg.module = "esm/index.js";
+	pkg.name = projectNamespace.concat(moduleName);
+	pkg.private = false;
+	pkg.publishConfig = { access: "public" };
+	pkg.readme = "README.md";
 	pkg.types = "types/index.d.ts";
 	pkg.typings = "types/index.d.ts";
+	pkg.exports = {
+		".": {
+			types: "./types/index.d.ts",
+			import: "./esm/index.js",
+			require: "./cjs/index.js",
+			default: "./esm/index.js",
+		},
+	};
 	if (errors.length === 0) {
 		console.log("   ✅ Looks okay.");
 		rewrites.push(() => {

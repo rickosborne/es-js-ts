@@ -10,8 +10,14 @@ export type PackageJsonLike = {
 	exports?: Record<string, Record<string, string>>;
 	files?: string[];
 	main?: string;
+	module?: string;
 	name: string;
 	peerDependencies?: Record<string, string>;
+	private?: boolean;
+	publishConfig?: {
+		access: "public";
+	};
+	readme?: string;
 	scripts?: Record<string, string>;
 	types?: string;
 	typings?: string;

@@ -11,17 +11,6 @@
 	"engines": {
 		"node": ">=14"
 	},
-	"exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/esm/index.js",
-			"require": "./dist/cjs/index.js",
-			"default": "./dist/esm/index.js"
-		}
-	},
-	"files": [
-		"dist"
-	],
 	"homepage": "https://github.com/rickosborne/es-js-ts",
 	"keywords": [
 		"typescript",
@@ -29,12 +18,8 @@
 		"data structures"
 	],
 	"license": "CC-BY-NC-SA-4.0",
-	"main": "dist/cjs/index.js",
 	"name": "@rickosborne/foundation",
-	"private": false,
-	"publishConfig": {
-		"access": "public"
-	},
+	"private": true,
 	"readme": "README.md",
 	"repository": {
 		"directory": "foundation",
@@ -63,5 +48,6 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
+	"typings": "./dist/types/index.d.ts",
 	"version": "2024.12.31"
 }

@@ -1,4 +1,4 @@
-name: Build
+name: "Build"
 
 on:
     push:
@@ -21,16 +21,18 @@ jobs:
                 with:
                     node-version: "${{ matrix.node-version }}"
                     cache: "npm"
-            -   working-directory: ./typical
-                run: npm link
-            -   working-directory: ./guard
-                run: npm link
-            -   working-directory: ./foundation
-                run: npm link
-            -   working-directory: ./guard
-                run: npm link @rickosborne/typical
-            -   working-directory: ./foundation
-                run: npm link @rickosborne/typical @rickosborne/guard
+            -   name: "Link typical"
+                working-directory: "./typical"
+                run: "npm link"
+            -   name: "Link guard"
+                working-directory: "./guard"
+                run: "npm link"
+            -   name: "Link typical into guard"
+                working-directory: "./guard"
+                run: "npm link @rickosborne/typical"
+            -   name: "Link typical and guard into foundation"
+                working-directory: "./foundation"
+                run: "npm link @rickosborne/typical @rickosborne/guard"
             -   run: "npm ci"
             -   run: "npm run build"
             -   run: "npm test"
