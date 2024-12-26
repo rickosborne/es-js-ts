@@ -7,6 +7,9 @@
 		"guard",
 		"foundation"
 	],
+	"excludeInternal": true,
+	"excludePrivate": true,
+	"excludeProtected": true,
 	"includeVersion": true,
 	"outputFileStrategy": "modules",
 	"outputs": [
@@ -16,9 +19,10 @@
 		}
 	],
 	"plugin": [
-		"typedoc-plugin-markdown"
+		"typedoc-plugin-markdown",
+		"./typedoc-plugin-simplify/simplify.mjs"
 	],
 	"treatValidationWarningsAsErrors": true,
 	"treatWarningsAsErrors": true,
-	"useCodeBlocks": true
+	"useCodeBlocks": false
 }

@@ -7,7 +7,6 @@
 		"../typedoc.json"
 	],
 	"intentionallyNotExported": [
-		"SkipNode"
 	],
 	"mergeReadme": true,
 	"outputs": [
