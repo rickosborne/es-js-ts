@@ -69,7 +69,7 @@ moduleNames.forEach((moduleName) => {
 			if (target == null) {
 				throw new Error(`Cannot find dependency ${ packageName } in ${ moduleName }package.json`);
 			}
-			if (version == null || version.toString() !== bumped) {
+			if (version != null && version.toString() !== bumped) {
 				target[ packageName ] = bumped;
 				anyBumps = true;
 			}
