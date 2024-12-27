@@ -14,7 +14,7 @@
 	"docModel": {
 		"apiJsonFilePath": "<projectFolder>/build/api/api.json",
 		"enabled": true,
-		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/guard"
+		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/${moduleName}"
 	},
 	"dtsRollup": {
 		"enabled": false

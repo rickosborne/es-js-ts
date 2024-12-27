@@ -1,4 +1,4 @@
-import { assertDefined } from "../assert-defined.js";
+import { assertDefined, expectDefined, isDefined } from "../is-defined.js";
 import { describe, it } from "mocha";
 import { expect } from "chai";
 
@@ -23,5 +23,34 @@ describe(assertDefined.name, () => {
 	it("can use custom message", () => {
 		expect(() => assertDefined(undefined, "undefined")).throws(RangeError, "undefined");
 		expect(() => assertDefined(undefined, () => "undefined")).throws(RangeError, "undefined");
+	});
+});
+
+describe(isDefined.name, () => {
+	it("is false for null", () => {
+		expect(isDefined(null)).eq(false);
+	});
+	it("is false for undefined", () => {
+		expect(isDefined(undefined)).eq(false);
+	});
+	it("is true for other things", () => {
+		expect(isDefined({})).eq(true);
+		expect(isDefined([])).eq(true);
+		expect(isDefined(NaN)).eq(true);
+		expect(isDefined(Infinity)).eq(true);
+		expect(isDefined(0)).eq(true);
+		expect(isDefined(false)).eq(true);
+	});
+});
+
+describe(expectDefined.name, () => {
+	it("passes through for defined values", () => {
+		expect(expectDefined(123, "123")).eq(123);
+	});
+	it("throws for null", () => {
+		expect(() => expectDefined(null, "null")).throws(RangeError);
+	});
+	it("throws for undefined", () => {
+		expect(() => expectDefined(undefined, "undefined")).throws(RangeError);
 	});
 });

@@ -1,3 +1,6 @@
+/**
+ * Basic interface for a queue.
+ */
 export type Queue<T> = {
 	add(value: T): void;
 	peek(): T | undefined;

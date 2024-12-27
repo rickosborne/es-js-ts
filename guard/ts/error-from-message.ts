@@ -1,3 +1,5 @@
+import { scrubStackTrace } from "./scrub-stack-trace.js";
+
 /**
  * A message, an error, or something which can generate one of those.
  */
@@ -23,5 +25,5 @@ export const errorFromMessageOrError = (
 	} else {
 		error = stringOrError;
 	}
-	return error;
+	return scrubStackTrace(error, " at errorFromMessageOrError ");
 };

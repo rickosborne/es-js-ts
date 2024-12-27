@@ -1,12 +1,29 @@
 import { assertDefined } from "@rickosborne/guard";
 import { Comparator } from "@rickosborne/typical";
 
+/**
+ * Mixin for a comparator with chaining functions to constrain
+ * the behavior of the comparator.
+ */
 export type ChainableComparator<T> = Comparator<T> & {
+	/**
+	 * Reverse the comparator.
+	 */
 	get desc(): ChainableComparator<T>;
+	/**
+	 * Return null and undefined values before the rest.
+	 */
 	get nullsFirst(): ChainableComparator<T | undefined | null>;
+	/**
+	 * Return null and undefined values after the rest.
+	 */
 	get nullsLast(): ChainableComparator<T | undefined | null>;
 };
 
+/**
+ * Wrap the given comparator to return null and undefined values
+ * before the others.
+ */
 export const withNullsFirst = <T>(comparator: Comparator<T>): Comparator<T | null | undefined> => {
 	return function nullsFirst(a, b) {
 		if (a == null && b == null) {
@@ -20,6 +37,10 @@ export const withNullsFirst = <T>(comparator: Comparator<T>): Comparator<T | nul
 	};
 };
 
+/**
+ * Wrap the given comparator to return null and undefined values
+ * after the others.
+ */
 export const withNullsLast = <T>(comparator: Comparator<T>): Comparator<T | null | undefined> => {
 	return function nullsLast(a, b) {
 		if (a == null && b == null) {
@@ -33,10 +54,17 @@ export const withNullsLast = <T>(comparator: Comparator<T>): Comparator<T | null
 	};
 };
 
+/**
+ * Wrap the given comparator to invert its result.
+ */
 const withDesc = <T>(comparator: Comparator<T>): Comparator<T> => function desc(a, b) {
 	return comparator(b, a);
 };
 
+/**
+ * Wrap the given comparator so you can chain {@link ChainableComparator}
+ * functions from it.
+ */
 export const chainableComparator = <T>(comparator: Comparator<T>): ChainableComparator<T> => {
 	let _nullsFirst: ChainableComparator<T | null | undefined> | undefined;
 	let _nullsLast: ChainableComparator<T | null | undefined> | undefined;
@@ -76,17 +104,47 @@ export const chainableComparator = <T>(comparator: Comparator<T>): ChainableComp
 	});
 };
 
+/**
+ * Numeric comparator which sorts lower values before higher ones.
+ */
 export const numberAsc: Comparator<number> = (a, b) => a - b;
 
+/**
+ * Build a comparator for the given type, which goes through the
+ * specified checks in the order they are defined.
+ */
 export type ComparatorBuilder<T> = {
+	/**
+	 * Return the generated comparator.
+	 */
 	build(): Comparator<T>;
+	/**
+	 * Invert the previous comparator.
+	 */
 	get desc(): ComparatorBuilder<T>;
+	/**
+	 * Have the previous comparator return null and undefined values before others.
+	 */
 	get nullsFirst(): ComparatorBuilder<T>;
+	/**
+	 * Have the previous comparator return null and undefined values after others.
+	 */
 	get nullsLast(): ComparatorBuilder<T>;
+	/**
+	 * Add comparator which first accesses a numeric value, often
+	 * a property value, from the compared type.
+	 */
 	num(accessor: (t: T) => (undefined | number)): ComparatorBuilder<T>;
+	/**
+	 * Add comparator which first accesses a string value, often
+	 * a property value, from the compared type.
+	 */
 	str(accessor: (t: T) => (undefined | string)): ComparatorBuilder<T>;
 }
 
+/**
+ * Start building a comparator.
+ */
 export const comparatorBuilder = <T>(): ComparatorBuilder<T> => {
 	const ops: [ (t: T) => unknown, Comparator<unknown> ][] = [];
 	const withPrevious = (modifier: (comparator: Comparator<unknown>) => Comparator<unknown>): void => {

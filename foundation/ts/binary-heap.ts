@@ -1,6 +1,11 @@
-import type { Queue } from "./queue.js";
 import type { Comparator } from "@rickosborne/typical";
+import type { Queue } from "./queue.js";
 
+/**
+ * Simple implementation of a binary min-heap, meaning low
+ * values are sorted before high values, using the supplied
+ * comparator.  Invert your comparator if you want a max-heap.
+ */
 export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	private count: number = 0;
 	private readonly items: T[] = [ null as T ];
@@ -10,6 +15,10 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 
 	public get length(): number {
 		return this.count;
+	}
+
+	public get unsorted(): T[] {
+		return this.items.slice(1);
 	}
 
 	public add(value: T): void {
@@ -26,13 +35,13 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 
 	protected down(index: number): void {
 		let i = index;
-		let current: T = this.items[index];
+		let current: T = this.items[ index ];
 		while ((i * 2) <= this.count) {
 			const minChild = this.minChild(i * 2);
-			const child: T = this.items[minChild];
+			const child: T = this.items[ minChild ];
 			if (this.comparator(current, child) > 0) {
-				this.items[i] = child;
-				this.items[minChild] = current;
+				this.items[ i ] = child;
+				this.items[ minChild ] = current;
 			}
 			i = minChild;
 			current = child;
@@ -43,14 +52,14 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		if (index + 1 > this.count) {
 			return index;
 		}
-		if (this.comparator(this.items[index], this.items[index + 1]) < 0) {
+		if (this.comparator(this.items[ index ], this.items[ index + 1 ]) < 0) {
 			return index;
 		}
 		return index + 1;
 	}
 
 	public peek(): T | undefined {
-		return this.items[1];
+		return this.items[ 1 ];
 	}
 
 	public remove(item: T): void {
@@ -73,11 +82,11 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	}
 
 	private removeAt(index: number): T {
-		const value = this.items[index];
+		const value = this.items[ index ];
 		const lastItem = this.items.pop() as T;
 		this.count--;
 		if (index <= this.count) {
-			this.items[index] = lastItem;
+			this.items[ index ] = lastItem;
 			this.down(index);
 		}
 		return value;
@@ -85,11 +94,11 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 
 	public sort(): void {
 		const values = Array<T>(this.count + 1);
-		values[0] = null as T;
+		values[ 0 ] = null as T;
 		let index = 1;
 		let anyMoves = false;
 		for (const [ value, originalIndex ] of this.valuesAndIndexes()) {
-			values[index] = value;
+			values[ index ] = value;
 			if (index !== originalIndex) {
 				anyMoves = true;
 			}
@@ -97,7 +106,7 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		}
 		if (anyMoves) {
 			for (let i = 1; i <= this.count; i++) {
-				this.items[i] = values[i];
+				this.items[ i ] = values[ i ];
 			}
 		}
 	}
@@ -116,22 +125,18 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	protected up(index: number): void {
 		let currentIndex = index;
 		while (currentIndex >= 2) {
-			const current: T = this.items[currentIndex];
+			const current: T = this.items[ currentIndex ];
 			const parentIndex = currentIndex >> 1;
-			const parent: T = this.items[parentIndex];
+			const parent: T = this.items[ parentIndex ];
 			const compared = this.comparator(current, parent);
 			if (compared === 0) {
 				this.removeAt(currentIndex);
 			} else if (compared < 0) {
-				this.items[parentIndex] = current;
-				this.items[currentIndex] = parent;
+				this.items[ parentIndex ] = current;
+				this.items[ currentIndex ] = parent;
 			}
 			currentIndex = parentIndex;
 		}
-	}
-
-	public get unsorted(): T[] {
-		return this.items.slice(1);
 	}
 
 	public* values(): Generator<T, void, undefined> {
@@ -147,17 +152,17 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		const paths: number[] = [ 1 ];
 		while (paths.length > 0) {
 			let index = paths.shift()!;
-			let value = this.items[index];
+			let value = this.items[ index ];
 			const smaller = paths
-				.map((itemIndex, pathIndex) => ({ itemIndex, otherValue: this.items[itemIndex], pathIndex }))
+				.map((itemIndex, pathIndex) => ({ itemIndex, otherValue: this.items[ itemIndex ], pathIndex }))
 				.filter(({ otherValue }) => this.comparator(otherValue, value) < 0);
 			if (smaller.length > 1) {
 				paths.push(index);
 			} else {
 				if (smaller.length === 1) {
-					paths[smaller[0].pathIndex] = index;
-					index = smaller[0].itemIndex;
-					value = smaller[0].otherValue;
+					paths[ smaller[ 0 ].pathIndex ] = index;
+					index = smaller[ 0 ].itemIndex;
+					value = smaller[ 0 ].otherValue;
 				}
 				yield [ value, index ];
 				const child1Index = index * 2;
@@ -173,10 +178,18 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	}
 }
 
+/**
+ * Build a min-heap using the given comparator.
+ */
 export const arrayBinaryMinHeap = <T>(
 	comparator: Comparator<T>,
 ) => new ArrayBinaryMinHeap<T>(comparator);
 
+/**
+ * Build a max-heap using the given comparator.  Will invert the
+ * comparator and build a min-heap, which produces the same
+ * outcomes.
+ */
 export const arrayBinaryMaxHeap = <T>(
 	comparator: Comparator<T>,
 ) => new ArrayBinaryMinHeap<T>((a, b) => comparator(b, a));

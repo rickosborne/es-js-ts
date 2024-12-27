@@ -48,6 +48,9 @@ export type IntRange = {
 	}
 }
 
+/**
+ * Start generating a range of integers.
+ */
 export const intRange: IntRange = {
 	from(startInclusive: number) {
 		let skipBy: number = 1;
@@ -75,7 +78,7 @@ export const intRange: IntRange = {
 				writable: false,
 			});
 		};
-		const toExclusive = (stopExclusive: number) : IntGenerator => {
+		const toExclusive = (stopExclusive: number): IntGenerator => {
 			stop = stopExclusive;
 			inclusive = false;
 			return addToArray(generatorFn());
@@ -85,7 +88,7 @@ export const intRange: IntRange = {
 			inclusive = true;
 			return addToArray(generatorFn());
 		};
-		const by = (skip: number)=> {
+		const by = (skip: number) => {
 			skipBy = skip;
 			return { toExclusive, toInclusive };
 		};

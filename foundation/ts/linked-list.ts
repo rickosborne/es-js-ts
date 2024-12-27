@@ -1,3 +1,7 @@
+/**
+ * Controls how a {@link List}'s <kbd>walk</kbd> operation behaves
+ * after each iteration.
+ */
 export type ListWalkDecision<T> = {
 	deleteItem?: boolean;
 	insertAfter?: T;
@@ -5,6 +9,9 @@ export type ListWalkDecision<T> = {
 	keepWalking: boolean;
 };
 
+/**
+ * Basic list-like structure.
+ */
 export type List<T> = {
 	at(index: number): T | undefined;
 	get head(): T | undefined;
@@ -19,22 +26,33 @@ export type List<T> = {
 	values(): Generator<T, void, undefined>;
 	valuesAndIndexes(): Generator<[ T, number ], void, undefined>;
 	walk(block: (value: T, index: number) => ListWalkDecision<T>): void;
-	readonly [Symbol.toStringTag]: string;
+	readonly [ Symbol.toStringTag ]: string;
 }
 
+/**
+ * Generic node type for linked list implementations.
+ * @internal
+ */
 type LinkNode<T> = {
 	next?: LinkNode<T> | undefined;
 	prev?: LinkNode<T> | undefined;
 	value: T;
 };
 
-type LinksAround<T> = [prev: LinkNode<T> | undefined, current: LinkNode<T> | undefined, next: LinkNode<T> | undefined];
-type LinkWindow<T> = [prev: LinkNode<T> | undefined, current: LinkNode<T>, next: LinkNode<T> | undefined, index: number];
+/**
+ * A tuple of a node and its neighbors.
+ */
+type LinksAround<T> = [ prev: LinkNode<T> | undefined, current: LinkNode<T> | undefined, next: LinkNode<T> | undefined ];
+/**
+ * A tuple of a node, its neighbors, and their index values.
+ */
+type LinkWindow<T> = [ prev: LinkNode<T> | undefined, current: LinkNode<T>, next: LinkNode<T> | undefined, index: number ];
 
+/**
+ * Base implementation for a linked list.
+ */
 abstract class ALinkedList<T> implements List<T> {
 	protected count = 0;
-
-	public abstract get [Symbol.toStringTag](): string;
 
 	protected _head: LinkNode<T> | undefined = undefined;
 
@@ -42,12 +60,15 @@ abstract class ALinkedList<T> implements List<T> {
 		return this._head?.value;
 	}
 
-	public insertAt(index: number, value: T): void {
-		const [ prev, next ] = this.around(index);
-		const node = this.buildNode(prev, value, next);
-		this.relink(prev, node, next);
-		this.count++;
+	public get isEmpty(): boolean {
+		return this.count === 0;
 	}
+
+	public get length(): number {
+		return this.count;
+	}
+
+	public abstract get [ Symbol.toStringTag ](): string;
 
 	protected around(index: number): LinksAround<T> {
 		if (index < -1) {
@@ -63,7 +84,7 @@ abstract class ALinkedList<T> implements List<T> {
 			return [ ...this.last2Nodes(), undefined ];
 		}
 		if (index === this.count) {
-			return [ this.last2Nodes()[1], undefined, undefined ];
+			return [ this.last2Nodes()[ 1 ], undefined, undefined ];
 		}
 		if (index > this.count) {
 			return [ undefined, undefined, undefined ];
@@ -80,19 +101,18 @@ abstract class ALinkedList<T> implements List<T> {
 
 	}
 
-	public get isEmpty(): boolean {
-		return this.count === 0;
-	}
-
-	public get length(): number {
-		return this.count;
-	}
-
 	public at(index: number): T | undefined {
-		return this.around(index)[1]?.value;
+		return this.around(index)[ 1 ]?.value;
 	}
 
 	protected abstract buildNode(prev: LinkNode<T> | undefined, value: T, next: LinkNode<T> | undefined): LinkNode<T>;
+
+	public insertAt(index: number, value: T): void {
+		const [ prev, next ] = this.around(index);
+		const node = this.buildNode(prev, value, next);
+		this.relink(prev, node, next);
+		this.count++;
+	}
 
 	protected abstract last2Nodes(): [ LinkNode<T> | undefined, LinkNode<T> | undefined ];
 
@@ -157,17 +177,8 @@ abstract class ALinkedList<T> implements List<T> {
 		}
 	}
 
-	protected *windows(): Generator<LinkWindow<T>, undefined, void> {
-		let current = this._head;
-		let index = 0;
-		let prev: LinkNode<T> | undefined = undefined;
-		while (current != null) {
-			const next = current.next;
-			yield [ prev, current, next, index ];
-			prev = current;
-			current = next;
-			index++;
-		}
+	public walk(decide: (value: T, index: number) => ListWalkDecision<T>): void {
+		this.walkValues(decide);
 	}
 
 	protected walkValues(
@@ -200,13 +211,26 @@ abstract class ALinkedList<T> implements List<T> {
 		}
 	}
 
-	public walk(decide: (value: T, index: number) => ListWalkDecision<T>): void {
-		this.walkValues(decide);
+	protected* windows(): Generator<LinkWindow<T>, undefined, void> {
+		let current = this._head;
+		let index = 0;
+		let prev: LinkNode<T> | undefined = undefined;
+		while (current != null) {
+			const next = current.next;
+			yield [ prev, current, next, index ];
+			prev = current;
+			current = next;
+			index++;
+		}
 	}
 }
 
+/**
+ * Single-linked list implementation, for when you only ever
+ * go forward.
+ */
 class SingleLinkedListImpl<T> extends ALinkedList<T> {
-	public get [Symbol.toStringTag](): string {
+	public get [ Symbol.toStringTag ](): string {
 		return `SingleLinkedList+${ this.count }`;
 	}
 
@@ -236,10 +260,17 @@ class SingleLinkedListImpl<T> extends ALinkedList<T> {
 	}
 }
 
+/**
+ * Builder for a single-linked list.
+ */
 export const singleLinkedList = <T>(): List<T> => {
 	return new SingleLinkedListImpl();
 };
 
+/**
+ * Mixin for additional methods available when the linked list
+ * is double-linked.
+ */
 export type DoubleLinkedList<T> = List<T> & {
 	get tail(): T | undefined;
 	reverseValues(): Generator<T, void, undefined>;
@@ -247,19 +278,18 @@ export type DoubleLinkedList<T> = List<T> & {
 	reverseWalk(block: (value: T, index: number) => ListWalkDecision<T>): void;
 }
 
+/**
+ * Implementation of a doubly-linked list.
+ */
 class DoubleLinkedListImpl<T> extends SingleLinkedListImpl<T> implements DoubleLinkedList<T> {
-	public override get [Symbol.toStringTag](): string {
-		return `DoubleLinkedList+${ this.count }`;
-	}
-
 	protected _tail: LinkNode<T> | undefined = undefined;
 
 	public get tail(): T | undefined {
 		return this._tail?.value;
 	}
 
-	protected reverseIndex(index: number): number {
-		return this.count - index - 1;
+	public override get [ Symbol.toStringTag ](): string {
+		return `DoubleLinkedList+${ this.count }`;
 	}
 
 	protected override around(index: number): [ LinkNode<T> | undefined, LinkNode<T> | undefined, LinkNode<T> | undefined ] {
@@ -293,7 +323,11 @@ class DoubleLinkedListImpl<T> extends SingleLinkedListImpl<T> implements DoubleL
 		}
 	}
 
-	public *reverseValues(): Generator<T, void, undefined> {
+	protected reverseIndex(index: number): number {
+		return this.count - index - 1;
+	}
+
+	public* reverseValues(): Generator<T, void, undefined> {
 		let current = this._tail;
 		while (current != null) {
 			yield current.value;
@@ -301,7 +335,7 @@ class DoubleLinkedListImpl<T> extends SingleLinkedListImpl<T> implements DoubleL
 		}
 	}
 
-	public *reverseValuesAndIndexes(): Generator<[ T, number ], void, undefined> {
+	public* reverseValuesAndIndexes(): Generator<[ T, number ], void, undefined> {
 		let current = this._tail;
 		let index = this.count - 1;
 		while (current != null) {
@@ -315,7 +349,7 @@ class DoubleLinkedListImpl<T> extends SingleLinkedListImpl<T> implements DoubleL
 		this.walkValues(block, this.reverseWindows());
 	}
 
-	protected *reverseWindows(): Generator<LinkWindow<T>, undefined, void> {
+	protected* reverseWindows(): Generator<LinkWindow<T>, undefined, void> {
 		let current = this._tail;
 		let index = this.count - 1;
 		while (current != null) {
@@ -328,6 +362,9 @@ class DoubleLinkedListImpl<T> extends SingleLinkedListImpl<T> implements DoubleL
 
 }
 
+/**
+ * Build a doubly-linked list.
+ */
 export const doubleLinkedList = <T>(): DoubleLinkedList<T> => {
 	return new DoubleLinkedListImpl();
 };

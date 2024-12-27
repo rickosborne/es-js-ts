@@ -1,3 +1,6 @@
+/**
+ * Configuration options for the {@link shuffle} function.
+ */
 export type ShuffleConfig<T> = {
 	/**
 	 * Target array.  Defaults to the given array, shuffling in place.
@@ -28,4 +31,8 @@ export const shuffle = <T>(
 	return into;
 };
 
+/**
+ * Wrapper for the {@link shuffle} function which shuffles into
+ * a new array, leaving the original intact.
+ */
 export const toShuffled = <T>(list: T[], config?: Omit<ShuffleConfig<T>, "into"> | undefined): T[] => shuffle(list, { ...config, into: Array<T>(list.length) });

@@ -1,14 +1,19 @@
-import type { Queue } from "./queue.js";
-import { binaryIndexOf } from "./binary-index-of.js";
 import type { Comparator } from "@rickosborne/typical";
+import { binaryIndexOf } from "./binary-index-of.js";
+import type { Queue } from "./queue.js";
 
+/**
+ * An implementation of a priority queue backed by a JS array,
+ * using the given comparator.  Sorts low-to-high, so you will
+ * need to invert comparator if you want high-to-low.
+ */
 export class PriorityArray<T> implements Queue<T> {
 	private readonly items: T[] = [];
 
 	constructor(private readonly comparator: Comparator<T>) {
 	}
 
-	public get [Symbol.toStringTag](): string {
+	public get [ Symbol.toStringTag ](): string {
 		return `PriorityArray+${ this.items.length }`;
 	}
 
@@ -31,12 +36,12 @@ export class PriorityArray<T> implements Queue<T> {
 	}
 
 	public peek(): T | undefined {
-		return this.items[0];
+		return this.items[ 0 ];
 	}
 
 	public remove(item: T): void {
 		for (let i = this.items.length - 1; i >= 0; i--) {
-			const other: T = this.items[i];
+			const other: T = this.items[ i ];
 			const comparison = this.comparator(item, other);
 			if (comparison === 0) {
 				this.items.splice(i, 1);

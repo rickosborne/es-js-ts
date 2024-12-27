@@ -1,8 +1,8 @@
+import { hasOwn } from "@rickosborne/guard";
+import type { Runnable } from "@rickosborne/typical";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import * as process from "node:process";
-// noinspection ES6PreferShortImport
-import { hasOwn } from "../guard/ts/has-own.js";
 import { isDryRun } from "./shared/dry-run.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { fromRoot, projectNamespace, projectRoot, rootPlus } from "./shared/project-root.js";
@@ -13,7 +13,7 @@ const moduleNames = getModuleNames();
 const inheritDependencies = process.argv.slice(2).includes("--inherit-dependencies");
 
 const rootPackage = readPackageJson(projectRoot);
-const rewrites: (() => void)[] = [];
+const rewrites: Runnable[] = [];
 
 for (const moduleName of moduleNames) {
 	const pkg = readPackageJson(rootPlus(moduleName, "package.json"));
@@ -31,7 +31,7 @@ for (const moduleName of moduleNames) {
 		if (target != null) {
 			for (const [ name, version ] of Object.entries(target)) {
 				if (name.startsWith(projectNamespace) && version.startsWith("file:../")) {
-					target[name] = rootPackage.version;
+					target[ name ] = rootPackage.version;
 				}
 			}
 		} else {

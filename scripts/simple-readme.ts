@@ -1,9 +1,9 @@
 import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
 import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
+import * as fs from "node:fs";
 import * as process from "node:process";
-// noinspection ES6PreferShortImport
-import { comparatorBuilder } from "../foundation/ts/comparator.js";
+import { comparatorBuilder } from "@rickosborne/foundation";
 import { fileExists } from "./shared/file-exists.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { projectRoot, rootPlus } from "./shared/project-root.js";
@@ -18,6 +18,8 @@ const itemSorter = comparatorBuilder<ApiItem>()
 const slug = (text: string): string => {
 	return text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 };
+
+const apiExtractorTemplate = readFile(rootPlus("static", "api-extractor.template.json"));
 
 const mdFromDocComment = (doc: tsdoc.DocComment): string | undefined => {
 	const md: string[] = [];
@@ -74,7 +76,11 @@ for (const moduleName of getModuleNames({
 	dirEntPredicate: (de) => fileExists(projectRoot, de.name, "api-extractor.json"),
 })) {
 	console.log(`📦 ${ moduleName }`);
-	const configPath = rootPlus(moduleName, "api-extractor.json");
+	fs.mkdirSync(rootPlus(moduleName, "build"), { recursive: true });
+	const configPath = rootPlus(moduleName, "build", "api-extractor.json");
+	const configJson = apiExtractorTemplate
+		.replace(/\${moduleName}/g, moduleName);
+	writeText(configPath, configJson);
 	const config = ExtractorConfig.loadFileAndPrepare(configPath);
 	const extractorResult = Extractor.invoke(config, {
 		localBuild: true,

@@ -1,5 +1,12 @@
 import type { Comparator } from "@rickosborne/typical";
 
+/**
+ * A result of a search through a list.  If the value was found,
+ * its index is returned.  Otherwise, the <kbd>before</kbd> value
+ * is the index before which the value could be inserted.
+ * For troubleshooting and instrumentation, also returns the
+ * number of comparisons it took to find the value.
+ */
 export type SearchResult = {
 	before?: undefined;
 	comparisons: number;
@@ -12,6 +19,9 @@ export type SearchResult = {
 	index?: undefined;
 };
 
+/**
+ * Configuration options for {@link binaryIndexOf}.
+ */
 export type BinaryIndexOfConfig = {
 	/**
 	 * The values may not be unique, and the result should be the
@@ -44,25 +54,29 @@ export type BinaryIndexOfConfig = {
 	rangeCheck?: boolean;
 };
 
+/**
+ * Perform a binary search through the given list for the given value
+ * using the given comparator.
+ */
 export const binaryIndexOf = <T>(
 	value: T,
 	items: T[],
 	comparator: Comparator<T>,
-	{ initialLeft = 0, initialRight = items.length, firstNonUnique, rangeCheck }: BinaryIndexOfConfig = {},
+	config: BinaryIndexOfConfig = {},
 ): SearchResult => {
-	let left = initialLeft;
-	let right = initialRight;
+	let left = config.initialLeft ?? 0;
+	let right = config.initialRight ?? items.length;
 	let comparisons = 0;
 	if (left >= right) {
 		return { before: right, comparisons: 0, exists: false };
 	}
 	const compareAt = (index: number): number => {
-		const other = items[index];
+		const other = items[ index ];
 		const compared = other === value ? 0 : comparator(value, other);
 		comparisons++;
 		return compared;
 	};
-	if (rangeCheck) {
+	if (config.rangeCheck) {
 		const beforeLeft = compareAt(left);
 		if (beforeLeft < 0) {
 			return { before: left, comparisons, exists: false };
@@ -77,7 +91,7 @@ export const binaryIndexOf = <T>(
 				return { before: right, comparisons, exists: false };
 			}
 			if (afterRight === 0) {
-				if (firstNonUnique) {
+				if (config.firstNonUnique) {
 					while (right > 1 && compareAt(right - 2) === 0) {
 						right--;
 					}
@@ -91,7 +105,7 @@ export const binaryIndexOf = <T>(
 		let index = (left + right) >> 1;
 		const compared = compareAt(index);
 		if (compared === 0) {
-			if (firstNonUnique) {
+			if (config.firstNonUnique) {
 				while (index > 0 && compareAt(index - 1) === 0) {
 					index--;
 				}

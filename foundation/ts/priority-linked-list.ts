@@ -1,11 +1,20 @@
-import type { Queue } from "./queue.js";
-import { singleLinkedList } from "./linked-list.js";
 import type { Comparator } from "@rickosborne/typical";
+import { singleLinkedList } from "./linked-list.js";
+import type { Queue } from "./queue.js";
 
+/**
+ * Implementation of a priority queue backed by a linked list,
+ * using the given comparator.  Sorts low-to-high, so you will
+ * need to invert comparator if you want high-to-low.
+ */
 export class PriorityLinkedList<T> implements Queue<T> {
 	private readonly list = singleLinkedList<T>();
 
 	constructor(private readonly comparator: Comparator<T>) {
+	}
+
+	public get length(): number {
+		return this.list.length;
 	}
 
 	public add(item: T): void {
@@ -27,10 +36,6 @@ export class PriorityLinkedList<T> implements Queue<T> {
 				return { keepWalking: true };
 			});
 		}
-	}
-
-	public get length(): number {
-		return this.list.length;
 	}
 
 	public peek(): T | undefined {
