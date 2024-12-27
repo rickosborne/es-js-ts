@@ -10,7 +10,7 @@ import { writePackageJson } from "./shared/write-package-json.js";
 
 const moduleNames = getModuleNames();
 const versionForModule = new Map<string, SemVer>();
-const dependenciesForModule = new Map<string, Map<string, SemVer>>();
+const dependenciesForModule = new Map<string, Map<string, SemVer | null>>();
 const packageForModule = new Map<string, PackageJsonLike>();
 
 const now = new Date();
@@ -69,7 +69,7 @@ moduleNames.forEach((moduleName) => {
 			if (target == null) {
 				throw new Error(`Cannot find dependency ${ packageName } in ${ moduleName }package.json`);
 			}
-			if (version.toString() !== bumped) {
+			if (version == null || version.toString() !== bumped) {
 				target[ packageName ] = bumped;
 				anyBumps = true;
 			}
