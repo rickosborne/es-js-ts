@@ -8,3 +8,4 @@ export * from "./ts/is-list-of.js";
 export * from "./ts/is-object.js";
 export * from "./ts/is-predicate.js";
 export * from "./ts/scrub-stack-trace.js";
+

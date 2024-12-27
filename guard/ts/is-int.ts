@@ -25,3 +25,33 @@ export const expectInt = (
 	assertInt(obj, messageOrError);
 	return obj;
 };
+
+/**
+ * Convert to an integer, if it seems like it could be done safely.
+ * See {@link https://en.wikipedia.org/wiki/Decimal_separator | decimal separator on Wikipedia}
+ * for details on how this is probably very wrong in many countries.
+ */
+export const maybeInt = (
+	text: string,
+): number | undefined => {
+	let sign = 1;
+	let clean = text.trim();
+	// This just makes the patterns below a little easier.
+	if (text.startsWith("-")) {
+		sign = -1;
+		clean = clean.substring(1);
+	}
+	clean = clean
+		.replace(/(?<=\d)[_  ](?=\d)/g, "")
+		.replace(/^0+[,'.·]0*$/, "0")
+		.replace(/^(\d+(?:,\d+)+)[.·]0*$/, (_all, digits: string) => digits.replace(/[^-0-9]/g, ""))
+		.replace(/^(\d+(?:'\d+)+)[.,]0*$/, (_all, digits: string) => digits.replace(/[^-0-9]/g, ""))
+		.replace(/^(\d+(?:\.\d+)+)[,']0*$/, (_all, digits: string) => digits.replace(/[^-0-9]/g, ""))
+		.replace(/^(\d{4,})[,'.·]0*$/, (_all, digits: string) => digits.replace(/[^-0-9]/g, ""))
+	;
+	if (/^-?(0|[1-9][0-9]*)$/.test(clean)) {
+		return parseInt(clean, 10) * sign;
+	}
+	return undefined;
+};
+

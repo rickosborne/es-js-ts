@@ -1,9 +1,9 @@
 import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
 import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
+import { comparatorBuilder } from "@rickosborne/foundation";
 import * as fs from "node:fs";
 import * as process from "node:process";
-import { comparatorBuilder } from "@rickosborne/foundation";
 import { fileExists } from "./shared/file-exists.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { projectRoot, rootPlus } from "./shared/project-root.js";
@@ -92,7 +92,7 @@ for (const moduleName of getModuleNames({
 	}
 	const api = new ApiModel().loadPackage(config.apiJsonFilePath);
 	const baseReadMe = readFile(rootPlus(moduleName, "README.md"));
-	const md: string[] = [ "***", "", "## API", "" ];
+	const md: string[] = [ "", "***", "", "## API", "" ];
 	const sortedMembers = Array.from(api.members[ 0 ].members)
 		.sort(itemSorter);
 	const membersByKind = sortedMembers.reduce((items, item) => {
@@ -109,7 +109,14 @@ for (const moduleName of getModuleNames({
 		for (const member of members) {
 			md.push(`#### ${ member.displayName }`, "", `<a id="api-${ slug(member.displayName) }"></a>`, "");
 			if (member instanceof ApiDeclaredItem) {
-				md.push("```typescript", member.excerpt.text.replace(/^export /, ""), "```", "");
+				md.push(
+					"```typescript",
+					member.excerpt.text
+						.replace(/^export declare/, "")
+						.replace(/^export type/, "type"),
+					"```",
+					"",
+				);
 			}
 			if (member instanceof ApiDocumentedItem) {
 				const comment = member.tsdocComment;
