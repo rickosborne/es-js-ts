@@ -68,7 +68,7 @@ export const intRange: IntRange = {
 			}
 		};
 		const addToArray = (gen: Generator<number, void, undefined>): IntGenerator => {
-			if (hasOwn(gen, "toArray", (f) => typeof f === "function")) {
+			if (hasOwn(gen, "toArray", (f): f is (() => number[]) => typeof f === "function")) {
 				return gen as IntGenerator;
 			}
 			return addProperty(gen, "toArray", {

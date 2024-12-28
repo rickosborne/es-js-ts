@@ -113,7 +113,8 @@ for (const moduleName of getModuleNames({
 					"```typescript",
 					member.excerpt.text
 						.replace(/^export declare/, "")
-						.replace(/^export type/, "type"),
+						.replace(/^export type/, "type")
+						.replace(/\\u[0-9a-fA-F]{4}/g, (all) => JSON.parse(`"${all}"`) as string),
 					"```",
 					"",
 				);

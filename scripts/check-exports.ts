@@ -16,7 +16,7 @@ moduleNames.forEach((moduleName) => {
 	const indexPath = path.join(projectRoot, moduleName, "index.ts");
 	if (fileExists(indexPath)) {
 		const needFiles = new Set<string>(readdirSync(tsDir, { encoding: "utf-8", recursive: true, withFileTypes: true })
-			.filter((de) => de.isFile() && de.name.endsWith(".ts") && de.name !== "index.ts" && !de.name.endsWith(".test.ts"))
+			.filter((de) => de.isFile() && de.name.endsWith(".ts") && de.name !== "index.ts" && !de.name.endsWith(".test.ts") && !de.parentPath.includes("/__test__"))
 			.map((de) => de.name.replace(/\.ts$/, "")));
 		console.log(`   Files: ${ needFiles.size }`);
 		readFileSync(indexPath, { encoding: "utf-8" })

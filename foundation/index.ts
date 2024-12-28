@@ -1,6 +1,8 @@
 export * from "./ts/add-property.js";
+export * from "./ts/as-fraction.js";
 export * from "./ts/binary-heap.js";
 export * from "./ts/binary-index-of.js";
+export * from "./ts/close-to.js";
 export * from "./ts/comparator.js";
 export * from "./ts/deep-sort.js";
 export * from "./ts/int-range.js";
@@ -11,6 +13,7 @@ export * from "./ts/priority-linked-list.js";
 export * from "./ts/priority-queue.js";
 export * from "./ts/queue.js";
 export * from "./ts/shuffle.js";
+export * from "./ts/sigil.js";
 export * from "./ts/skip-list.js";
 export * from "./ts/window.js";
 export * from "./ts/with-lazy-property.js";
