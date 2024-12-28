@@ -63,7 +63,7 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2024.12.34",
+	"version": "2024.12.35",
 	"workspaces": [
 		"typical",
 		"guard",
