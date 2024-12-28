@@ -34,7 +34,7 @@ That's fine.
 
 ### Update 2024-12-26
 
-Okay, after much, _much_ fiddling, it seems I have sound the magic words.
+Okay, after much, _much_ fiddling, it seems I have found the magic words.
 It's basically what is listed below in [Update 2024-12-23](#update-2024-12-23) but with a few extras.
 
 I had originally _not_ wanted to install the modules as dependencies of the top-level `package.json` ... but it turns out this is almost the easiest solution.
