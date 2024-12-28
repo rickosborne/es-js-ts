@@ -5,6 +5,7 @@ export * from "./ts/binary-index-of.js";
 export * from "./ts/close-to.js";
 export * from "./ts/comparator.js";
 export * from "./ts/deep-sort.js";
+export * from "./ts/format-bytes.js";
 export * from "./ts/int-range.js";
 export * from "./ts/linked-list.js";
 export * from "./ts/memoize.js";

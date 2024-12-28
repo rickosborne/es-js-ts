@@ -3,6 +3,7 @@ export * from "./ts/angle.js";
 export * from "./ts/bounding.js";
 export * from "./ts/centroid.js";
 export * from "./ts/constant.js";
+export * from "./ts/is-convex.js";
 export * from "./ts/is-shape.js";
 export * from "./ts/measure-angles.js";
 export * from "./ts/orientation.js";

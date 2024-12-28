@@ -2,15 +2,21 @@ import { signOf } from "@rickosborne/planar";
 import { closeToZero } from "./close-to.js";
 
 /**
- * Try to find a human-readable fraction for the given decimal value,
- * within a given percentage error, in the form of a
- * <kbd>[ numerator, denominator ]</kbd> tuple, where both values
- * are integers.
- * See {@link https://stackoverflow.com/a/45314258 | the original algorithm by Sjaak}.
- * If the given value is negative, it the numerator will be negative.
+ * A fraction represented as a tuple of numerator and
+ * denominator.
+ * The numerator is negative if the value is negative.
  * The denominator is always positive, and at least 1.
+ * Both values are integers, though the numerator may
+ * be Infinity or NaN as the value requires.
  */
-export const asFraction = (num: number, percentError: number = 0.000001): [ number, number ] => {
+export type FracTuple = [ numerator: number, denominator: number ];
+
+/**
+ * Try to find a human-readable fraction for the given decimal value,
+ * within a given percentage error.
+ * See {@link https://stackoverflow.com/a/45314258 | the original algorithm by Sjaak}.
+ */
+export const asFraction = (num: number, percentError: number = 0.000001): FracTuple => {
 	if (isNaN(num)) {
 		return [ NaN, 1 ];
 	}

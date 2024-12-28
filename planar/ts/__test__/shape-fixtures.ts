@@ -4,16 +4,21 @@ import { SQRT_2, SQRT_5 } from "../constant.js";
 export type ShapeFixture = {
 	centroid: Point;
 	name: string;
-	orientation: Orientation;
 	polygon: Polygon;
 	perimeter: number;
 	signedArea: number;
 } & ({
 	badPoints?: undefined;
 	convex: true;
+	firstOrientation?: undefined;
+	orientation: Orientation;
+	overallOrientation?: undefined;
 } | {
 	badPoints: number[];
 	convex: false;
+	firstOrientation?: Orientation | undefined;
+	orientation?: undefined;
+	overallOrientation?: Orientation | undefined;
 });
 
 export const fixtures = {
@@ -21,8 +26,10 @@ export const fixtures = {
 		badPoints: [ 3 ],
 		centroid: { x: 1, y: 7 / 9 },
 		convex: false,
+		firstOrientation: CCW,
 		name: "envelopeCCW",
-		orientation: CCW,
+		orientation: undefined,
+		overallOrientation: CCW,
 		perimeter: 6 + 2 * SQRT_2,
 		polygon: {
 			points: [
@@ -40,7 +47,8 @@ export const fixtures = {
 		centroid: { x: 1, y: 7 / 9 },
 		convex: false,
 		name: "envelopeCW",
-		orientation: CW,
+		firstOrientation: CW,
+		overallOrientation: CW,
 		perimeter: 6 + 2 * SQRT_2,
 		polygon: {
 			points: [
@@ -54,11 +62,12 @@ export const fixtures = {
 		signedArea: -3,
 	},
 	infinityCCW: {
-		badPoints: [ 2, 3, 4 ],
+		badPoints: [ ],
 		centroid: { x: 2, y: 1 },
 		convex: false,
 		name: "infinityCCW",
-		orientation: STRAIGHT,
+		firstOrientation: CCW,
+		overallOrientation: STRAIGHT,
 		perimeter: 8 * SQRT_2,
 		polygon: {
 			points: [
@@ -73,11 +82,12 @@ export const fixtures = {
 		signedArea: 0,
 	},
 	infinityCW: {
-		badPoints: [ 2, 3, 4 ],
+		badPoints: [ ],
 		centroid: { x: 2, y: 1 },
 		convex: false,
 		name: "infinityCW",
-		orientation: STRAIGHT,
+		firstOrientation: CW,
+		overallOrientation: STRAIGHT,
 		perimeter: 8 * SQRT_2,
 		polygon: {
 			points: [
