@@ -69,6 +69,7 @@
 		"guard",
 		"foundation",
 		"planar",
+		"term",
 		"module-template"
 	]
 }

@@ -1,12 +1,10 @@
+import { DEPENDENCIES_KEYS, type PackageJsonLike, isDryRun, pathWithPackageJson, readPackageJson, writeJson } from "@rickosborne/term";
 import { execSync } from "node:child_process";
 import * as path from "node:path";
 import { SemVer } from "semver";
-import { isDryRun } from "./shared/dry-run.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { ownDependencies } from "./shared/own-dependencies.js";
-import { projectNamespace, projectRoot, rootPlus } from "./shared/project-root.js";
-import { DEPENDENCIES_KEYS, type PackageJsonLike, readPackageJson } from "./shared/read-file.js";
-import { writePackageJson } from "./shared/write-package-json.js";
+import { projectRoot, rootPlus, withNamespace } from "./shared/project-root.js";
 
 const moduleNames = getModuleNames();
 const versionForModule = new Map<string, SemVer>();
@@ -29,7 +27,7 @@ moduleNames.forEach((moduleName) => {
 	const pkg = readPackageJson(path.join(projectRoot, moduleName));
 	packageForModule.set(moduleName, pkg);
 	const packageName = pkg.name;
-	if (packageName !== projectNamespace.concat(moduleName)) {
+	if (packageName !== withNamespace(moduleName)) {
 		throw new Error(`Bad package name of ${ moduleName }: ${ packageName }`);
 	}
 	const version = new SemVer(pkg.version);
@@ -92,13 +90,13 @@ if (updatedModules.length === 0) {
 			if (pkg == null) {
 				throw new Error(`No package: ${ moduleName }`);
 			}
-			const filePath = path.join(projectRoot, moduleName, "package.json");
-			writePackageJson(pkg, filePath);
+			const filePath = pathWithPackageJson(projectRoot, moduleName);
+			writeJson(filePath, pkg);
 		}
 		const rootPkgPath = rootPlus("package.json");
 		const rootPkg = readPackageJson(rootPkgPath);
 		rootPkg.version = bumped;
-		writePackageJson(rootPkg, rootPkgPath);
+		writeJson(rootPkgPath, rootPkg);
 		execSync("npm install", { encoding: "utf-8", stdio: "inherit" });
 		console.log(`🏷️ Tagging as v${ bumped }`);
 		execSync(`git commit -a -m "v${ bumped }"`, { encoding: "utf-8", stdio: "inherit" });

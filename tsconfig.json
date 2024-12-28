@@ -17,6 +17,12 @@
 			"@rickosborne/guard": [
 				"guard/ts/index.ts"
 			],
+			"@rickosborne/planar": [
+				"planar/ts/index.ts"
+			],
+			"@rickosborne/term": [
+				"term/ts/index.ts"
+			],
 			"@rickosborne/typical": [
 				"typical/ts/index.ts"
 			]

@@ -2,13 +2,11 @@ import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
 import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
 import { comparatorBuilder } from "@rickosborne/foundation";
+import { fileExists, readFile, writeText } from "@rickosborne/term";
 import * as fs from "node:fs";
 import * as process from "node:process";
-import { fileExists } from "./shared/file-exists.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { projectRoot, rootPlus } from "./shared/project-root.js";
-import { readFile } from "./shared/read-file.js";
-import { writeText } from "./shared/write-file.js";
 
 const itemSorter = comparatorBuilder<ApiItem>()
 	.str((item) => item.kind)
@@ -114,7 +112,7 @@ for (const moduleName of getModuleNames({
 					member.excerpt.text
 						.replace(/^export declare/, "")
 						.replace(/^export type/, "type")
-						.replace(/\\u[0-9a-fA-F]{4}/g, (all) => JSON.parse(`"${all}"`) as string),
+						.replace(/\\u[0-9a-fA-F]{4}/g, (all) => JSON.parse(`"${ all }"`) as string),
 					"```",
 					"",
 				);

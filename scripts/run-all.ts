@@ -1,10 +1,10 @@
+import { readPackageJson } from "@rickosborne/term";
 import { execSync } from "node:child_process";
 import * as console from "node:console";
 import * as path from "node:path";
 import * as process from "node:process";
 import { getModuleNames } from "./shared/module-names.js";
 import { projectNamespace, projectRoot, withoutNamespace } from "./shared/project-root.js";
-import { readPackageJson } from "./shared/read-file.js";
 
 const args = process.argv.slice(2);
 
@@ -68,7 +68,7 @@ while (modules.length > 0) {
 		if (mod.deferCount > 10) {
 			throw new Error(`Cannot figure out how build ${ mod.moduleName } with: ${ mod.dependsOn.join(" ") }`);
 		}
-		console.debug(`⏲️ Deferring ${mod.moduleName} until after ${stillNeeds.join(" ")}`);
+		console.debug(`⏲️ Deferring ${ mod.moduleName } until after ${ stillNeeds.join(" ") }`);
 		modules.push(mod);
 	} else {
 		console.log(`📦 ${ mod.moduleName }`);

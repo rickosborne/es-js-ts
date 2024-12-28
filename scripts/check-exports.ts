@@ -1,8 +1,8 @@
+import { fileExists } from "@rickosborne/term";
 import * as console from "node:console";
 import { readFileSync, readdirSync } from "node:fs";
 import * as path from "node:path";
 import * as process from "node:process";
-import { fileExists } from "./shared/file-exists.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { fromRoot, projectRoot } from "./shared/project-root.js";
 

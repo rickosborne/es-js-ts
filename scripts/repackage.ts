@@ -1,13 +1,11 @@
 import { hasOwn } from "@rickosborne/guard";
+import { DEPENDENCIES_KEYS, isDryRun, readPackageJson, writeJson } from "@rickosborne/term";
 import type { Runnable } from "@rickosborne/typical";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import * as process from "node:process";
-import { isDryRun } from "./shared/dry-run.js";
 import { getModuleNames } from "./shared/module-names.js";
 import { fromRoot, projectNamespace, projectRoot, rootPlus } from "./shared/project-root.js";
-import { DEPENDENCIES_KEYS, readPackageJson } from "./shared/read-file.js";
-import { writePackageJson } from "./shared/write-package-json.js";
 
 const moduleNames = getModuleNames();
 const inheritDependencies = process.argv.slice(2).includes("--inherit-dependencies");
@@ -74,7 +72,7 @@ for (const moduleName of moduleNames) {
 	if (errors.length === 0) {
 		console.log("   ✅ Looks okay.");
 		rewrites.push(() => {
-			writePackageJson(pkg, distPackagePath, (json) => json.replace(/("|\.\/)dist\//g, "$1"));
+			writeJson(distPackagePath, pkg, { modifyJson: (json) => json.replace(/("|\.\/)dist\//g, "$1") });
 		});
 	} else {
 		console.error(`   ‼️ Problems:\n${ errors.join("\n   ") }`);

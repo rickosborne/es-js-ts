@@ -1,15 +1,13 @@
+import { dirExists, fileExists, positionalArgs } from "@rickosborne/term";
 import { type Dirent, readdirSync } from "node:fs";
 import * as path from "node:path";
 import * as process from "node:process";
-import { dirExists } from "./dir-exists.js";
-import { fileExists } from "./file-exists.js";
-import { positionalArgs } from "./positionals.js";
 
 export type GetModuleNamesConfig = {
 	args?: string[];
 	dirEntPredicate?: (de: Dirent) => boolean,
 	rootDir?: string;
-}
+};
 
 export const getModuleNames = (
 	config: GetModuleNamesConfig = {},
