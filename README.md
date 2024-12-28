@@ -1,17 +1,18 @@
 # Rick Osborne's JS/ES/TS Tools
 
 This monorepo contains some of my Javascript/EcmaScript/TypeScript modules.
-Individual packages are published under [@rickosborne/*] on npm.
+Individual packages are published under [@rickosborne/*](https://www.npmjs.com/~rickosborne) on npm.
 
-[@rickosborne/*]: https://www.npmjs.com/~rickosborne
-
-* [typical](./typical/README.md) - Useful type helpers and type declarations
-* [guard](./guard/README.md) - Type guards for some of those types
-* [foundation](./foundation/README.md) - Basic data structures and algorithms
+* [@rickosborne/typical](https://www.npmjs.com/package/@rickosborne/typical) — Useful type helpers and type declarations.
+* [@rickosborne/guard](https://www.npmjs.com/package/@rickosborne/guard) — Type guards for some of those types.
+* [@rickosborne/foundation](https://www.npmjs.com/package/@rickosborne/foundation) — Basic data structures and algorithms, like priority queues, binary searches, and sorting.
+* [@rickosborne/planar](https://www.npmjs.com/package/@rickosborne/planar) — 2D Cartesian and graphics related data structures and algorithms, like polygon convex testing, line segment intersections, etc.
+* [@rickosborne/term](https://www.npmjs.com/package/@rickosborne/term) — Utilities for working at the terminal/console/command-line, with local files and processes, etc.
 
 ## Notes
 
 * [monorepo](./notes/monorepo.md) — How I have TypeScript + multiple modules/packages set up here.
+* [docs](./notes/docs.md) — How I generate package README files formatted for npmjs.com.
 
 ## License
 
