@@ -12,7 +12,7 @@ export const helpForParam = (names: string[], param: CommandParam): string | und
 	const handler = findParamHandler(param);
 	const placeholder = handler.placeholderForParam(param);
 	const lines: string[] = [];
-	for (const name of names.toSorted()) {
+	for (const name of names.slice().sort()) {
 		let line = "  ";
 		if (name.length === 1) {
 			line = line.concat("-", name);
