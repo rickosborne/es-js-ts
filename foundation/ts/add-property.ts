@@ -22,6 +22,8 @@ export type PropertyDescriptorFlags = {
  * instead of an accessor and/or mutator.
  */
 export type ValuePropertyDescriptor<T> = PropertyDescriptorFlags & {
+	get?: never;
+	set?: never;
 	value: T;
 };
 
@@ -29,7 +31,7 @@ export type ValuePropertyDescriptor<T> = PropertyDescriptorFlags & {
  * Partial property descriptor which includes only an accessor (getter)
  * and not a mutator, and is thus read-only.
  */
-export type GetPropertyDescriptor<T> = PropertyDescriptorFlags & { get(): T; set?: undefined; };
+export type GetPropertyDescriptor<T> = PropertyDescriptorFlags & { get(): T; set?: never; value?: never; };
 
 /**
  * Partial property descriptor which includes only a mutator (setter)
@@ -37,7 +39,7 @@ export type GetPropertyDescriptor<T> = PropertyDescriptorFlags & { get(): T; set
  * Note: TypeScript support for these kinds of properties is very
  * poor as of v5.7.
  */
-export type SetPropertyDescriptor<T> = PropertyDescriptorFlags & { get?: undefined; set(t: T): void; };
+export type SetPropertyDescriptor<T> = PropertyDescriptorFlags & { get?: never; set(t: T): void; };
 
 /**
  * Partial property descriptor which includes both an accessor (getter)
@@ -61,7 +63,7 @@ export type IfReadOnlyDescriptor<T, D extends TypedPropertyDescriptor<unknown>> 
  * Filter type <kbd>T</kbd> based on whether the property descriptor
  * <kbd>D</kbd> would produce a read-write (or write-only) property.
  */
-export type IfReadWriteDescriptor<T, D extends TypedPropertyDescriptor<unknown>> = D extends ReadOnlyPropertyDescriptor | GetPropertyDescriptor<unknown> ? never : T;
+export type IfReadWriteDescriptor<T, D extends TypedPropertyDescriptor<unknown>> = D extends ReadOnlyPropertyDescriptor | GetPropertyDescriptor<unknown> | SetPropertyDescriptor<unknown> ? never : T;
 
 /**
  * Mangle the given <kbd>Key</kbd> to <kbd>$\{Key\}IsWriteOnly</kbd> if
@@ -110,6 +112,14 @@ export type ReadWriteDescriptorsKeys<R> = R extends Record<infer K, TypedPropert
 }[K] : never;
 
 /**
+ * Produce the non-mangled keys for the given property
+ * descriptors record which would produce write-only properties.
+ */
+export type WriteOnlyDescriptorsKeys<R> = R extends Record<infer K, TypedPropertyDescriptor<unknown>> ? {
+	[key in string & K]: IfWriteOnlyDescriptor<key, R[key]>;
+}[string & K] : never;
+
+/**
  * Produce the <strong>mangled</strong> keys for the given property
  * descriptors record which would produce write-only properties.
  * See {@link RenameIfWriteOnlyDescriptor} for details on the mangling.
@@ -129,6 +139,8 @@ export type PropertyFromDescriptor<K extends string, D extends TypedPropertyDesc
 } & {
 	[key in IfReadWriteDescriptor<K, D>]: V;
 } & {
+	[key in IfWriteOnlyDescriptor<K, D>]: V;
+} & {
 	[key in RenameIfWriteOnlyDescriptor<K, D>]?: undefined;
 }) : never;
 
@@ -141,6 +153,8 @@ export type PropertiesFromDescriptors<R extends Record<string, TypedPropertyDesc
 	readonly [K in ReadOnlyDescriptorsKeys<R>]: R[K] extends TypedPropertyDescriptor<infer V> ? V : never;
 } & {
 	[K in ReadWriteDescriptorsKeys<R>]: R[K] extends TypedPropertyDescriptor<infer V> ? V : never;
+} & {
+	[K in WriteOnlyDescriptorsKeys<R>]: R[K] extends TypedPropertyDescriptor<infer V> ? V : never;
 } & {
 	[K in RenamedWriteOnlyDescriptorsKeys<R>]?: undefined;
 };

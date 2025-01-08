@@ -26,7 +26,7 @@ console.log(`spec: ${JSON.stringify(spec)}`);
 
 const config = {
 	checkLeaks: true,
-	ignore: "node_modules/**/*",
+	ignore: [ "node_modules/**/*", "attic/**/*" ],
 	recursive: true,
 	spec,
 };

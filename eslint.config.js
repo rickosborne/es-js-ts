@@ -27,9 +27,15 @@ ignores.push("**/package-lock.json");
 
 // console.debug("eslint ignores: ", ignores);
 
+/** @type {import("eslint").Linter.FlatConfig} */
 module.exports = [
 	{
 		ignores,
+	},
+	{
+		linterOptions: {
+			reportUnusedDisableDirectives: "error",
+		},
 	},
 	{
 		...js.configs.recommended,
@@ -117,7 +123,7 @@ module.exports = [
 			"eol-last": [ "error", "always" ],
 			"linebreak-style": [ "error", "unix" ],
 			"no-mixed-spaces-and-tabs": "error",
-			"no-multi-spaces": "error",
+			"no-multi-spaces": [ "error", { ignoreEOLComments: true } ],
 			"no-trailing-spaces": "error",
 			"object-curly-spacing": [ "error", "always" ],
 			"semi": [ "error", "always" ],

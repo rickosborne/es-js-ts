@@ -45,6 +45,7 @@
 		"repackage": "tsx ../scripts/repackage.ts typical",
 		"test": "mocha",
 		"test:coverage": "nyc mocha",
+		"tstyche": "tstyche --config ../tstyche.config.json --tsconfig ./tsconfig.json /typical/",
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},

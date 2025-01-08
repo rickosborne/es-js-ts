@@ -64,15 +64,15 @@ export const readPackageJson = (pathOrModuleName: string): PackageJsonLike => {
 /**
  * Reasonable order for the keys of a <kbd>package.json</kbd>'s <kbd>exports</kbd> map.
  */
-export const EXPORTS_ORDER = [ "types", "import", "require", "default" ];
+export const EXPORTS_ORDER = Object.freeze([ "types", "import", "require", "default" ] as const);
 
 /**
  * Comparator for the keys of a <kbd>package.json</kbd>'s <kbd>exports</kbd> map,
  * to ensure they are serialized in the correct order.
  */
 export const compareExportsKeys = (a: string, b: string): number => {
-	const aIndex = EXPORTS_ORDER.indexOf(a);
-	const bIndex = EXPORTS_ORDER.indexOf(b);
+	const aIndex = (EXPORTS_ORDER as readonly string[]).indexOf(a);
+	const bIndex = (EXPORTS_ORDER as readonly string[]).indexOf(b);
 	return aIndex - bIndex;
 };
 

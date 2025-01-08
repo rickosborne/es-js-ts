@@ -30,7 +30,7 @@
 		"resolveJsonModule": false,
 		"rootDir": ".",
 		"sourceMap": true,
-		"strict": false,
+		"strict": true,
 		"strictBindCallApply": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
@@ -38,6 +38,7 @@
 		"target": "esnext"
 	},
 	"exclude": [
+		"**/attic/**",
 		"**/dist/**",
 		"**/node_modules/**",
 		"**/.cache/**",

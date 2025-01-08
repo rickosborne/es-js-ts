@@ -1,19 +1,5 @@
-/**
- * Combine two types such that matching keys are overwritten entirely
- * by the Winner.
- */
-export type Overwrite<Loser, Winner> = Omit<Loser, keyof Winner> & Winner;
-
-/**
- * Map a type such that it has the same keys, but they all have <kbd>never</kbd>
- * as their value type.  Generally combined with {@link Overwrite}.
- * Used when you want to acknowledge the possible presence of those
- * properties, but you want to mask them out so they're never read
- * or written in any meaningful way.
- */
-export type NeverEvery<T> = {
-	readonly [K in keyof T]?: never;
-};
+import type { NeverEvery } from "./never-every.js";
+import type { Overwrite } from "./overwrite.js";
 
 /**
  * Produce a union of intersections, where all keys are present for
@@ -64,4 +50,4 @@ export type NeverEvery<T> = {
  * };
  * ```
  */
-export type Either<T, U> = Overwrite<NeverEvery<T>, U> | Overwrite<NeverEvery<U>, T>;
+export type Either<T extends object, U extends object> = Overwrite<NeverEvery<T>, U> | Overwrite<NeverEvery<U>, T>;

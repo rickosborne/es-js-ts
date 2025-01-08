@@ -1,4 +1,4 @@
-import { type Resolve, WithProperty } from "@rickosborne/typical";
+import type { WithProperty } from "@rickosborne/typical";
 
 /**
  * Add a property to the given object which is calculated lazily, and
@@ -8,7 +8,7 @@ export const withLazyProperty = <Target, Property, Name extends string>(
 	target: Target,
 	name: Name,
 	calculator: (t: Target) => Property,
-): Resolve<WithProperty<Target, Name, Property>> => {
+): WithProperty<Target, Name, Property> => {
 	Object.defineProperty(target, name, {
 		configurable: true,
 		enumerable: true,

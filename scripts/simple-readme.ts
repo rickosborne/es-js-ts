@@ -48,7 +48,7 @@ const mdFromDocComment = (doc: tsdoc.DocComment): string | undefined => {
 		} else if (node instanceof tsdoc.DocSoftBreak) {
 			return "\n";
 		} else if (node instanceof tsdoc.DocCodeSpan) {
-			return [ "`", node.code, "`" ].join(" ");
+			return [ "`", node.code, "`" ].join("");
 		} else if (node instanceof tsdoc.DocFencedCode) {
 			return [
 				"```typescript",
@@ -58,6 +58,13 @@ const mdFromDocComment = (doc: tsdoc.DocComment): string | undefined => {
 			].join("\n");
 		} else if (node instanceof tsdoc.DocEscapedText) {
 			return node.encodedText;
+		} else if (node instanceof tsdoc.DocInlineTag) {
+			if (node.tagName === "@link" && node.tagContent.startsWith("import(")) {
+				const id = node.tagContent.replace(/^.+?\)\./, "");
+				return `[${ id }](#api-${ slug(id) })`;
+			}
+		} else if (node instanceof tsdoc.DocBlockTag) {
+			console.dir(node);
 		}
 		throw new Error(`Unknown node kind: ${ node.kind }`);
 	};

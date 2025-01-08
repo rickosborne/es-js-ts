@@ -20,7 +20,7 @@ describe(addProperty.name, () => {
 		const stop = addProperty({ ...start }, "stop", { enumerable: true, get: () => "stop" });
 		expect(Object.keys(stop)).eql([ "start", "stop" ]);
 		expect(stop).eql({ start: "start", stop: "stop" });
-		(stop as Record<string, unknown>).stop = "restart";
+		expect(() => (stop as Record<string, unknown>).stop = "restart").throws(TypeError, "Cannot set property stop");
 		expect(stop.stop).eq("stop");
 	});
 	it("can add get-set props", () => {
@@ -64,9 +64,9 @@ describe(addProperties.name, () => {
 				writable: true,
 			},
 		});
-		(basket as Record<string, unknown>).banana = "ignored";
+		expect(() => (basket as Record<string, unknown>).banana = "ignored").throws(TypeError, "Cannot set property banana");
 		expect(basket.banana).eq("banana");
-		(basket as Record<string, unknown>).cherry = "ignored";
+		expect(() => (basket as Record<string, unknown>).cherry = "ignored").throws(TypeError, "Cannot assign to read only property 'cherry'");
 		expect(basket.cherry).eq("cherry");
 		expect(basket.durian).eq("durian");
 		basket.durian = "DURIAN";
