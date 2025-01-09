@@ -21,7 +21,7 @@
 		"noImplicitThis": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
-		// "noUncheckedSideEffectImports": true, // Not supported by api-extractor ... yet
+		"noUncheckedSideEffectImports": true,
 		"noUnusedLocals": true,
 		"paths": {
 			"@rickosborne/foundation": [
@@ -45,7 +45,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"strictBindCallApply": true,
-		// "strictBuiltinIteratorReturn": true, // Not supported by api-extractor
+		"strictBuiltinIteratorReturn": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
