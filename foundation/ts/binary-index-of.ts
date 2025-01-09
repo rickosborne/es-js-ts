@@ -71,7 +71,7 @@ export const binaryIndexOf = <T>(
 		return { before: right, comparisons: 0, exists: false };
 	}
 	const compareAt = (index: number): number => {
-		const other = items[ index ];
+		const other = items[ index ]!;
 		const compared = other === value ? 0 : comparator(value, other);
 		comparisons++;
 		return compared;

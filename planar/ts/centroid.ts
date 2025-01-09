@@ -11,12 +11,12 @@ export const centroidOfPolygon = (poly: Polygon): Point => {
 	const { points } = poly;
 	const count = points.length;
 	if (count < 2) {
-		return points[ 0 ];
+		return points[ 0 ]!;
 	}
 	if (count === 2) {
 		return {
-			x: (points[ 0 ].x + points[ 1 ].x) / 2,
-			y: (points[ 0 ].y + points[ 1 ].y) / 2,
+			x: (points[ 0 ]!.x + points[ 1 ]!.x) / 2,
+			y: (points[ 0 ]!.y + points[ 1 ]!.y) / 2,
 		};
 	}
 	let area = 0;

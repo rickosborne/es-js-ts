@@ -35,10 +35,10 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 
 	protected down(index: number): void {
 		let i = index;
-		let current: T = this.items[ index ];
+		let current: T = this.items[ index ]!;
 		while ((i * 2) <= this.count) {
 			const minChild = this.minChild(i * 2);
-			const child: T = this.items[ minChild ];
+			const child: T = this.items[ minChild ]!;
 			if (this.comparator(current, child) > 0) {
 				this.items[ i ] = child;
 				this.items[ minChild ] = current;
@@ -52,7 +52,7 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		if (index + 1 > this.count) {
 			return index;
 		}
-		if (this.comparator(this.items[ index ], this.items[ index + 1 ]) < 0) {
+		if (this.comparator(this.items[ index ]!, this.items[ index + 1 ]!) < 0) {
 			return index;
 		}
 		return index + 1;
@@ -82,7 +82,7 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	}
 
 	private removeAt(index: number): T {
-		const value = this.items[ index ];
+		const value = this.items[ index ]!;
 		const lastItem = this.items.pop() as T;
 		this.count--;
 		if (index <= this.count) {
@@ -106,7 +106,7 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		}
 		if (anyMoves) {
 			for (let i = 1; i <= this.count; i++) {
-				this.items[ i ] = values[ i ];
+				this.items[ i ] = values[ i ]!;
 			}
 		}
 	}
@@ -125,9 +125,9 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 	protected up(index: number): void {
 		let currentIndex = index;
 		while (currentIndex >= 2) {
-			const current: T = this.items[ currentIndex ];
+			const current: T = this.items[ currentIndex ]!;
 			const parentIndex = currentIndex >> 1;
-			const parent: T = this.items[ parentIndex ];
+			const parent: T = this.items[ parentIndex ]!;
 			const compared = this.comparator(current, parent);
 			if (compared === 0) {
 				this.removeAt(currentIndex);
@@ -152,17 +152,17 @@ export class ArrayBinaryMinHeap<T> implements Queue<T> {
 		const paths: number[] = [ 1 ];
 		while (paths.length > 0) {
 			let index = paths.shift()!;
-			let value = this.items[ index ];
+			let value = this.items[ index ]!;
 			const smaller = paths
-				.map((itemIndex, pathIndex) => ({ itemIndex, otherValue: this.items[ itemIndex ], pathIndex }))
+				.map((itemIndex, pathIndex) => ({ itemIndex, otherValue: this.items[ itemIndex ]!, pathIndex }))
 				.filter(({ otherValue }) => this.comparator(otherValue, value) < 0);
 			if (smaller.length > 1) {
 				paths.push(index);
 			} else {
 				if (smaller.length === 1) {
-					paths[ smaller[ 0 ].pathIndex ] = index;
-					index = smaller[ 0 ].itemIndex;
-					value = smaller[ 0 ].otherValue;
+					paths[ smaller[ 0 ]!.pathIndex ] = index;
+					index = smaller[ 0 ]!.itemIndex;
+					value = smaller[ 0 ]!.otherValue;
 				}
 				yield [ value, index ];
 				const child1Index = index * 2;

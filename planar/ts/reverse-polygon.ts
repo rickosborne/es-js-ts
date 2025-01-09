@@ -10,7 +10,7 @@ export const reversePolygon = <P extends Polygon>(poly: P): P => {
 		return poly;
 	}
 	const newPoints = poly.points.slice(1).reverse();
-	newPoints.unshift(poly.points[ 0 ]);
+	newPoints.unshift(poly.points[ 0 ]!);
 	return {
 		...poly,
 		points: newPoints.map((p) => {

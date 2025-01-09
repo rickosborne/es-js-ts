@@ -101,7 +101,7 @@ export const commandParams = <Spec extends CommandParamsSpec>(
 				typedValue = toReturnType(arg, positional.spec);
 			} else {
 				let no = false;
-				let name: string | undefined;
+				let name: string;
 				if (arg.startsWith("--no-")) {
 					name = arg.substring(5);
 					no = true;
@@ -115,7 +115,7 @@ export const commandParams = <Spec extends CommandParamsSpec>(
 				}
 				let suffix: string | undefined;
 				if (name.includes("=")) {
-					[ name, suffix ] = name.split("=", 2);
+					[ name, suffix ] = name.split("=", 2) as [string, string];
 				}
 				const specs = Object.entries(spec)
 					.filter(([ n, s ]) => "name" in s && s.name === name || ("names" in s && (s.names?.includes(name) ?? false)) || n === name);
@@ -182,7 +182,9 @@ export const commandParams = <Spec extends CommandParamsSpec>(
 			.map(([ key ]) => key);
 		const missing = requiredKeys.filter((key) => !(key in result));
 		if (missing.length > 0) {
-			const message = missing.map((key) => labelForParam(spec[ key ])).join(" ");
+			const message = missing
+				.map((key) => spec[key])
+				.map((p) => p == null ? "" : labelForParam(p)).join(" ");
 			// noinspection ExceptionCaughtLocallyJS
 			throw new Error(`Missing required params: ${ message }`);
 		}

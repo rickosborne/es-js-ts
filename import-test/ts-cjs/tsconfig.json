@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"composite": false,
+		"incremental": false,
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"outDir": "dist",
+		"rootDir": "."
+	},
+	"include": [
+		"**/*.cts"
+	]
+}

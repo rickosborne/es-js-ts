@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { hasOwn } from "@rickosborne/guard";
+import { assertDefined, hasOwn } from "@rickosborne/guard";
 import { type DoubleLinkedList, type List, doubleLinkedList, singleLinkedList } from "../linked-list.js";
 import { expect } from "chai";
 
@@ -86,6 +86,7 @@ const testType = <T>(
 			expect(index, "index").eq(expectedIndex);
 			expectedIndex++;
 			expect(value, "value").eql(expectedValues[index]);
+			assertDefined(expectedLists[index], "expectedLists[index]");
 			expectListToBe(expectedLists[index], `#${index}`);
 			if (index === 0) {
 				return { insertBefore: a, keepWalking: true };

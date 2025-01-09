@@ -98,7 +98,7 @@ for (const moduleName of getModuleNames({
 	const api = new ApiModel().loadPackage(config.apiJsonFilePath);
 	const baseReadMe = readFile(rootPlus(moduleName, "README.md"));
 	const md: string[] = [ "", "***", "", "## API", "" ];
-	const sortedMembers = Array.from(api.members[ 0 ].members)
+	const sortedMembers = Array.from(api.members[ 0 ]!.members)
 		.sort(itemSorter);
 	const membersByKind = sortedMembers.reduce((items, item) => {
 		let existing = items.get(item.kind);

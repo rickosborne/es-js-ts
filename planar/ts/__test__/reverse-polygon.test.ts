@@ -28,8 +28,8 @@ describe(reversePolygon.name, () => {
 		});
 		const reversed = reversePolygon(measured);
 		for (let i = 0; i < 4; i++) {
-			const original = measured.points[i];
-			const flipped = reversed.points[i === 0 ? 0 : (4 - i)];
+			const original = measured.points[i]!;
+			const flipped = reversed.points[i === 0 ? 0 : (4 - i)]!;
 			const expected = {
 				...original,
 				orientation: -original.orientation,

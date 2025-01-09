@@ -15,7 +15,7 @@ export const memoizeSupplier = <T>(supplier: Supplier<T>): Supplier<T> => {
 			}
 			return value;
 		},
-	}[ name ];
+	}[ name ]!;
 };
 
 /**

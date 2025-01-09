@@ -1,15 +1,28 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
+		"alwaysStrict": true,
+		"baseUrl": "./",
+		"composite": true,
+		"emitDecoratorMetadata": true,
 		"esModuleInterop": false,
+		"exactOptionalPropertyTypes": true,
+		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
 		"module": "None",
 		"moduleResolution": "Node",
+		"newLine": "LF",
 		"noEmit": true,
+		"noEmitOnError": true,
+		"noFallthroughCasesInSwitch": true,
 		"noImplicitAny": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		// "noUncheckedSideEffectImports": true, // Not supported by api-extractor ... yet
+		"noUnusedLocals": true,
 		"paths": {
 			"@rickosborne/foundation": [
 				"foundation/ts/index.ts"
@@ -32,6 +45,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"strictBindCallApply": true,
+		// "strictBuiltinIteratorReturn": true, // Not supported by api-extractor
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,

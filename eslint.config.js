@@ -7,7 +7,7 @@ const editorConfig = require("eslint-plugin-editorconfig");
 const globals = require("globals");
 const stylistic = require("@stylistic/eslint-plugin-js");
 const fs = require("node:fs");
-const requireExtensions = require("eslint-plugin-require-extensions");
+// const requireExtensions = require("eslint-plugin-require-extensions");
 const markdown = require("eslint-plugin-markdown");
 const path = require("node:path");
 
@@ -83,7 +83,7 @@ module.exports = [
 			"@stylistic/js": stylistic,
 			editorConfig,
 			markdown,
-			"require-extensions": requireExtensions,
+			// "require-extensions": requireExtensions,
 			sortKeysFix,
 		},
 	},

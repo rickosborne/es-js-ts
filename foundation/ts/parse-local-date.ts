@@ -49,9 +49,9 @@ export const parseLocalDate = (text: string, config: ParseLocalDateConfig = {}):
 	}
 	const [ datePart, yearText, monthText, dayText ] = dateMatch;
 	remain = remain.substring(datePart.length);
-	const year = parseInt(yearText, 10);
-	const month = parseInt(monthText, 10);
-	const day = parseInt(dayText, 10);
+	const year = parseInt(yearText!, 10);
+	const month = parseInt(monthText!, 10);
+	const day = parseInt(dayText!, 10);
 	let utc = false;
 	let hour = 0;
 	let min = 0;
@@ -68,8 +68,8 @@ export const parseLocalDate = (text: string, config: ParseLocalDateConfig = {}):
 		const timeMatch = /^([01]\d|2[0-4]):?([0-5]\d|6[01])(?::?([0-5]\d|6[01])(?:\.?(\d+))?)?/.exec(remain);
 		if (timeMatch != null) {
 			const [ timePart, hourText, minText, secText, msText ] = timeMatch;
-			hour = parseInt(hourText, 10);
-			min = parseInt(minText, 10);
+			hour = parseInt(hourText!, 10);
+			min = parseInt(minText!, 10);
 			sec = secText == null || secText === "" ? 0 : parseInt(secText, 10);
 			ms = msText == null || msText === "" ? 0 : parseFloat("0.".concat(msText)) * 1000;
 			remain = remain.substring(timePart.length);
@@ -84,7 +84,7 @@ export const parseLocalDate = (text: string, config: ParseLocalDateConfig = {}):
 			if (zoneMatch != null) {
 				utc = true;
 				const [ zonePart, sign, hourText, minText ] = zoneMatch;
-				const offHour = parseInt(hourText, 10);
+				const offHour = parseInt(hourText!, 10);
 				const offMin = minText == null || minText === "" ? 0 : parseInt(minText, 10);
 				let offsetMin = (offHour * 60) + offMin;
 				if (sign === "-") {

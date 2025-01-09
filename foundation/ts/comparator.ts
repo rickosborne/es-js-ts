@@ -149,9 +149,9 @@ export const comparatorBuilder = <T>(): ComparatorBuilder<T> => {
 	const ops: [ (t: T) => unknown, Comparator<unknown> ][] = [];
 	const withPrevious = (modifier: (comparator: Comparator<unknown>) => Comparator<unknown>): void => {
 		const lastIndex = ops.length - 1;
-		const comparator = ops[ lastIndex ][ 1 ];
+		const comparator = ops[ lastIndex ]![ 1 ];
 		assertDefined(comparator, "Prior comparator");
-		ops[ lastIndex ][ 1 ] = modifier(comparator);
+		ops[ lastIndex ]![ 1 ] = modifier(comparator);
 	};
 	const builder: ComparatorBuilder<T> = {
 		build(): Comparator<T> {

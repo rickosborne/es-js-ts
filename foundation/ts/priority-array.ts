@@ -41,7 +41,7 @@ export class PriorityArray<T> implements Queue<T> {
 
 	public remove(item: T): void {
 		for (let i = this.items.length - 1; i >= 0; i--) {
-			const other: T = this.items[ i ];
+			const other: T = this.items[ i ]!;
 			const comparison = this.comparator(item, other);
 			if (comparison === 0) {
 				this.items.splice(i, 1);

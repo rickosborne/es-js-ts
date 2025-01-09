@@ -17,7 +17,7 @@ const testType = <T>(
 	config: Partial<Config>,
 ): void => {
 	const queue = fn(comparator);
-	const [ a, b, c, d, e ] = config.reverse ? items.reverse() : items;
+	const [ a, b, c, d, e ] = config.reverse ? items.reverse() as typeof items : items;
 
 	const expectArrayToBe = (items: T[], extra = ""): void => {
 		expect(queue.length, `expectArrayToBe:length${ extra }`).eq(items.length);

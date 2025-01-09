@@ -70,13 +70,13 @@ describe(measureAngles.name, () => {
 			const radC = PI - radA - angle.rad;
 			const withoutAngles: Polygon = { points: [ a, b, c ] };
 			const poly = measureAngles(withoutAngles);
-			expect(poly.points.every((p, n) => pointEq(p, withoutAngles.points[ n ])));
+			expect(poly.points.every((p, n) => pointEq(p, withoutAngles.points[ n ]!)));
 			const [ angleA, angleB, angleC ] = poly.points;
-			expect(prettyRad(angleA.rad), "A.rad").eq(prettyRad(radA));
-			expect(prettyRad(angleB.rad), "B.rad").eq(prettyRad(angle.rad));
-			expect(angleB.area, "B.area").closeTo(angle.area, 0.0001);
-			expect(angleB.orientation, "B.orientation").eq(angle.orientation);
-			expect(prettyRad(angleC.rad), "C.rad").eq(prettyRad(radC));
+			expect(prettyRad(angleA!.rad), "A.rad").eq(prettyRad(radA));
+			expect(prettyRad(angleB!.rad), "B.rad").eq(prettyRad(angle.rad));
+			expect(angleB!.area, "B.area").closeTo(angle.area, 0.0001);
+			expect(angleB!.orientation, "B.orientation").eq(angle.orientation);
+			expect(prettyRad(angleC!.rad), "C.rad").eq(prettyRad(radC));
 		});
 	}
 });

@@ -21,10 +21,10 @@ export function* window2<T>(
 ): Generator<Readonly<[T, T, number, number]>, void, undefined> {
 	const count = items.length;
 	let currentIndex = 0;
-	let currentItem = items[0];
+	let currentItem = items[0]!;
 	for (let i = 1; i <= count; i++) {
 		const nextIndex = i === count ? 0 : i;
-		const nextItem = items[nextIndex];
+		const nextItem = items[nextIndex]!;
 		yield [ currentItem, nextItem, currentIndex, nextIndex ];
 		currentIndex = nextIndex;
 		currentItem = nextItem;
@@ -59,12 +59,12 @@ export function* window3<T>(
 ): Generator<Readonly<[T, T, T, number, number, number]>, void, undefined> {
 	const count = items.length;
 	let previousIndex = count - 1;
-	let previousItem = items[previousIndex];
+	let previousItem = items[previousIndex]!;
 	let currentIndex = 0;
-	let currentItem = items[0];
+	let currentItem = items[0]!;
 	for (let i = 1; i <= count; i++) {
 		const nextIndex = i === count ? 0 : i;
-		const nextItem = items[nextIndex];
+		const nextItem = items[nextIndex]!;
 		yield [ previousItem, currentItem, nextItem, previousIndex, currentIndex, nextIndex ];
 		previousIndex = currentIndex;
 		previousItem = currentItem;

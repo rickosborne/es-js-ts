@@ -24,8 +24,8 @@ export const shuffle = <T>(
 	const n = list.length;
 	for (let i = 0; i < n; i++) {
 		const j = Math.trunc(random01() * (i + 1));
-		const t = list[ i ];
-		into[ i ] = into[ j ];
+		const t = list[ i ]!;
+		into[ i ] = into[ j ]!;
 		into[ j ] = t;
 	}
 	return into;
