@@ -1,0 +1,59 @@
+{
+	"buildOptions": {
+		// "traceResolution": true,
+		"verbose": true
+	},
+	"compilerOptions": {
+		"alwaysStrict": true,
+		"baseUrl": "./",
+		"composite": false,
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": false,
+		"exactOptionalPropertyTypes": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		"module": "None",
+		"moduleResolution": "Node",
+		"newLine": "LF",
+		"noEmit": true,
+		"noEmitOnError": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"noUncheckedSideEffectImports": true,
+		"noUnusedLocals": true,
+		"paths": {
+			"@rickosborne/clamp": ["packages/clamp/index.ts"],
+			"@rickosborne/foundation": ["packages/foundation/index.ts"],
+			"@rickosborne/guard": ["packages/guard/index.ts"],
+			"@rickosborne/planar": ["packages/planar/index.ts"],
+			"@rickosborne/term": ["packages/term/index.ts"],
+			"@rickosborne/typical": ["packages/typical/index.ts"]
+		},
+		"resolveJsonModule": false,
+		"rootDir": "./",
+		"sourceMap": true,
+		"strict": true,
+		"strictBindCallApply": true,
+		"strictBuiltinIteratorReturn": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"target": "esnext"
+	},
+	"exclude": [
+		"**/.cache/**",
+		"**/.idea/**",
+		"**/.nyc_output/**",
+		"**/attic/**",
+		"**/build/**",
+		"**/coverage/**",
+		"**/dist/**",
+		"**/node_modules/**"
+	]
+}

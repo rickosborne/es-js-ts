@@ -2,8 +2,8 @@
 	"$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
 	"apiReport": {
 		"enabled": false,
-		"reportFolder": "<projectFolder>/dist/",
-		"reportTempFolder": "<projectFolder>/build/api/",
+		"reportFolder": "<projectFolder>",
+		"reportTempFolder": "<projectFolder>/../../build/${moduleName}/api",
 		"reportVariants": [
 			"public"
 		]
@@ -11,16 +11,24 @@
 	"bundledPackages": [
 		"@rickosborne/*"
 	],
+	"compiler": {
+		"tsconfigFilePath": "<projectFolder>/../../src/tsconfig.build.json"
+	},
 	"docModel": {
-		"apiJsonFilePath": "<projectFolder>/build/api/api.json",
+		"apiJsonFilePath": "<projectFolder>/../../build/${moduleName}/api/api.json",
 		"enabled": true,
-		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/${moduleName}"
+		"projectFolderUrl": "https://github.com/rickosborne/es-js-ts/tree/main/src/packages/${moduleName}"
 	},
 	"dtsRollup": {
 		"enabled": false
 	},
-	"mainEntryPointFilePath": "<projectFolder>/dist/types/index.d.ts",
+	"mainEntryPointFilePath": "<projectFolder>/index.d.ts",
 	"messages": {
+		"compilerMessageReporting": {
+			"default": {
+				"logLevel": "warning"
+			}
+		},
 		"extractorMessageReporting": {
 			"ae-forgotten-export": {
 				"logLevel": "none"
@@ -36,11 +44,20 @@
 			},
 			"ae-wrong-input-file-type": {
 				"logLevel": "none"
+			},
+			"default": {
+				"logLevel": "warning"
+			}
+		},
+		"tsdocMessageReporting": {
+			"default": {
+				"logLevel": "warning"
 			}
 		}
 	},
 	"newlineKind": "lf",
+	"projectFolder": "../../dist/${moduleName}",
 	"tsdocMetadata": {
-		"tsdocMetadataFilePath": "<projectFolder>/dist/tsdoc-metadata.json"
+		"tsdocMetadataFilePath": "<projectFolder>/../../build/${moduleName}/tsdoc-metadata.json"
 	}
 }

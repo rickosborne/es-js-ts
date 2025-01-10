@@ -1,8 +1,0 @@
-{
-	"compilerOptions": {
-		"baseUrl": ".",
-		"outDir": "dist/types",
-		"rootDir": "."
-	},
-	"extends": "../tsconfig.types.json"
-}

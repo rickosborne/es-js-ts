@@ -1,0 +1,33 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's collection of 2D Cartesian and graphics related data structures and algorithms.",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"graphics",
+		"2D",
+		"algorithms",
+		"data structures"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/planar",
+	"private": true,
+	"readme": "README.md",
+	"repository": {
+		"directory": "src/packages/planar",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.7"
+}

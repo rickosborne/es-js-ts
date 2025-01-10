@@ -1,0 +1,17 @@
+{
+	"exclude": [
+		"**/.cache/**",
+		"**/.idea/**",
+		"**/.nyc_output/**",
+		"**/attic/**",
+		"**/build/**",
+		"**/coverage/**",
+		"**/dist/**",
+		"**/node_modules/**",
+		"**/__test__/**",
+		"**/test-d/**",
+		"**/*.test.ts",
+		"**/*.test-d.ts"
+	],
+	"extends": "./tsconfig.base.json"
+}

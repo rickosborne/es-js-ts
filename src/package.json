@@ -1,0 +1,73 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"description": "Rick Osborne's JS/ES/TS Tools",
+	"devDependencies": {
+		"@eslint/js": "8.57.1",
+		"@microsoft/api-extractor": "7.49.1",
+		"@microsoft/api-extractor-model": "7.30.2",
+		"@stylistic/eslint-plugin-js": "1.8.1",
+		"@tsconfig/node22": "22.0.0",
+		"@types/chai": "4.3.16",
+		"@types/eslint__js": "8.42.3",
+		"@types/mocha": "10.0.10",
+		"@types/node": "22.10.5",
+		"@typescript-eslint/eslint-plugin": "6.21.0",
+		"@typescript-eslint/parser": "6.21.0",
+		"chai": "4.5.0",
+		"cpr": "3.0.1",
+		"esbuild": "0.24.2",
+		"eslint": "8.57.1",
+		"eslint-plugin-editorconfig": "4.0.3",
+		"eslint-plugin-jsonc": "2.18.2",
+		"eslint-plugin-markdown": "5.1.0",
+		"eslint-plugin-require-extensions": "0.1.3",
+		"eslint-plugin-sort-keys-fix": "1.1.2",
+		"expect-type": "1.1.0",
+		"globals": "15.14.0",
+		"mocha": "11.0.1",
+		"npm-check-updates": "17.1.13",
+		"nyc": "17.1.0",
+		"p-limit": "6.2.0",
+		"rimraf": "6.0.1",
+		"semver": "7.6.3",
+		"source-map-support": "0.5.21",
+		"tstyche": "3.3.1",
+		"tsx": "4.19.2",
+		"typescript": "5.7.3"
+	},
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/js-es-ts",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"scripts": {
+		"barrel": "tsx ./scripts/barrels.ts",
+		"build": "tsx ./scripts/build-packages.ts",
+		"clean": "rimraf ./build && rimraf ./dist",
+		"doc": "tsx ./scripts/simple-readme.ts",
+		"lint": "eslint .",
+		"lint:fix": "eslint --fix .",
+		"precommit": "npm run lint && npm run clean && npm run build && npm run test && npm run tstyche && npm run pub",
+		"pub": "npm run --workspaces --if-present pub:dry-run",
+		"pub:commit": "npm run --workspaces --if-present pub",
+		"reinstall": "rimraf ./node_modules && npm ci",
+		"reinstall:full": "rimraf ./node_modules package-lock.json && npm install",
+		"release": "tsx scripts/bump-version.ts --dry-run",
+		"release:commit": "tsx scripts/bump-version.ts",
+		"test": "mocha",
+		"test:coverage": "nyc mocha",
+		"tstyche": "tstyche packages",
+		"type-check": "tsc --noEmit",
+		"upgrade:check": "npm-check-updates"
+	},
+	"version": "2025.1.7"
+}

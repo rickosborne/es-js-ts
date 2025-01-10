@@ -1,0 +1,36 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/term": "file:../term",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's command-line parameter handling tools",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"files",
+		"terminal",
+		"console",
+		"command-line",
+		"arguments",
+		"parameters"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/clamp",
+	"private": true,
+	"readme": "README.md",
+	"repository": {
+		"directory": "src/packages/clamp",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.7"
+}

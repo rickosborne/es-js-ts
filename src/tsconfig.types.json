@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"outDir": "${configDir}/../build"
+	},
+	"extends": "./tsconfig.build.json",
+	"include": [
+		"packages"
+	]
+}

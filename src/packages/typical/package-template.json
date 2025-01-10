@@ -1,0 +1,25 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"description": "Rick Osborne's collection of type definitions which I've found helpful across many projects.",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"type definitions",
+		"type declarations"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/typical",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/typical",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.7"
+}

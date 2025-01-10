@@ -1,0 +1,28 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's collection of type guards.",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"guards",
+		"type guards"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/guard",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/guard",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.7"
+}

@@ -1,8 +1,0 @@
-{
-	"compilerOptions": {
-		"baseUrl": ".",
-		"outDir": "dist/cjs",
-		"rootDir": "."
-	},
-	"extends": "../tsconfig.cjs.json"
-}

@@ -1,7 +1,6 @@
+import { concatRegExp } from "@rickosborne/foundation";
 import * as strictAssert from "node:assert/strict";
 import { describe, it } from "node:test";
-
-import {concatRegExp} from "@rickosborne/foundation";
 import { regExpComparator } from "./ts-cjs-fn.cjs";
 
 describe(concatRegExp.name, () => {
