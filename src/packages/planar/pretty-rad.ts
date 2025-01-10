@@ -1,4 +1,4 @@
-import { INFINITY_SIGIL, PI_SIGIL, asFraction, closeToZero } from "@rickosborne/foundation";
+import { asFraction, closeToZero, INFINITY_SIGIL, PI_SIGIL } from "@rickosborne/foundation";
 import { EPSILON, PI } from "./constant.js";
 import { signOf } from "./sign-of.js";
 

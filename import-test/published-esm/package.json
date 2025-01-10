@@ -1,0 +1,12 @@
+{
+	"devDependencies": {
+		"@rickosborne/guard": "2025.1.7"
+	},
+	"private": true,
+	"scripts": {
+		"clean": "rimraf ./node_modules && rimraf ./package-lock.json",
+		"reinstall": "npm install --workspace",
+		"test": "node --test"
+	},
+	"type": "module"
+}

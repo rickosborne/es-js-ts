@@ -1,21 +1,21 @@
 {
 	"devDependencies": {
-		"@rickosborne/foundation": "file://../../foundation/dist",
-		"@rickosborne/guard": "file://../../guard/dist",
-		"@rickosborne/typical": "file://../../typical/dist",
+		"@rickosborne/foundation": "file://../../integration/foundation",
+		"@rickosborne/guard": "file://../../integration/guard",
+		"@rickosborne/typical": "file://../../integration/typical",
 		"@types/node": "22.10.5",
+		"tstyche": "3.3.1",
+		"tsx": "4.19.2",
 		"typescript": "5.7.3"
-	},
-	"exports": {
-		"@rickosborne/foundation": "file://../../foundation/dist",
-		"@rickosborne/guard": "file://../../guard/dist",
-		"@rickosborne/typical": "file://../../typical/dist"
 	},
 	"name": "ts-node16",
 	"private": true,
 	"scripts": {
-		"build": "npm run type-check && tsc --build --verbose ./tsconfig.json",
-		"test": "tsx --tsconfig ./tsconfig.json ./ts-node16.test.mts",
+		"build": "tsc --build --verbose ./tsconfig.json",
+		"clean": "rimraf ./node_modules && rimraf ./package-lock.json && rimraf ./dist",
+		"reinstall": "npm install --workspace",
+		"test": "tsx --test && tstyche",
+		"tstyche": "tstyche",
 		"type-check": "tsc --build --noEmit --verbose ./tsconfig.json"
 	},
 	"type": "module"

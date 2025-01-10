@@ -1,6 +1,7 @@
 import { window3 } from "@rickosborne/foundation";
 import type { Either } from "@rickosborne/typical";
-import { CCW, CW, Orientation, type Polygon, STRAIGHT, type Sign } from "./2d.js";
+import type { Polygon, Sign } from "./2d.js";
+import { CCW, CW, Orientation, STRAIGHT } from "./2d.js";
 import { angleMeasures } from "./measure-angles.js";
 
 type SignTracker = {
@@ -11,7 +12,7 @@ type SignTracker = {
 
 /**
  * Used by {@link fastIsConvex}, this keeps track of sign flips.
- * @returns {false} if the flip count is too high
+ * @returns `false` if the flip count is too high
  */
 const trackSign = (tracker: SignTracker, value: number): boolean => {
 	const { last } = tracker;

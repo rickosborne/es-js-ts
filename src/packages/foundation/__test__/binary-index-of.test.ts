@@ -1,7 +1,8 @@
+import type { Comparator } from "@rickosborne/typical";
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { type BinaryIndexOfConfig, type SearchResult, binaryIndexOf } from "../binary-index-of.js";
-import type { Comparator } from "@rickosborne/typical";
+import type { BinaryIndexOfConfig, SearchResult } from "../binary-index-of.js";
+import { binaryIndexOf } from "../binary-index-of.js";
 
 const numericAsc: Comparator<number> = (a, b) => a - b;
 const numbers = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ];

@@ -1,8 +1,0 @@
-{
-	"compilerOptions": {
-		"composite": false,
-		"incremental": false,
-		"noEmit": true
-	},
-	"extends": "@tsconfig/node22/tsconfig.json"
-}

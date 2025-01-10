@@ -3,7 +3,7 @@ import { DEPENDENCIES_KEYS, isDryRun, writeJson } from "@rickosborne/term";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import { readdirSync } from "node:fs";
-import { deepCopy } from "../../packages/foundation/deep-copy.js";
+import { deepCopy } from "@rickosborne/foundation";
 import { distPlus, projectNamespace } from "./project-root.js";
 
 export type RepackageModuleOptions = {

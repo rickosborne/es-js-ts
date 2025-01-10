@@ -9,6 +9,7 @@
 		"rootDir": "."
 	},
 	"include": [
-		"**/*.cts"
+		"ts-cjs.test.cts",
+		"ts-cjs-fn.cts"
 	]
 }

@@ -1,9 +1,31 @@
-import { copyRecursiveSync } from "@rickosborne/term";
-import { type BuildOptions, build as esbuild } from "esbuild";
+import { copyRecursiveSync, readFile, writeText } from "@rickosborne/term";
+import type { BuildOptions } from "esbuild";
+import { build as esbuild } from "esbuild";
 import * as console from "node:console";
 import * as fs from "node:fs";
+import { readdirSync } from "node:fs";
 import * as path from "node:path";
 import { buildPlus, distPlus, packagesPlus, srcPlus } from "./project-root.js";
+
+const fixImports = (filePath: string) => {
+	let ext: string;
+	if (filePath.endsWith(".cjs")) {
+		ext = ".cjs";
+	} else if (filePath.endsWith(".mjs")) {
+		ext = ".mjs";
+	} else if (filePath.endsWith(".d.ts")) {
+		ext = "";
+	} else {
+		throw new Error(`Neither cjs nor mjs: ${ filePath }`);
+	}
+	const original = readFile(filePath);
+	const modified = original
+		.replace(/(?<= from ")(\.\.?\/[^"]+?)\.js(?=")/g, `$1${ ext }`)
+		.replace(/(?<=(?:require|import)\(")(\.\.?\/[^"]+?)\.js(?="\))/g, `$1${ ext }`);
+	if (modified !== original) {
+		writeText(filePath, modified, { silent: true });
+	}
+};
 
 export async function esbuildModule(
 	moduleName: string,
@@ -47,10 +69,14 @@ export async function esbuildModule(
 		tsconfig: srcPlus("tsconfig.build.json"),
 	});
 	const copied = copyRecursiveSync(buildPlus("packages", moduleName), distModule);
-	console.log(`   ☑️ Copied ${moduleName} types: ${ copied.fileCount / 2 }`);
+	console.log(`   ☑️ Copied ${ moduleName } types: ${ copied.fileCount / 2 }`);
 	await Promise.all([
 		cjsPromise,
 		esmPromise,
 	]);
-	console.log(`   ☑️ Built ${moduleName}`);
+	readdirSync(distModule, { encoding: "utf8", recursive: false, withFileTypes: true })
+		.filter((de) => de.isFile() && (de.name.endsWith(".cjs") || de.name.endsWith(".mjs") || de.name === "index.d.ts"))
+		.map((de) => path.join(de.parentPath, de.name))
+		.forEach((filePath) => fixImports(filePath));
+	console.log(`   ☑️ Built ${ moduleName }`);
 }

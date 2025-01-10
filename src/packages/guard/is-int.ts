@@ -1,4 +1,5 @@
-import { type MessageOrError, errorFromMessageOrError } from "./error-from-message.js";
+import type { MessageOrError } from "./error-from-message.js";
+import { errorFromMessageOrError } from "./error-from-message.js";
 
 /**
  * Check whether the given value is not just numeric, but is

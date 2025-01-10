@@ -3,6 +3,7 @@ export * from "./copy-recursive.js";
 export * from "./dir-exists.js";
 export * from "./dry-run.js";
 export * from "./env-or-arg.js";
+export * from "./file-exists-error.js";
 export * from "./file-exists.js";
 export * from "./file-missing-error.js";
 export * from "./not-file-error.js";

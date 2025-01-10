@@ -3,6 +3,8 @@ import * as console from "node:console";
 import type { Dirent } from "node:fs";
 import { copyFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join as pathJoin, relative } from "node:path";
+import { FileExistsError } from "./file-exists-error.js";
+import { fileExists } from "./file-exists.js";
 
 /**
  * Options for {@link copyRecursiveSync}.
@@ -32,6 +34,11 @@ export type CopyRecursiveOptions = {
 	 * Callback when a file or directory is copied, such as for logging.
 	 */
 	onCopy?: (sourceDirEnt: Dirent, destination: string) => void;
+	/**
+	 * Overwrite a file if it already exists.
+	 * @defaultValue false
+	 */
+	overwrite?: boolean;
 	/**
 	 * Override the implementation of the read-directory operation.
 	 * Mostly used for unit tests.
@@ -67,6 +74,7 @@ export const copyRecursiveSync = (
 		dirCount: 0,
 		totalCount: 0,
 	};
+	const overwrite = options.overwrite ?? false;
 	const readDir = options.readdirSync ?? readdirSync;
 	const copyFile = options.copyFileSync ?? copyFileSync;
 	const mkdir = options.mkdirSync ?? mkdirSync;
@@ -81,6 +89,9 @@ export const copyRecursiveSync = (
 			const destPath = pathJoin(d, item.name);
 			const sourcePath = pathJoin(item.parentPath, item.name);
 			if (item.isFile() || item.isSymbolicLink()) {
+				if (fileExists(destPath) && !overwrite) {
+					throw new FileExistsError(destPath, sourcePath);
+				}
 				copyFile(sourcePath, destPath);
 				result.fileCount++;
 				result.totalCount++;

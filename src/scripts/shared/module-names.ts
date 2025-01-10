@@ -1,8 +1,8 @@
-import { DEPENDENCIES_KEYS, type PackageJsonLike, fileExists, positionalArgs, readPackageJson } from "@rickosborne/term";
+import { DEPENDENCIES_KEYS, fileExists, type PackageJsonLike, positionalArgs, readPackageJson } from "@rickosborne/term";
 import type { Comparator } from "@rickosborne/typical";
 import { type Dirent, readdirSync } from "node:fs";
 import * as process from "node:process";
-import { packageTemplate, packagesPlus, packagesRoot } from "./project-root.js";
+import { packagesPlus, packagesRoot, packageTemplate } from "./project-root.js";
 
 export interface GetModuleNamesConfig {
 	args?: string[];

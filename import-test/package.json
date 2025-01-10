@@ -3,17 +3,9 @@
 		"name": "Rick Osborne",
 		"url": "https://rickosborne.org"
 	},
-	"dependencies": {
-		"@rickosborne/foundation": "2024.12.32",
-		"@rickosborne/guard": "2024.12.32",
-		"@rickosborne/typical": "2024.12.32"
-	},
 	"description": "Private project with its own configuration used for testing published modules",
 	"devDependencies": {
-		"@tsconfig/node22": "22.0.0",
-		"@types/node": "22.10.2",
-		"tsx": "4.19.2",
-		"typescript": "5.7.2"
+		"rimraf": "6.0.1"
 	},
 	"engines": {
 		"node": ">=14"
@@ -22,7 +14,15 @@
 	"name": "@rickosborne/import-test",
 	"private": true,
 	"scripts": {
-		"test": "tsx test.ts"
+		"clean": "npm run --workspaces --if-present clean && rimraf ./node_modules ./package-lock.json",
+		"reinstall": "npm install --install-strategy=nested",
+		"test": "npm run --workspaces --if-present test"
 	},
-	"version": "2024.12.32"
+	"version": "2024.12.32",
+	"workspaces": [
+		"published-cjs",
+		"published-esm",
+		"ts-cjs",
+		"ts-node16"
+	]
 }

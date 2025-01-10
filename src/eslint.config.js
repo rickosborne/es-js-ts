@@ -10,6 +10,7 @@ const fs = require("node:fs");
 // const requireExtensions = require("eslint-plugin-require-extensions");
 const markdown = require("eslint-plugin-markdown");
 const path = require("node:path");
+const tsdoc = require("eslint-plugin-tsdoc");
 
 /**
  * Load the `ignores` definitions from the `.gitignore` instead of replicating it.
@@ -71,11 +72,13 @@ module.exports = [
 		},
 		plugins: {
 			"@typescript-eslint": tse,
+			tsdoc,
 		},
 		rules: {
 			...("rules" in c ? c["rules"] : {}),
 			"@typescript-eslint/consistent-type-definitions": "off",
 			"@typescript-eslint/no-inferrable-types": "off",
+			"tsdoc/syntax": "error",
 		},
 	})),
 	{

@@ -1,4 +1,5 @@
-import { type ParseLocalDateConfig, parseLocalDate } from "@rickosborne/foundation";
+import type { ParseLocalDateConfig } from "@rickosborne/foundation";
+import { parseLocalDate } from "@rickosborne/foundation";
 import type { CommandParamBase, ParamHandler, TypedCommandParam } from "./common.js";
 import { labelForParam } from "./label-for-param.js";
 
