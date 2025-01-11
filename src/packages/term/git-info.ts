@@ -69,7 +69,7 @@ export const gitInfo = (): GitInfo => {
 		info.commitDateISO = info.commitDate.toISOString();
 	}
 	if (info.refNames != null) {
-		info.refNames.split(",")
+		info.refNames.split(/\s*,\s*/g)
 			.forEach((part) => {
 				if (part.startsWith("tag:")) {
 					const tagName = part.substring(4).trim();
