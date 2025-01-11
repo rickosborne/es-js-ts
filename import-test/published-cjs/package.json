@@ -1,6 +1,6 @@
 {
 	"devDependencies": {
-		"@rickosborne/guard": "2025.1.7"
+		"@rickosborne/guard": "2025.1.10"
 	},
 	"private": true,
 	"scripts": {
