@@ -6,6 +6,7 @@ export * from "./env-or-arg.js";
 export * from "./file-exists-error.js";
 export * from "./file-exists.js";
 export * from "./file-missing-error.js";
+export * from "./git-info.js";
 export * from "./not-file-error.js";
 export * from "./package-json.js";
 export * from "./positionals.js";

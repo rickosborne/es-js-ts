@@ -5,6 +5,7 @@ import * as process from "node:process";
 import * as util from "node:util";
 import { limitFunction } from "p-limit";
 import { rimraf } from "rimraf";
+import { gitInfo } from "../packages/term/git-info.js";
 import { documentModule } from "./shared/document-module.js";
 import { esbuildModule } from "./shared/esbuild-module.js";
 import { getModulePackages } from "./shared/module-names.js";
@@ -36,13 +37,15 @@ const build = async (): Promise<number> => {
 			console.error("❌ Build Types failed.");
 			failed = true;
 		});
+	const git = gitInfo();
+	console.dir(git);
 	const modulePackages = getModulePackages();
 	const buildModule = limitFunction(async (moduleName: string, modulePackage: PackageJsonLike) => {
 		console.log(`📦 Building ${ moduleName }`);
 		moduleNames.push(moduleName);
 		updateModuleBarrel(moduleName);
 		await esbuildModule(moduleName);
-		repackageModule(moduleName, modulePackage, rootPackage);
+		repackageModule(moduleName, modulePackage, rootPackage, { git });
 		documentModule(moduleName, apiExtractorTemplate);
 	}, { concurrency });
 	await Promise.all(modulePackages.map(({ moduleName, modulePackage }) => buildModule(moduleName, modulePackage)));

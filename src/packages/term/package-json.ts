@@ -20,6 +20,7 @@ export type PackageJsonLike = {
 		} & Record<string, string>;
 	};
 	files?: string[];
+	git?: string | Record<string, string>;
 	main?: string;
 	module?: string;
 	name: string;
@@ -29,6 +30,11 @@ export type PackageJsonLike = {
 		access: "public";
 	};
 	readme?: string;
+	repository?: {
+		directory?: string;
+		type?: string;
+		url?: string;
+	};
 	scripts?: Record<string, string>;
 	types?: string;
 	typings?: string;

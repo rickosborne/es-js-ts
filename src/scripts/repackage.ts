@@ -2,6 +2,7 @@ import { isDryRun, readPackageJson } from "@rickosborne/term";
 import type { Runnable } from "@rickosborne/typical";
 import * as console from "node:console";
 import * as process from "node:process";
+import { gitInfo } from "../packages/term/git-info.js";
 import { getModulePackages } from "./shared/module-names.js";
 import { srcRoot } from "./shared/project-root.js";
 import { repackageModule } from "./shared/repackage-module.js";
@@ -10,9 +11,11 @@ const inheritDependencies = process.argv.slice(2).includes("--inherit-dependenci
 
 const rootPackage = readPackageJson(srcRoot);
 const rewrites: Runnable[] = [];
+const git = gitInfo();
 
 for (const { moduleName, modulePackage } of getModulePackages()) {
 	repackageModule(moduleName, modulePackage, rootPackage, {
+		git,
 		inheritDependencies,
 	});
 }

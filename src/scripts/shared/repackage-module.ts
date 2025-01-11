@@ -1,13 +1,15 @@
+import { deepCopy } from "@rickosborne/foundation";
 import type { PackageJsonLike } from "@rickosborne/term";
 import { DEPENDENCIES_KEYS, isDryRun, writeJson } from "@rickosborne/term";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import { readdirSync } from "node:fs";
-import { deepCopy } from "@rickosborne/foundation";
+import { gitInfo, type GitInfo } from "../../packages/term/git-info.js";
 import { distPlus, projectNamespace } from "./project-root.js";
 
 export type RepackageModuleOptions = {
 	dryRun?: boolean;
+	git?: GitInfo;
 	inheritDependencies?: boolean;
 }
 
@@ -17,6 +19,7 @@ export function repackageModule(
 	rootPackage: PackageJsonLike,
 	options: RepackageModuleOptions = {},
 ): void {
+	const git = options.git ?? gitInfo();
 	const inheritDependencies = options.inheritDependencies ?? false;
 	const dryRun = options.dryRun ?? isDryRun;
 	const distDir = distPlus(moduleName);
@@ -77,6 +80,15 @@ export function repackageModule(
 			require: "./*.cjs",
 			default: "./*.mjs",
 		},
+	};
+	pkg.git = {
+		authorName: git.authorName,
+		commitDateISO: git.commitDateISO,
+		commitHash: git.commitHash,
+		parentHash: git.parentHash,
+		...(git.sigKey != null ? { signingKeyId: git.sigKey.toLowerCase() } : {}),
+		...(git.tags.length === 1 ? { tag: git.tags[ 0 ] } : {}),
+		...(pkg.repository?.url?.includes("http") ?? false ? { commitLink: pkg.repository?.url?.replace("git+", "").replace(/\.git$/, "").concat("/commits/", git.commitHash) ?? "" } : {}),
 	};
 	const sources = readdirSync(distPlus(moduleName), { encoding: "utf-8", withFileTypes: true })
 		.filter((de) => de.isFile() && (de.name.endsWith(".d.ts") || de.name.endsWith(".mjs") || de.name.endsWith(".cjs")) && !de.name.startsWith("index."))
