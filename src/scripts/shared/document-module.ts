@@ -1,12 +1,12 @@
 import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
 import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
-import { comparatorBuilder } from "@rickosborne/foundation";
+import { comparatorBuilder, memoizeSupplier } from "@rickosborne/foundation";
 import { readFile, writeText } from "@rickosborne/term";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import * as process from "node:process";
-import { buildPlus, distPlus, packagesPlus } from "./project-root.js";
+import { buildPlus, distPlus, packagesPlus, repoPlus } from "./project-root.js";
 
 const itemSorter = comparatorBuilder<ApiItem>()
 	.str((item) => item.kind)
@@ -16,6 +16,9 @@ const itemSorter = comparatorBuilder<ApiItem>()
 const slug = (text: string): string => {
 	return text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 };
+
+const usage = memoizeSupplier(() => readFile(repoPlus("USAGE.md")).concat("\n"));
+const license = memoizeSupplier(() => readFile(repoPlus("LICENSE.md")).concat("\n"));
 
 const mdFromDocComment = (doc: tsdoc.DocComment): string | undefined => {
 	const md: string[] = [];
@@ -136,7 +139,7 @@ export function documentModule(
 			}
 		}
 	}
-	const distReadMe = baseReadMe.concat(md.join("\n"), "\n");
+	const distReadMe = baseReadMe.concat(usage(), license(), md.join("\n"), "\n");
 	writeText(distPlus(moduleName, "README.md"), distReadMe);
 	fs.unlinkSync(configPath);
 	console.log(`   📝 Documented ${ moduleName }`);

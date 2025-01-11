@@ -26,3 +26,5 @@ export const srcPlus = (...pathParts: string[]) => path.resolve(srcRoot, ...path
 export const staticPlus = (...pathParts: string[]) => path.resolve(staticRoot, ...pathParts);
 
 export const packagesPlus = (...pathParts: string[]) => path.resolve(packagesRoot, ...pathParts);
+
+export const repoPlus = (...pathParts: string[]) => path.join(repoRoot, ...pathParts);
