@@ -32,7 +32,7 @@ export function toHSV(h: number, s: number, v: number, a?: number | undefined): 
 
 export const hsvComparator = colorComparatorBuilder<HSV>("hsvComparator", "h", "s", "v", "a");
 
-export const hsvEq = colorEqBuilder<HSV>("hsvEq", [ "h", "s", "v", "a" ]);
+export const hsvEq = colorEqBuilder<HSV>("hsvEq", [ "h", "s", "v", "a" ], { h: 1, s: 0.01, v: 0.01, a: 0.01 });
 
 export function chroma01FromHSV(hsv: HSV | { s: Float01; v: Float01 }): Float01;
 export function chroma01FromHSV(hsv: HSV | { s: Float01; v: Float01 } | undefined): Float01 | undefined;

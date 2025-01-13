@@ -1,7 +1,8 @@
+import { positiveMod } from "../foundation/modulo.js";
 import { chroma01FromHSL, type HSL } from "./hsl.js";
 import { chroma01FromHSV, type HSV } from "./hsv.js";
-import { type Float01, type Int360, toFloat01, toInt255 } from "./numbers.js";
-import type { RGB } from "./rgb.js";
+import { type Float01, type Int255, type Int360, toFloat01, toInt255 } from "./numbers.js";
+import { chroma01FromRGB, type RGB } from "./rgb.js";
 
 export function hslFromHSV(hsv: HSV): HSL;
 export function hslFromHSV(hsv: HSV | undefined): HSL | undefined;
@@ -115,4 +116,88 @@ export function rgbFromHSV(hsv: HSV | undefined): RGB | undefined {
 	const c = chroma01FromHSV(hsv);
 	const m = v - c as Float01;
 	return rgbFromHueChromaMin(h, c, m, a);
+}
+
+export function hue360FromRGB(rgb: RGB, chroma01?: Float01 | undefined, max255?: Int255 | undefined): Int360;
+export function hue360FromRGB(rgb: RGB | undefined, chroma01?: Float01 | undefined, max255?: Int255 | undefined): Int360 | undefined;
+export function hue360FromRGB(rgb: RGB | undefined, chroma01?: Float01 | undefined, max255?: Int255 | undefined): Int360 | undefined {
+	if (rgb == null) {
+		return undefined;
+	}
+	const c01 = chroma01 ?? chroma01FromRGB(rgb);
+	const c255 = c01 * 255;
+	const { r, g, b } = rgb;
+	if (c01 === 0) {
+		return 0 as Int360;
+	}
+	const m255 = max255 ?? Math.max(r, g, b);
+	let hPrime;
+	if (m255 === r) {
+		hPrime = (g - b) / c255;
+	} else if (m255 === g) {
+		hPrime = (b - r) / c255 + 2;
+	} else {
+		hPrime = (r - g) / c255 + 4;
+	}
+	return positiveMod(Math.round(hPrime * 60), 360) as Int360;
+}
+
+export function hsvFromRGB(rgb: RGB): HSV;
+export function hsvFromRGB(rgb: RGB | undefined): HSV | undefined;
+export function hsvFromRGB(rgb: RGB | undefined): HSV | undefined {
+	if (rgb == null) {
+		return undefined;
+	}
+	const { r, g, b, a: a255 } = rgb;
+	const a01: Float01 | undefined = a255 == null ? undefined : toFloat01(a255 / 255);
+	const min255 = Math.min(r, g, b) as Int255;
+	const max255 = Math.max(r, g, b) as Int255;
+	let h: Int360;
+	let s: Float01;
+	const v = toFloat01(max255 / 255);
+	if (max255 === min255) {
+		h = 0 as Int360;
+		s = 0 as Float01;
+	} else {
+		const c255 = max255 - min255;
+		const c01 = ((max255 - min255) / 255) as Float01;
+		h = hue360FromRGB(rgb, c01, max255);
+		s = toFloat01(c255 / max255);
+	}
+	return { h, s, v, ...(a01 == null ? {} : { a: a01 }) };
+}
+
+export function hslFromRGB(rgb: RGB): HSL;
+export function hslFromRGB(rgb: RGB | undefined): HSL | undefined;
+export function hslFromRGB(rgb: RGB | undefined): HSL | undefined {
+	if (rgb == null) {
+		return undefined;
+	}
+	const { r, g, b, a: a255 } = rgb;
+	const a01: Float01 | undefined = a255 == null ? undefined : toFloat01(a255 / 255);
+	const min01 = Math.min(r, g, b) / 255;
+	const max255 = Math.max(r, g, b) as Int255;
+	const max01 = max255 / 255;
+	const sum01 = max01 + min01;
+	// L = (M + m) / 2
+	const l: Float01 = toFloat01(sum01 / 2, "luminosity");
+	let h: Int360;
+	let s: Float01;
+	if (l === 0 || l === 1) {
+		h = 0 as Int360;
+		s = 0 as Float01;
+	} else {
+		// C = M - m
+		const c01 = toFloat01(max01 - min01);
+		// S = C / (1 - Math.abs(2 * L - 1));
+		// L <= 0.5 => S = C / (2 * L)
+		// L >  0.5 => S = C / (2 - (2 * L))
+		if (l <= 0.5) {
+			s = toFloat01(c01 / sum01, "saturation");
+		} else {
+			s = toFloat01(c01 / (2 - sum01), "saturation");
+		}
+		h = hue360FromRGB(rgb, c01, max255);
+	}
+	return { h, s, l, ...(a01 == null ? {} : { a: a01 }) };
 }

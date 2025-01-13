@@ -24,9 +24,9 @@ const blueParts: UncheckedColorParts = {
 };
 
 const blueCombined = {
-	rgb: toRGB(51, 102, 153),
-	hsl: toHSL(210, 0.5, 0.4),
-	hsv: toHSV(210, 0.6667, 0.6),
+	rgb: toRGB(51, 102, 153, 255),
+	hsl: toHSL(210, 0.5, 0.4, 1),
+	hsv: toHSV(210, 0.6667, 0.6, 1),
 	cssHSL: "hsl(210 50% 40%)",
 	cssHWB: "hwb(210 66.7% 60%)",
 	cssRGB: "rgb(51 102 153)",
@@ -99,16 +99,16 @@ describe(Color.name, () => {
 			green255: 179,
 			blue255: 236,
 			hue360: blueParts.hue360,
-			sv01: 0.4872,
-			val01: 0.9254,
+			sv01: 0.4865,
+			val01: 0.925,
 			sl01: (1 + blueParts.sl01!) / 2,
 			lum01: (1 + blueParts.lum01!) / 2,
 		}, {
 			rgb: toRGB(121, 179, 236),
 			hsl: toHSL(before.hue360, (1 + blueParts.sl01!) / 2, (1 + blueParts.lum01!) / 2),
-			hsv: toHSV(before.hue360, 0.4872, 0.9254),
+			hsv: toHSV(before.hue360, 0.4865, 0.925),
 			cssHSL: "hsl(210 75% 70%)",
-			cssHWB: "hwb(210 48.7% 92.5%)",
+			cssHWB: "hwb(210 48.6% 92.5%)",
 			cssRGB: "rgb(121 179 236)",
 		});
 		const alsoLightBlue = before.with({
@@ -125,11 +125,11 @@ describe(Color.name, () => {
 			blue255: 204,
 			sv01: toFloat01((1 + blueParts.sv01!) / 2),
 			val01: toFloat01((1 + blueParts.val01!) / 2),
-			sl01: 0.7142,
+			sl01: 0.7143,
 			lum01: 0.46667,
 		}, {
 			rgb: toRGB(34, 119, 204),
-			hsl: toHSL(before.hue360, 0.7142, 0.46667),
+			hsl: toHSL(before.hue360, 0.7143, 0.46667),
 			hsv: toHSV(before.hue360, (1 + blueParts.sv01!) / 2, (1 + blueParts.val01!) / 2),
 			cssHSL: "hsl(210 71.4% 46.7%)",
 			cssHWB: "hwb(210 83.3% 80%)",
@@ -163,7 +163,8 @@ describe(Color.name, () => {
 
 	describe("Wikipedia table", () => {
 		it("converts from hex", () => {
-			WIKI_COLORS.forEach(({ hex, r01, g01, b01, h360, h2, c01, v01, l01, sv01, sl01 }, index) => {
+			let index = 0;
+			for (const{ hex, r01, g01, b01, h360, h2, c01, v01, l01, sv01, sl01 } of WIKI_COLORS) {
 				let color: Color;
 				let rgbTolerance: number;
 				const method = index % 2;
@@ -192,7 +193,8 @@ describe(Color.name, () => {
 				expect(color.lum01).closeTo(l01, 0.005, hex.concat(".l"));
 				expect(color.sv01).closeTo(sv01, 0.005, hex.concat(".sv"));
 				expect(color.sl01).closeTo(sl01, 0.01, hex.concat(".sl"));
-			});
+				index++;
+			}
 		});
 
 		it("shortens CSS colors", () => {

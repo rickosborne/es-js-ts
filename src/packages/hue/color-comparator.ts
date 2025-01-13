@@ -1,6 +1,6 @@
 import { closeTo } from "@rickosborne/foundation";
 import { A_GT_B, A_LT_B, type Comparator, EQ } from "@rickosborne/typical";
-import { COLOR_EPSILON, type Float01, type Int255, type Int360 } from "./numbers.js";
+import { type Float01, type Int255, type Int360 } from "./numbers.js";
 
 /**
  * Remove the branding from number values, to make type operations
@@ -20,7 +20,7 @@ export const colorComparatorBuilder = <C extends object>(
 	...keys: (keyof UnbrandedNumbers<C>)[]
 ): Comparator<C | undefined> => {
 	const comparator = {
-		[fnName]: (a: C | undefined, b: C | undefined): number => {
+		[ fnName ]: (a: C | undefined, b: C | undefined): number => {
 			if (a === b) {
 				return EQ;
 			}
@@ -46,7 +46,7 @@ export const colorComparatorBuilder = <C extends object>(
 			}
 			return EQ;
 		},
-	}[fnName];
+	}[ fnName ];
 	return comparator!;
 };
 
@@ -54,7 +54,7 @@ export const colorComparatorBuilder = <C extends object>(
  * A function which checks two colors for equivalence, within some
  * tolerable margin of error.
  */
-export type ColorCloseTo<C extends object> = (a: C | undefined, b: C | undefined, epsilon?: number | undefined) => boolean;
+export type ColorCloseTo<C extends object> = (a: C | undefined, b: C | undefined, epsilons?: Partial<Record<keyof C, number>> | undefined) => boolean;
 
 /**
  * Generator for color equality functions, since they all follow
@@ -63,10 +63,10 @@ export type ColorCloseTo<C extends object> = (a: C | undefined, b: C | undefined
 export const colorEqBuilder = <C extends object>(
 	fnName: string,
 	keys: (keyof UnbrandedNumbers<C>)[],
-	defaultEpsilon = COLOR_EPSILON,
+	defaultEpsilons: Record<keyof C, number>,
 ): ColorCloseTo<C> => {
 	const predicate = {
-		[fnName]: (a: C | undefined, b: C | undefined, epsilon = defaultEpsilon): boolean => {
+		[ fnName ]: (a: C | undefined, b: C | undefined, epsilons?: Partial<Record<keyof C, number>>): boolean => {
 			if (a == null && b == null) {
 				return true;
 			}
@@ -85,12 +85,13 @@ export const colorEqBuilder = <C extends object>(
 				if ((aValue == null) !== (bValue == null)) {
 					return false;
 				}
-				if (!closeTo(aValue, bValue, epsilon)) {
+				const eps = epsilons?.[ key ] ?? defaultEpsilons[ key ];
+				if (!closeTo(aValue, bValue, eps)) {
 					return false;
 				}
 			}
 			return true;
 		},
-	}[fnName];
+	}[ fnName ];
 	return predicate!;
 };

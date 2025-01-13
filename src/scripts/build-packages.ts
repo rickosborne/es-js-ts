@@ -1,11 +1,10 @@
-import { envOrArg, type PackageJsonLike, readFile, readPackageJson } from "@rickosborne/term";
+import { envOrArg, gitInfo, type PackageJsonLike, readFile, readPackageJson } from "@rickosborne/term";
 import * as childProcess from "node:child_process";
 import * as console from "node:console";
 import * as process from "node:process";
 import * as util from "node:util";
 import { limitFunction } from "p-limit";
 import { rimraf } from "rimraf";
-import { gitInfo } from "../packages/term/git-info.js";
 import { documentModule } from "./shared/document-module.js";
 import { esbuildModule } from "./shared/esbuild-module.js";
 import { getModulePackages } from "./shared/module-names.js";

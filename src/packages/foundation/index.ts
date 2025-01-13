@@ -17,6 +17,7 @@ export * from "./json-path-append.js";
 export * from "./linked-list.js";
 export * from "./memoize.js";
 export * from "./min-max.js";
+export * from "./modulo.js";
 export * from "./optional-reg-exp.js";
 export * from "./parse-local-date.js";
 export * from "./priority-array.js";

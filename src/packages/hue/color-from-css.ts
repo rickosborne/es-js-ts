@@ -28,7 +28,9 @@ const to360 = ([ value, unit = "deg" ]: DimensionPair): Int360 | undefined => {
 };
 
 /**
- * Try to parse a CSS color expression.
+ * Try to parse a CSS color expression.  Does not support anything clever.
+ * Intended more for "I have colors in a config file" use-cases, and
+ * not "accept CSS typed in by Web users".
  */
 export const colorFromCSS = (text: string): Color | undefined => {
 	const tokens = colorTokensFromCSS(text);

@@ -32,7 +32,7 @@ export function toHSL(h: number, s: number, l: number, a?: number | undefined): 
 
 export const hslComparator = colorComparatorBuilder<HSL>("hslComparator", "h", "s", "l", "a");
 
-export const hslEq = colorEqBuilder<HSL>("hslEq", [ "h", "s", "l", "a" ]);
+export const hslEq = colorEqBuilder<HSL>("hslEq", [ "h", "s", "l", "a" ], { h: 1, s: 0.01, l: 0.01, a: 0.01 });
 
 export function chroma01FromHSL(hsl: HSL | { s: Float01; l: Float01 }): Float01;
 export function chroma01FromHSL(hsl: HSL | { s: Float01; l: Float01 } | undefined): Float01 | undefined;

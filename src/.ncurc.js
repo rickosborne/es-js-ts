@@ -8,7 +8,7 @@
 /**
  * @typedef Plan
  * @type {object}
- * @property {string} currentVersion            Current version declaration (may be a range).
+ * @property {string} currentVersion            Current version declaration (could be a range).
  * @property {SemVer[]} currentVersionSemver    Current version declaration in semantic versioning format (may be a range).
  * @property {string} upgradedVersion           Upgraded version.
  * @property {SemVer} upgradedVersionSemver     Upgraded version in semantic versioning format.

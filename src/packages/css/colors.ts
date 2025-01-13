@@ -3,10 +3,9 @@
  */
 export const TRANSPARENT = "transparent";
 
-/**
- * CSS Level 4 color names mapped to their hex values.
- */
-export const HEX_FROM_NAME = Object.freeze({
+// This is distinct from CSS_COLOR_HEX below due to a bug in api-extractor:
+// https://github.com/microsoft/rushstack/issues/5077
+const CSS_COLOR_HEX = Object.freeze({
 	AliceBlue: "#F0F8FF",
 	AntiqueWhite: "#FAEBD7",
 	Aqua: "#00FFFF",
@@ -158,6 +157,11 @@ export const HEX_FROM_NAME = Object.freeze({
 	Yellow: "#FFFF00",
 	YellowGreen: "#9ACD32",
 } as const);
+
+/**
+ * CSS Level 4 color names mapped to their hex values.
+ */
+export const HEX_FROM_NAME = CSS_COLOR_HEX;
 
 /**
  * CSS Level 4 color name.

@@ -1,8 +1,7 @@
-import { isDryRun, readPackageJson } from "@rickosborne/term";
+import { gitInfo, isDryRun, readPackageJson } from "@rickosborne/term";
 import type { Runnable } from "@rickosborne/typical";
 import * as console from "node:console";
 import * as process from "node:process";
-import { gitInfo } from "../packages/term/git-info.js";
 import { getModulePackages } from "./shared/module-names.js";
 import { srcRoot } from "./shared/project-root.js";
 import { repackageModule } from "./shared/repackage-module.js";
