@@ -57,8 +57,8 @@ module.exports = [
 		},
 	},
 	...[
-		tse.configs["recommended-type-checked"],
-		tse.configs["stylistic-type-checked"],
+		tse.configs[ "recommended-type-checked" ],
+		tse.configs[ "stylistic-type-checked" ],
 	].map((c) => ({
 		files: [ "**/*.ts", "**/*.tsx", "**/*.mts" ],
 		languageOptions: {
@@ -75,9 +75,19 @@ module.exports = [
 			tsdoc,
 		},
 		rules: {
-			...("rules" in c ? c["rules"] : {}),
+			...("rules" in c ? c[ "rules" ] : {}),
 			"@typescript-eslint/consistent-type-definitions": "off",
 			"@typescript-eslint/no-inferrable-types": "off",
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					argsIgnorePattern: "^_",
+					caughtErrorsIgnorePattern: "^_",
+					destructuredArrayIgnorePattern: "^_",
+					ignoreRestSiblings: true,
+					varsIgnorePattern: "^_",
+				},
+			],
 			"tsdoc/syntax": "error",
 		},
 	})),
@@ -90,7 +100,7 @@ module.exports = [
 			sortKeysFix,
 		},
 	},
-	...json.configs["flat/recommended-with-json"],
+	...json.configs[ "flat/recommended-with-json" ],
 	{
 		rules: {
 			"jsonc/key-spacing": "error",
@@ -128,6 +138,7 @@ module.exports = [
 			"no-mixed-spaces-and-tabs": "error",
 			"no-multi-spaces": [ "error", { ignoreEOLComments: true } ],
 			"no-trailing-spaces": "error",
+			"no-unused-vars": "off",
 			"object-curly-spacing": [ "error", "always" ],
 			"semi": [ "error", "always" ],
 			"sort-imports": [

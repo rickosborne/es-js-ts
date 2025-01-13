@@ -7,6 +7,9 @@ export const closeTo = (
 	b: number,
 	epsilon: number = 0.00001,
 ): boolean => {
+	if (a === b) {
+		return true;
+	}
 	const delta = Math.abs(a - b);
 	return delta <= epsilon;
 };

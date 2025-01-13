@@ -11,7 +11,8 @@
 		"**/__test__/**",
 		"**/test-d/**",
 		"**/*.test.ts",
-		"**/*.test-d.ts"
+		"**/*.test-d.ts",
+		"**/*.fixture.ts"
 	],
 	"extends": "./tsconfig.base.json"
 }

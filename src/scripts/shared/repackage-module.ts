@@ -1,10 +1,9 @@
 import { deepCopy } from "@rickosborne/foundation";
 import type { PackageJsonLike } from "@rickosborne/term";
-import { DEPENDENCIES_KEYS, isDryRun, writeJson } from "@rickosborne/term";
+import { DEPENDENCIES_KEYS, gitInfo, type GitInfo, isDryRun, writeJson } from "@rickosborne/term";
 import * as console from "node:console";
 import * as fs from "node:fs";
 import { readdirSync } from "node:fs";
-import { gitInfo, type GitInfo } from "../../packages/term/git-info.js";
 import { distPlus, projectNamespace } from "./project-root.js";
 
 export type RepackageModuleOptions = {

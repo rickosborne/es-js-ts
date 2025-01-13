@@ -9,3 +9,4 @@ export * from "./is-list-of.js";
 export * from "./is-object.js";
 export * from "./is-predicate.js";
 export * from "./scrub-stack-trace.js";
+export * from "./throw-on-error.js";

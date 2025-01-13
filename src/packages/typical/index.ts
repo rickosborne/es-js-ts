@@ -1,3 +1,4 @@
+export * from "./arrays.js";
 export * from "./built-in.js";
 export * from "./comparator.js";
 export * from "./defined.js";

@@ -1,0 +1,30 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/css": "file:../css",
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's collection of color-related code.",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"color"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/hue",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/hue",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.10"
+}

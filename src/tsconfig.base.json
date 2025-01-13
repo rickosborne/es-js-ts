@@ -29,8 +29,10 @@
 		"noUnusedLocals": true,
 		"paths": {
 			"@rickosborne/clamp": ["packages/clamp/index.ts"],
+			"@rickosborne/css": ["packages/css/index.ts"],
 			"@rickosborne/foundation": ["packages/foundation/index.ts"],
 			"@rickosborne/guard": ["packages/guard/index.ts"],
+			"@rickosborne/hue": ["packages/hue/index.ts"],
 			"@rickosborne/planar": ["packages/planar/index.ts"],
 			"@rickosborne/term": ["packages/term/index.ts"],
 			"@rickosborne/typical": ["packages/typical/index.ts"]
