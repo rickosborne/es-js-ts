@@ -1,33 +1,33 @@
 import { type CSSColorName, cssFormatHex, cssNameFromHex } from "@rickosborne/css";
+import { type Int360, type Real01, real01From255, type Real255, real255From01, toReal01 } from "@rickosborne/foundation";
 import { config } from "chai";
 import { ColorConversionError } from "./color-conversion-error.js";
 import { hslFromHSV, hslFromRGB, hsvFromHSL, hsvFromRGB, rgbFromHSL, rgbFromHSV } from "./color-conversion.js";
 import { colorFromCSS } from "./color-from-css.js";
 import { chroma01FromHSL, cssFormatHSL, type HSL, type HSLA } from "./hsl.js";
 import { chroma01FromHSV, cssFormatHSV, type HSV, type HSVA } from "./hsv.js";
-import { type Float01, float01FromInt255, type Int255, int255FromFloat01, type Int360, toFloat01 } from "./numbers.js";
-import { chroma01FromRGB, cssFormatRGB, hexFromRGB, type RGB, type RGBA, rgbFromHex } from "./rgb.js";
+import { chroma01FromRGB, cssFormatRGB, hexFromRGB, type RealRGB, type RealRGBA, type RGB, type RGB255, rgb255From01, type RGBA, rgbFromHex, rgbFromReal } from "./rgb.js";
 
 interface ColorConfig {
-	alpha01: Float01;
-	chroma01: Float01;
+	alpha01: Real01;
+	chroma01: Real01;
 	hex: string;
 	hsl: HSL;
 	hsv: HSV;
-	rgb: RGB;
+	rgb: RGB255;
 }
 
 export interface ColorParts {
-	alpha01?: Float01 | undefined;
-	alpha255?: Int255 | undefined;
-	blue255?: Int255 | undefined;
-	green255?: Int255 | undefined;
+	alpha01?: Real01 | undefined;
+	alpha255?: Real255 | undefined;
+	blue255?: Real255 | undefined;
+	green255?: Real255 | undefined;
 	hue360?: Int360 | undefined;
-	lum01?: Float01 | undefined;
-	red255?: Int255 | undefined;
-	sl01?: Float01 | undefined;
-	sv01?: Float01 | undefined;
-	val01?: Float01 | undefined;
+	lum01?: Real01 | undefined;
+	red255?: Real255 | undefined;
+	sl01?: Real01 | undefined;
+	sv01?: Real01 | undefined;
+	val01?: Real01 | undefined;
 }
 
 /**
@@ -49,9 +49,9 @@ export class Color implements ColorParts {
 
 	public static fromHSL(hsl: HSL): Color {
 		const chroma01 = chroma01FromHSL(hsl);
-		const rgb = rgbFromHSL(hsl);
+		const rgb = rgb255From01(rgbFromHSL(hsl));
 		const hsv = hsvFromHSL(hsl);
-		const alpha01 = toFloat01(hsl.a ?? 1);
+		const alpha01 = toReal01(hsl.a ?? 1);
 		const hex = hexFromRGB(rgb, "long");
 		return new Color({ alpha01, chroma01, hex, hsl, hsv, rgb });
 	}
@@ -59,8 +59,8 @@ export class Color implements ColorParts {
 	public static fromHSV(hsv: HSV): Color {
 		const chroma01 = chroma01FromHSV(hsv);
 		const hsl = hslFromHSV(hsv);
-		const rgb = rgbFromHSV(hsv);
-		const alpha01 = toFloat01(hsv.a ?? 1);
+		const rgb = rgb255From01(rgbFromHSV(hsv));
+		const alpha01 = toReal01(hsv.a ?? 1);
 		const hex = hexFromRGB(rgb, "long");
 		return new Color({ alpha01, chroma01, hex, hsl, hsv, rgb });
 	}
@@ -74,32 +74,32 @@ export class Color implements ColorParts {
 		const chroma01 = chroma01FromRGB(rgb);
 		const hsl = hslFromRGB(rgb);
 		const hsv = hsvFromRGB(rgb);
-		const alpha01 = toFloat01((rgb.a ?? 255) / 255);
+		const alpha01 = toReal01((rgb.a ?? 255) / 255);
 		const hex = hexFromRGB(rgb, "long");
 		return new Color({ alpha01, chroma01, hex, hsl, hsv, rgb });
 	}
 
-	public readonly alpha01: Float01;
-	public readonly alpha255: Int255;
-	public readonly blue255: Int255;
-	public readonly chroma01: Float01;
-	public readonly green255: Int255;
+	public readonly alpha01: Real01;
+	public readonly alpha255: Real255;
+	public readonly blue255: Real255;
+	public readonly chroma01: Real01;
+	public readonly green255: Real255;
 	public readonly hex: string;
 	public readonly hue360: Int360;
-	public readonly lum01: Float01;
+	public readonly lum01: Real01;
 	public readonly name: CSSColorName | undefined;
-	public readonly red255: Int255;
-	public readonly sl01: Float01;
-	public readonly sv01: Float01;
-	public readonly val01: Float01;
+	public readonly red255: Real255;
+	public readonly sl01: Real01;
+	public readonly sv01: Real01;
+	public readonly val01: Real01;
 
 	protected constructor(config: ColorConfig) {
 		let { hsl, alpha01, chroma01, hex, hsv, rgb } = config;
 		this.alpha01 = alpha01;
-		this.alpha255 = rgb.a ?? int255FromFloat01(this.alpha01);
-		this.red255 = rgb.r;
-		this.green255 = rgb.g;
-		this.blue255 = rgb.b;
+		this.alpha255 = real255From01(alpha01);
+		this.red255 = rgb.r as Real255;
+		this.green255 = rgb.g as Real255;
+		this.blue255 = rgb.b as Real255;
 		this.hue360 = hsl.h;
 		this.sl01 = hsl.s;
 		this.sv01 = hsv.s;
@@ -158,7 +158,7 @@ export class Color implements ColorParts {
 		};
 	}
 
-	public get rgb(): RGBA {
+	public get realRGB(): RealRGBA {
 		return {
 			a: this.alpha255,
 			b: this.blue255,
@@ -167,17 +167,21 @@ export class Color implements ColorParts {
 		};
 	}
 
+	public get rgb(): RGBA {
+		return rgbFromReal(this.realRGB);
+	}
+
 	public with(changes: ColorParts): Color {
-		const alpha01 = changes.alpha01 ?? float01FromInt255(changes.alpha255) ?? this.alpha01;
-		let r: Int255 | undefined = this.red255;
-		let g: Int255 | undefined = this.green255;
-		let b: Int255 | undefined = this.blue255;
+		const alpha01 = changes.alpha01 ?? real01From255(changes.alpha255) ?? this.alpha01;
+		let r: Real255 | undefined = this.red255;
+		let g: Real255 | undefined = this.green255;
+		let b: Real255 | undefined = this.blue255;
 		let h: Int360 | undefined = this.hue360;
-		let sl: Float01 | undefined = this.sl01;
-		let sv: Float01 | undefined = this.sv01;
-		let l: Float01 | undefined = this.lum01;
-		let v: Float01 | undefined = this.val01;
-		let chroma01: Float01;
+		let sl: Real01 | undefined = this.sl01;
+		let sv: Real01 | undefined = this.sv01;
+		let l: Real01 | undefined = this.lum01;
+		let v: Real01 | undefined = this.val01;
+		let chroma01: Real01;
 		if (changes.red255 != null || changes.green255 != null || changes.blue255 != null) {
 			r = changes.red255 ?? this.red255;
 			g = changes.green255 ?? this.green255;
@@ -221,12 +225,12 @@ export class Color implements ColorParts {
 		} else {
 			chroma01 = this.chroma01;
 		}
-		let rgb: RGB | undefined = r != null && g != null && b != null ? { r, g, b } : undefined;
+		let rgb: RealRGB | undefined = r != null && g != null && b != null ? { r, g, b } : undefined;
 		let hsl: HSL | undefined = h != null && sl != null && l != null ? { h, s: sl, l } : undefined;
 		let hsv: HSV | undefined = h != null && sv != null && v != null ? { h, s: sv, v } : undefined;
 		hsl ??= hslFromHSV(hsv) ?? hslFromRGB(rgb);
 		hsv ??= hsvFromHSL(hsl) ?? hsvFromRGB(rgb);
-		rgb ??= rgbFromHSV(hsv) ?? rgbFromHSL(hsl);
+		rgb ??= rgb255From01(rgbFromHSV(hsv) ?? rgbFromHSL(hsl));
 		if (rgb == null || hsl == null || hsv == null) {
 			throw new ColorConversionError("Unknown", config, { message: "Could not derive color" });
 		}

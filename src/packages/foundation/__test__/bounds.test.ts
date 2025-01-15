@@ -1,6 +1,6 @@
+import { assertInt255, assertInt360, assertReal01, type Int255, int255From01, type Int360, isInt255, isInt360, isReal01, type Real01, real01From255, toInt255, toInt360, toReal01 } from "../bounds.js";
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { assertFloat01, assertInt255, assertInt360, type Float01, float01FromInt255, type Int255, int255FromFloat01, type Int360, isFloat01, isInt255, isInt360, toFloat01, toInt255, toInt360 } from "../numbers.js";
 
 const rangeTest = <T>(
 	guard: (value: unknown) => value is T,
@@ -76,34 +76,34 @@ describe("Int360", () => {
 	rangeTest<Int360>(isInt360, assertInt360, toInt360, 0, true, 360, false, true);
 });
 
-describe("Float01", () => {
-	rangeTest<Float01>(isFloat01, assertFloat01, toFloat01, 0, true, 1, true, false);
+describe("Real01", () => {
+	rangeTest<Real01>(isReal01, assertReal01, toReal01, 0, true, 1, true, false);
 });
 
-describe(int255FromFloat01.name, () => {
+describe(int255From01.name, () => {
 	it("is null-transparent", () => {
-		expect(int255FromFloat01(undefined)).eq(undefined);
+		expect(int255From01(undefined)).eq(undefined);
 	});
 	it("is still math", () => {
-		expect(int255FromFloat01(toFloat01(0))).eq(0);
-		expect(int255FromFloat01(toFloat01(0.2))).eq(51);
-		expect(int255FromFloat01(toFloat01(0.4))).eq(102);
-		expect(int255FromFloat01(toFloat01(0.6))).eq(153);
-		expect(int255FromFloat01(toFloat01(0.8))).eq(204);
-		expect(int255FromFloat01(toFloat01(1))).eq(255);
+		expect(int255From01(toReal01(0))).eq(0);
+		expect(int255From01(toReal01(0.2))).eq(51);
+		expect(int255From01(toReal01(0.4))).eq(102);
+		expect(int255From01(toReal01(0.6))).eq(153);
+		expect(int255From01(toReal01(0.8))).eq(204);
+		expect(int255From01(toReal01(1))).eq(255);
 	});
 });
 
-describe(float01FromInt255.name, () => {
+describe(real01From255.name, () => {
 	it("is null-transparent", () => {
-		expect(float01FromInt255(undefined)).eq(undefined);
+		expect(real01From255(undefined)).eq(undefined);
 	});
 	it("is still math", () => {
-		expect(float01FromInt255(toInt255(0))).eq(0);
-		expect(float01FromInt255(toInt255(51))).eq(0.2);
-		expect(float01FromInt255(toInt255(102))).eq(0.4);
-		expect(float01FromInt255(toInt255(153))).eq(0.6);
-		expect(float01FromInt255(toInt255(204))).eq(0.8);
-		expect(float01FromInt255(toInt255(255))).eq(1.0);
+		expect(real01From255(toInt255(0))).eq(0);
+		expect(real01From255(toInt255(51))).eq(0.2);
+		expect(real01From255(toInt255(102))).eq(0.4);
+		expect(real01From255(toInt255(153))).eq(0.6);
+		expect(real01From255(toInt255(204))).eq(0.8);
+		expect(real01From255(toInt255(255))).eq(1.0);
 	});
 });

@@ -1,0 +1,31 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's utilities for working with bounded numbers",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"bounds",
+		"numbers",
+		"branded"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/rebound",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/rebound",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.10"
+}

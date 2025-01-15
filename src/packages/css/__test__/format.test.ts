@@ -55,7 +55,7 @@ describe("format", () => {
 			expect(cssFormatPercent(1.000001)).eq("1%");
 			expect(cssFormatPercent(2)).eq("2%");
 		});
-		it("handles Float01 values", () => {
+		it("handles Real01 values", () => {
 			expect(cssFormatPercent(1)).eq("100%");
 			expect(cssFormatPercent(0.5678)).eq("56.8%");
 		});

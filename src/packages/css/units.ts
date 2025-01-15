@@ -51,9 +51,9 @@ export const dimensionFromCSS = (text: string | undefined): OptionalDimensionPai
 	if (numMatch == null) {
 		throw new CSSError(text, { expected: "Number", href: HREF_DIMENSION });
 	}
-	const float = numMatch[ 0 ];
-	t = t.substring(float.length).trim();
-	const value = parseFloat(float);
+	const real = numMatch[ 0 ];
+	t = t.substring(real.length).trim();
+	const value = parseFloat(real);
 	if (t === "") {
 		return [ value, undefined ];
 	}

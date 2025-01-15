@@ -7,7 +7,7 @@ export type ShuffleConfig<T> = {
 	 */
 	into?: T[] | undefined;
 	/**
-	 * Generate a random float in the range <kbd>[0..1)</kbd>.
+	 * Generate a random real in the range <kbd>[0..1)</kbd>.
 	 */
 	random01?: () => number;
 }

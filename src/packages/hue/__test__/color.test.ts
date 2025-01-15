@@ -1,11 +1,11 @@
 import { cssFormatPercent } from "@rickosborne/css";
+import { type Int255, type Int360, type Real01, toReal01 } from "@rickosborne/foundation";
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { ColorConversionError } from "../color-conversion-error.js";
 import { Color, type UncheckedColorParts } from "../color.js";
 import { toHSL } from "../hsl.js";
 import { toHSV } from "../hsv.js";
-import { type Float01, type Int255, type Int360, toFloat01 } from "../numbers.js";
 import { toRGB } from "../rgb.js";
 import { type CombinedParts, testColor } from "./test-color.fixture.js";
 import { WIKI_COLORS } from "./wiki-colors.fixture.js";
@@ -42,15 +42,15 @@ describe(Color.name, () => {
 			alpha01: 0.8,
 		}, {
 			rgb: { ...blueCombined.rgb, a: 204 as Int255 },
-			hsl: { ...blueCombined.hsl, a: 0.8 as Float01 },
-			hsv: { ...blueCombined.hsv, a: 0.8 as Float01 },
+			hsl: { ...blueCombined.hsl, a: 0.8 as Real01 },
+			hsv: { ...blueCombined.hsv, a: 0.8 as Real01 },
 		});
 		expect(() => Color.fromHexRGB("garbage")).throws(ColorConversionError);
 	});
 	it(Color.prototype.with.name, () => {
 		const before = Color.fromHexRGB("#369");
 		const ghosted = before.with({
-			alpha01: 0.6 as Float01,
+			alpha01: 0.6 as Real01,
 		});
 		expect(ghosted).not.eq(before);
 		testColor(ghosted, {
@@ -59,8 +59,8 @@ describe(Color.name, () => {
 			alpha255: 153,
 		}, {
 			rgb: { ...blueCombined.rgb, a: 153 as Int255 },
-			hsl: { ...blueCombined.hsl, a: 0.6 as Float01 },
-			hsv: { ...blueCombined.hsv, a: 0.6 as Float01 },
+			hsl: { ...blueCombined.hsl, a: 0.6 as Real01 },
+			hsv: { ...blueCombined.hsv, a: 0.6 as Real01 },
 			cssHSL: "hsl(210 50% 40% / 60%)",
 			cssHWB: "hwb(210 66.7% 60% / 60%)",
 			cssRGB: "rgb(51 102 153 / 60%)",
@@ -89,15 +89,15 @@ describe(Color.name, () => {
 		expect(back.equals(before), "back == before").eq(true);
 		testColor(back, blueParts, blueCombined);
 		const lightBlue = before.with({
-			sl01: (1 + before.sl01) / 2 as Float01,
-			lum01: (1 + before.lum01) / 2 as Float01,
+			sl01: (1 + before.sl01) / 2 as Real01,
+			lum01: (1 + before.lum01) / 2 as Real01,
 		});
 		testColor(lightBlue, {
 			alpha01: 1,
 			alpha255: 255,
-			red255: 121,
-			green255: 179,
-			blue255: 236,
+			red255: 121.125,
+			green255: 178.5,
+			blue255: 235.875,
 			hue360: blueParts.hue360,
 			sv01: 0.4865,
 			val01: 0.925,
@@ -112,19 +112,19 @@ describe(Color.name, () => {
 			cssRGB: "rgb(121 179 236)",
 		});
 		const alsoLightBlue = before.with({
-			sv01: toFloat01((1 + blueParts.sv01!) / 2),
-			val01: toFloat01((1 + blueParts.val01!) / 2),
+			sv01: toReal01((1 + blueParts.sv01!) / 2),
+			val01: toReal01((1 + blueParts.val01!) / 2),
 		});
 		testColor(alsoLightBlue, {
 			...blueParts,
 			hue360: blueParts.hue360,
 			alpha01: 1,
 			alpha255: 255,
-			red255: 34,
-			green255: 119,
+			red255: 33.9966,
+			green255: 118.9983,
 			blue255: 204,
-			sv01: toFloat01((1 + blueParts.sv01!) / 2),
-			val01: toFloat01((1 + blueParts.val01!) / 2),
+			sv01: toReal01((1 + blueParts.sv01!) / 2),
+			val01: toReal01((1 + blueParts.val01!) / 2),
 			sl01: 0.7143,
 			lum01: 0.46667,
 		}, {

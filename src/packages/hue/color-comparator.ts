@@ -1,13 +1,12 @@
-import { closeTo } from "@rickosborne/foundation";
+import { closeTo, type Unbound } from "@rickosborne/foundation";
 import { A_GT_B, A_LT_B, type Comparator, EQ } from "@rickosborne/typical";
-import { type Float01, type Int255, type Int360 } from "./numbers.js";
 
 /**
  * Remove the branding from number values, to make type operations
  * less onerous for generics.
  */
 export type UnbrandedNumbers<C extends object> = {
-	[K in keyof C as Int360 extends C[K] ? K : Float01 extends C[K] ? K : Int255 extends C[K] ? K : number extends C[K] ? K : never]: number;
+	[K in keyof C]: Unbound<C[K]>;
 }
 
 /**

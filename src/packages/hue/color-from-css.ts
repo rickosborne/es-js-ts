@@ -1,13 +1,13 @@
 import { ANGLE_CONVERSIONS, colorTokensFromCSS, convertBetweenUnits, type CSSAngleUnit, type DimensionPair, hexFromCSSName, isAngleUnit } from "@rickosborne/css";
+import { type Int255, type Int360, type Real01, toInt255, toInt360, toReal01 } from "@rickosborne/foundation";
 import { ColorConversionError } from "./color-conversion-error.js";
 import { Color } from "./color.js";
-import { type Float01, type Int255, type Int360, toFloat01, toInt255, toInt360 } from "./numbers.js";
 
-const to01 = ([ value, unit ]: DimensionPair): Float01 | undefined => {
+const to01 = ([ value, unit ]: DimensionPair): Real01 | undefined => {
 	if (unit === "%") {
-		return toFloat01(value * 0.01);
+		return toReal01(value * 0.01);
 	}
-	return toFloat01(value);
+	return toReal01(value);
 };
 
 const to255 = ([ value, unit ]: DimensionPair): Int255 | undefined => {

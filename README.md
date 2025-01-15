@@ -6,6 +6,8 @@ Individual packages are published under [@rickosborne/*](https://www.npmjs.com/~
 * [@rickosborne/typical](https://www.npmjs.com/package/@rickosborne/typical) — Useful type helpers and type declarations.
 * [@rickosborne/guard](https://www.npmjs.com/package/@rickosborne/guard) — Type guards for some of those types.
 * [@rickosborne/foundation](https://www.npmjs.com/package/@rickosborne/foundation) — Basic data structures and algorithms, like priority queues, binary searches, and sorting.
+* [@rickosborne/css](https://www.npmjs.com/package/@rickosborne/css) — Tools for working with CSS, such as CSS Color parsers and formatters.
+* [@rickosborne/hue](https://www.npmjs.com/package/@rickosborne/hue) — General color-handling tools for RGB, HSV, and HSL/HWB.
 * [@rickosborne/planar](https://www.npmjs.com/package/@rickosborne/planar) — 2D Cartesian and graphics related data structures and algorithms, like polygon convex testing, line segment intersections, etc.
 * [@rickosborne/term](https://www.npmjs.com/package/@rickosborne/term) — Utilities for working at the terminal/console/command-line, with local files and processes, etc.
 

@@ -36,27 +36,27 @@ export const asFraction = (num: number, percentError: number = 0.000001): FracTu
 	const epsilon = value * percentError;
 	const intPart = Math.trunc(value);
 	const fracPart = value - intPart;
-	const floatMin = fracPart - epsilon;
-	if (floatMin < 0) {
+	const realMin = fracPart - epsilon;
+	if (realMin < 0) {
 		return [ sign * intPart, 1 ];
 	}
-	const floatMax = fracPart + epsilon;
-	if (floatMax > 1) {
+	const realMax = fracPart + epsilon;
+	if (realMax > 1) {
 		return [ sign * (1 + intPart), 1 ];
 	}
 	let intA = 0;
 	let intB = 1;
 	let intC = 1;
-	let intD = Math.trunc(1 / floatMax);
+	let intD = Math.trunc(1 / realMax);
 	let more = true;
 	do {
-		const intN = Math.trunc((intB * floatMin - intA) / (intC - intD * floatMin));
+		const intN = Math.trunc((intB * realMin - intA) / (intC - intD * realMin));
 		if (intN === 0) {
 			more = false;
 		} else {
 			intA += intN * intC;
 			intB += intN * intD;
-			const intX = Math.trunc((intC - intD * floatMax) / (intB * floatMax - intA));
+			const intX = Math.trunc((intC - intD * realMax) / (intB * realMax - intA));
 			if (intX === 0) {
 				more = false;
 			} else {

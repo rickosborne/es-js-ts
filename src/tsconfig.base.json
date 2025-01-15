@@ -34,6 +34,7 @@
 			"@rickosborne/guard": ["packages/guard/index.ts"],
 			"@rickosborne/hue": ["packages/hue/index.ts"],
 			"@rickosborne/planar": ["packages/planar/index.ts"],
+			"@rickosborne/rebound": ["packages/rebound/index.ts"],
 			"@rickosborne/term": ["packages/term/index.ts"],
 			"@rickosborne/typical": ["packages/typical/index.ts"]
 		},
