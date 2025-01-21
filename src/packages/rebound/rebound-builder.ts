@@ -61,7 +61,7 @@ export class ReboundBuilder<
 > {
 	constructor(
 		private readonly config: BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>,
-		private readonly toRebound: <BWR extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(config: BWR) => Rebound<BoundsLabel<BWR>, LowerInc, Lower, Int, Upper, UpperInc>,
+		private readonly toRebound: <BWR extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(config: BWR) => Rebound<BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>, LowerInc, Lower, Int, Upper, UpperInc>,
 	) {
 	}
 
@@ -114,10 +114,13 @@ export class ReboundBuilder<
 
 	protected setLower<L extends number, LI extends LowerInEx>(lower: L, lowerInc: LI): asserts this is ReboundConfigBuilder<LI, L, Int, Upper, UpperInc> {
 		if (Number.isNaN(lower)) {
-			throw new Error("Lower bound cannot be NaN");
+			throw new Error("Bound cannot be NaN");
 		}
 		if (lower === Infinity) {
-			throw new Error("Use -Infinity for a lower bound.");
+			throw new Error("Use -Infinity for a lower bound");
+		}
+		if (this.config.upper != null && lower > this.config.upper) {
+			throw new Error("Bounds are reversed");
 		}
 		(this.config.lower as unknown as L) = lower;
 		(this.config.lowerInc as unknown as LowerInEx) = lowerInc;
@@ -125,10 +128,13 @@ export class ReboundBuilder<
 
 	protected setUpper<U extends number, UI extends UpperInEx>(upper: U, upperInc: UI): asserts this is ReboundConfigBuilder<LowerInc, Lower, Int, U, UI> {
 		if (Number.isNaN(upper)) {
-			throw new Error("Upper bound cannot be NaN");
+			throw new Error("Bound cannot be NaN");
 		}
 		if (upper === -Infinity) {
-			throw new Error("Use Infinity for an upper bound.");
+			throw new Error("Use Infinity for an upper bound");
+		}
+		if (this.config.lower != null && upper < this.config.lower) {
+			throw new Error("Bounds are reversed");
 		}
 		(this.config.upper as unknown as U) = upper;
 		(this.config.upperInc as unknown as UpperInEx) = upperInc;

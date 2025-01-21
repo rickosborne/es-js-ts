@@ -63,7 +63,7 @@ type IntFromReal<Real> = Real extends BoundNumber<infer Spec> ? BoundNumber<Spec
 
 export type Unbound<N> = N extends BoundNumber<infer _Spec> ? number : N;
 
-export const real01Bounds = Object.freeze({ gte: 0, lte: 1 } as const);
+export const real01Bounds = Object.freeze({ gte: 0, lte: 1 }) as Readonly<{ gte: 0, lte: 1 }>;
 type Real01Bounds = typeof real01Bounds;
 /**
  * A real number in the range [0,1].
@@ -73,7 +73,7 @@ export type Real01 = BoundNumber<Real01Bounds>
 /**
  * Bounds spec for {@link Real255}.
  */
-export const real255Bounds = Object.freeze({ gte: 0, lte: 255 } as const);
+export const real255Bounds = Object.freeze({ gte: 0, lte: 255 }) as Readonly<{ gte: 0, lte: 255 }>;
 type Real255Bounds = typeof real255Bounds;
 /**
  * A real number in the range [0,255].
@@ -83,21 +83,21 @@ export type Real255 = BoundNumber<Real255Bounds>
 /**
  * Bounds spec for {@link Int255}.
  */
-export const int255Bounds = Object.freeze({ gte: 0, int: true, lte: 255 } as const);
+export const int255Bounds = Object.freeze({ gte: 0, int: true, lte: 255 }) as Readonly<{ gte: 0, int: true, lte: 255 }>;
 type Int255Bounds = typeof int255Bounds;
 /**
  * An integer in the range [0,255].
  */
 export type Int255 = BoundNumber<Int255Bounds>;
 
-const int360Bounds = Object.freeze({ gte: 0, int: true, lt: 360 } as const);
+const int360Bounds = Object.freeze({ gte: 0, int: true, lt: 360 }) as Readonly<{ gte: 0, int: true, lt: 360 }>;
 type Int360Bounds = typeof int360Bounds;
 /**
  * An integer in the range [0,360).
  */
 export type Int360 = BoundNumber<Int360Bounds>;
 
-const real360Bounds = Object.freeze({ gte: 0, lt: 360 } as const);
+const real360Bounds = Object.freeze({ gte: 0, lt: 360 }) as Readonly<{ gte: 0, lt: 360 }>;
 type Real360Bounds = typeof real360Bounds;
 /**
  * A number in the range [0,360).

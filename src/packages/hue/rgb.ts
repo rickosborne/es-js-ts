@@ -1,12 +1,12 @@
 import { cssFormatAlpha01, cssFormatHex } from "@rickosborne/css";
-import { type Int255, minMax, type Real01, type Real255, roundBound, toInt255, toReal255 } from "@rickosborne/foundation";
+import { type Int255, minMax, type Real01, type Real255, roundBound, toReal255 } from "@rickosborne/foundation";
 import { NO_THROW, type ThrowOnError } from "@rickosborne/guard";
 import { colorComparatorBuilder, colorEqBuilder } from "./color-comparator.js";
 import { ColorConversionError } from "./color-conversion-error.js";
 
 /**
  * A color with RGB values, and possibly an alpha.
- * All values are integers in the range [0,255].
+ * All values are integers in the range [0..255].
  */
 export interface RGB {
 	a?: Int255 | undefined;

@@ -9,7 +9,7 @@ export const rangeFromConfig = <
 	Config extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>,
 >(config: Config): BoundsLabel<Config> => {
 	const { lower, lowerInc, int, upper, upperInc } = config;
-	return `${ lowerInc }${ lower === -Infinity ? "-∞" : lower } ${ int } ${ upper === Infinity ? "+∞" : upper }${ upperInc }` as BoundsLabel<Config>;
+	return `${ lowerInc }${ lower === -Infinity ? "-∞" : lower }${ int === INT_SET ? ".." : "," }${ upper === Infinity ? "+∞" : upper }${ upperInc }` as BoundsLabel<Config>;
 };
 
 export const rangeFromChecked = <Config extends CheckedBounds>(config: CheckedBounds): BoundsLabel<DefinedFromCheckedConfig<Config>> => {
@@ -22,3 +22,4 @@ export const rangeFromChecked = <Config extends CheckedBounds>(config: CheckedBo
 		upperInc: isUpperInc ? UPPER_IN : UPPER_EX,
 	});
 };
+

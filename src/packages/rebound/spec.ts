@@ -127,9 +127,9 @@ export type BoundsLabel<C extends DefinedBounds> = `${
 C extends { lowerInc: infer LowerInc extends LowerInEx } ? LowerInc : never
 }${
 C extends { lower: NegInfinity } ? NegInfinityLabel : C extends { lower: infer Lower extends number } ? number extends Lower ? never : `${ Lower }` : never
-} ${
-C extends { int: infer Int extends NumberSet } ? Int : never
-} ${
+}${
+C extends { int: infer Int extends NumberSet } ? Int extends IntegerSet ? ".." : "," : never
+}${
 C extends { upper: PosInfinity } ? PosInfinityLabel : C extends { upper: infer Upper extends number } ? number extends Upper ? never : `${ Upper }` : never
 }${
 C extends { upperInc: infer UpperInc extends UpperInEx } ? UpperInc : never

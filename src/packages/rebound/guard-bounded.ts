@@ -11,7 +11,7 @@ export interface GuardIfPresent<T extends number> extends TypedCheckedBounds {
 }
 
 export type IfIfPresent<IfPresent extends boolean, T> = IfPresent extends true ? (T | null | undefined) : T;
-export type If<IfPresent extends boolean, T, U> = IfPresent extends true ? T : U;
+export type If<IfPresent extends boolean | undefined, T, U> = IfPresent extends true ? T : U;
 
 export const validateBounded = <IsLowerInc extends boolean, Lower extends number, IsInt extends boolean, Upper extends number, IsUpperInc extends boolean, IfPresent extends boolean>(
 	isLowerInc: IsLowerInc,
@@ -19,7 +19,7 @@ export const validateBounded = <IsLowerInc extends boolean, Lower extends number
 	isInt: IsInt,
 	upper: Upper,
 	isUpperInc: IsUpperInc,
-	ifPresent: boolean,
+	ifPresent: IfPresent,
 	value: unknown,
 ): value is IfIfPresent<IfPresent, number & ReboundedFromChecked<IsLowerInc, Lower, IsInt, Upper, IsUpperInc>> => {
 	return (ifPresent && value == null) ||
