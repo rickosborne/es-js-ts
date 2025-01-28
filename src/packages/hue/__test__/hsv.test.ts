@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { cssFormatHSV, type HSV, hsvComparator, toHSV } from "../hsv.js";
+import type { HSV } from "../hsv.js";
+import { cssFormatHSV, hsvComparator, toHSV } from "../hsv.js";
 import { testComparator } from "./wiki-colors.fixture.js";
 
 describe(hsvComparator.name, () => {

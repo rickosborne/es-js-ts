@@ -1,13 +1,17 @@
 import { cssFormatPercent } from "@rickosborne/css";
-import { type Int255, type Int360, type Real01, toReal01 } from "@rickosborne/foundation";
+import { toReal01 } from "@rickosborne/rebound";
+import type { Int255, Int360, Real01 } from "@rickosborne/rebound";
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { ColorConversionError } from "../color-conversion-error.js";
-import { Color, type UncheckedColorParts } from "../color.js";
+import type { UncheckedColorParts } from "../color.js";
+import { Color } from "../color.js";
 import { toHSL } from "../hsl.js";
 import { toHSV } from "../hsv.js";
 import { toRGB } from "../rgb.js";
-import { type CombinedParts, testColor } from "./test-color.fixture.js";
+import type { IntRGB, IntRGBA } from "../rgb.js";
+import { testColor } from "./test-color.fixture.js";
+import type { CombinedParts } from "./test-color.fixture.js";
 import { WIKI_COLORS } from "./wiki-colors.fixture.js";
 
 const blueParts: UncheckedColorParts = {
@@ -24,7 +28,7 @@ const blueParts: UncheckedColorParts = {
 };
 
 const blueCombined = {
-	rgb: toRGB(51, 102, 153, 255),
+	rgb: toRGB(51, 102, 153, 255) as IntRGBA,
 	hsl: toHSL(210, 0.5, 0.4, 1),
 	hsv: toHSV(210, 0.6667, 0.6, 1),
 	cssHSL: "hsl(210 50% 40%)",
@@ -104,7 +108,7 @@ describe(Color.name, () => {
 			sl01: (1 + blueParts.sl01!) / 2,
 			lum01: (1 + blueParts.lum01!) / 2,
 		}, {
-			rgb: toRGB(121, 179, 236),
+			rgb: toRGB(121, 179, 236) as IntRGB,
 			hsl: toHSL(before.hue360, (1 + blueParts.sl01!) / 2, (1 + blueParts.lum01!) / 2),
 			hsv: toHSV(before.hue360, 0.4865, 0.925),
 			cssHSL: "hsl(210 75% 70%)",
@@ -128,7 +132,7 @@ describe(Color.name, () => {
 			sl01: 0.7143,
 			lum01: 0.46667,
 		}, {
-			rgb: toRGB(34, 119, 204),
+			rgb: toRGB(34, 119, 204) as IntRGB,
 			hsl: toHSL(before.hue360, 0.7143, 0.46667),
 			hsv: toHSV(before.hue360, (1 + blueParts.sv01!) / 2, (1 + blueParts.val01!) / 2),
 			cssHSL: "hsl(210 71.4% 46.7%)",

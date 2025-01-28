@@ -10,6 +10,7 @@ export const randomBounded = <
 	N extends number,
 >(
 	typeName: string,
+	label: string,
 	isLowerInc: boolean,
 	lower: number,
 	isInt: boolean,
@@ -34,6 +35,6 @@ export const randomBounded = <
 		fn = () => (rng.float01() * range) + low as N;
 	}
 	return addTypedProperties(fn, {
-		upper, lower, isUpperInc, isLowerInc, isInt,
+		label, upper, lower, isUpperInc, isLowerInc, isInt,
 	}, typeName, fnName);
 };

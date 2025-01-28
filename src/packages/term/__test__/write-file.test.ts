@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { type PackageJsonLike } from "../package-json.js";
+import type { PackageJsonLike } from "../package-json.js";
 import { writeJson, writeText } from "../write-file.js";
 
 describe(writeJson.name, () => {

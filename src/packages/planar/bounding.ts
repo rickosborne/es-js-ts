@@ -1,4 +1,4 @@
-import { type Circle, LineSegment, type Path, Rect, Shape } from "./2d.js";
+import type { Circle, LineSegment, Path, Rect, Shape } from "./2d.js";
 import { isCircle, isLineSegment, isPath } from "./is-shape.js";
 
 type PathBounds = {

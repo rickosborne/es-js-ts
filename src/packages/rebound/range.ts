@@ -1,4 +1,5 @@
-import { type BoundsConfig, type BoundsLabel, type CheckedBounds, type DefinedFromCheckedConfig, INT_SET, LOWER_EX, LOWER_IN, type LowerInEx, type NumberSet, REAL_SET, UPPER_EX, UPPER_IN, type UpperInEx } from "./spec.js";
+import { INT_SET, LOWER_EX, LOWER_IN, REAL_SET, UPPER_EX, UPPER_IN } from "./spec.js";
+import type { BoundsConfig, BoundsLabel, CheckedBounds, DefinedFromCheckedConfig, LowerInEx, NumberSet, UpperInEx } from "./spec.js";
 
 export const rangeFromConfig = <
 	LowerInc extends LowerInEx,

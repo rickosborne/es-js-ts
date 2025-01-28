@@ -1,5 +1,5 @@
 import { isInt as isIntValue } from "@rickosborne/guard";
-import { type BoundedNumber, type CheckedBounds, type ReboundedFromChecked, type TypedCheckedBounds } from "./spec.js";
+import type { ReboundedFromChecked, TypedCheckedBounds } from "./spec.js";
 import { addTypedProperties } from "./typed-function.js";
 
 export interface GuardExact<T extends number> extends TypedCheckedBounds {
@@ -33,7 +33,7 @@ export const validateBounded = <IsLowerInc extends boolean, Lower extends number
 /**
  * Generate a guard for the branded number type matching the given spec.
  */
-export function guardForBounds<Bounds extends CheckedBounds, N extends BoundedNumber<Bounds>, IfPresent extends boolean>(
+export function guardForBounds<Bounds extends Omit<TypedCheckedBounds, "typeName">, N extends number, IfPresent extends boolean>(
 	bounds: Bounds,
 	typeName: string,
 	fnName: string,

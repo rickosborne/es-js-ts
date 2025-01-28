@@ -1,5 +1,5 @@
 import { window2 } from "@rickosborne/foundation";
-import { Polygon } from "./2d.js";
+import type { Polygon } from "./2d.js";
 
 /**
  * Calculate the {@link https://en.wikipedia.org/wiki/Signed_area | signed area} of a polygon.

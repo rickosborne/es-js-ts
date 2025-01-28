@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, test } from "mocha";
-import { colorTokensFromCSS, type FunctionColorToken } from "../color-parser.js";
+import type { FunctionColorToken } from "../color-parser.js";
+import { colorTokensFromCSS } from "../color-parser.js";
 import { TRANSPARENT } from "../colors.js";
 import { CSSError } from "../css-error.js";
 

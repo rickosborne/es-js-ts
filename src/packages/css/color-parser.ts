@@ -1,4 +1,5 @@
-import { type CSSColorName, toCSSColorName } from "./colors.js";
+import type { CSSColorName } from "./colors.js";
+import { toCSSColorName } from "./colors.js";
 import type { CSSErrorOptions } from "./css-error.js";
 import { CSSError } from "./css-error.js";
 import { HREF_COLOR, HREF_COLOR_FN } from "./href.js";

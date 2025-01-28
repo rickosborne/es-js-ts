@@ -1,15 +1,16 @@
-import type { Int255 } from "@rickosborne/foundation";
+import type { Int255 } from "@rickosborne/rebound";
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import type { UnbrandedNumbers } from "../color-comparator.js";
 import { hslFromHSV, hslFromRGB, hsvFromHSL, rgbFromHSL, rgbFromHSV } from "../color-conversion.js";
-import { type HSL, hslEq } from "../hsl.js";
-import { type HSV, hsvEq } from "../hsv.js";
+import { hslEq } from "../hsl.js";
+import type { HSL } from "../hsl.js";
+import { hsvEq } from "../hsv.js";
+import type { HSV } from "../hsv.js";
 import { COLOR_EPSILON } from "../numbers.js";
-import { type RGB, type RGB255, rgb255From01, rgbEq } from "../rgb.js";
+import { rgbEq } from "../rgb.js";
+import type { IntRGB, RGB01, RGB255 } from "../rgb.js";
 import { WIKI_COLORS } from "./wiki-colors.fixture.js";
-
-const skipForNow = new Set<string>([ "#F0C80E.g" ]);
 
 const compareColors = <C extends object>(
 	epsilons: Partial<Record<keyof C, number>>,
@@ -21,7 +22,7 @@ const compareColors = <C extends object>(
 			const bValue = b[ key ] as number | undefined;
 			const label = hex.concat(".", key);
 			expect(aValue == null, label).eq(bValue == null);
-			if (aValue != null && bValue != null && !skipForNow.has(label)) {
+			if (aValue != null && bValue != null) {
 				const eps = epsilons[ key ] ?? COLOR_EPSILON;
 				expect(aValue, label).closeTo(bValue, eps);
 			}
@@ -31,7 +32,7 @@ const compareColors = <C extends object>(
 
 const compareHSL = compareColors<HSL>({ h: 1, s: 0.01, l: 0.01 }, "h", "s", "l", "a");
 const compareHSV = compareColors<HSV>({ h: 1, s: 0.01, v: 0.01 }, "h", "s", "v", "a");
-const compareRGB = compareColors<RGB255>({ r: 2, g: 2, b: 2 }, "r", "g", "b", "a");
+const compareRGB = compareColors<RGB255 | RGB01>({ r: 2, g: 2, b: 2 }, "r", "g", "b", "a");
 
 describe("color-conversion", () => {
 	describe(hslFromHSV.name, () => {
@@ -58,10 +59,10 @@ describe("color-conversion", () => {
 
 	describe(rgbFromHSL.name, () => {
 		it("matches wikipedia", () => {
-			for (const { hex, hsl, rgb } of WIKI_COLORS) {
-				const converted = rgb255From01(rgbFromHSL(hsl));
-				compareRGB(rgb, converted, hex);
-				expect(rgbEq(rgb, converted, { g: 2.5 }), `${JSON.stringify(rgb)} -> ${JSON.stringify(converted)}`).eq(true);
+			for (const { hex, hsl, rgb, rgb01 } of WIKI_COLORS) {
+				const converted = rgbFromHSL(hsl);
+				compareRGB(rgb01, converted, hex);
+				expect(rgbEq(rgb01, converted, { g: 2.5 }), `${JSON.stringify(rgb)} -> ${JSON.stringify(converted)}`).eq(true);
 			}
 			const rgb = WIKI_COLORS[ 0 ]!.rgb;
 			expect(rgbEq(rgb, undefined)).eq(false);
@@ -70,7 +71,7 @@ describe("color-conversion", () => {
 			expect(rgbEq(rgb, rgb)).eq(true);
 			expect(rgbEq(rgb, { ...rgb })).eq(true);
 			const { r: _r, ...broken } = rgb;
-			expect(rgbEq(rgb, broken as RGB)).eq(false);
+			expect(rgbEq(rgb, broken as IntRGB)).eq(false);
 			const close = { ...rgb };
 			close.r = close.r + 3 as Int255;
 			expect(rgbEq(rgb, close)).eq(false);
@@ -80,10 +81,10 @@ describe("color-conversion", () => {
 
 	describe(rgbFromHSV.name, () => {
 		it("matches wikipedia", () => {
-			for (const { hex, hsv, rgb } of WIKI_COLORS) {
-				const converted = rgb255From01(rgbFromHSV(hsv));
-				compareRGB(rgb, converted, hex);
-				expect(rgbEq(rgb, converted, { g: 3 }), `${hex}: ${JSON.stringify(rgb)} -> ${JSON.stringify(converted)}`).eq(true);
+			for (const { hex, hsv, rgb01 } of WIKI_COLORS) {
+				const converted = rgbFromHSV(hsv);
+				compareRGB(rgb01, converted, hex);
+				expect(rgbEq(rgb01, converted, { g: 3 }), `${hex}: ${JSON.stringify(rgb01)} -> ${JSON.stringify(converted)}`).eq(true);
 			}
 			expect(rgbFromHSV(undefined)).eq(undefined);
 		});

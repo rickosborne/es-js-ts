@@ -1,4 +1,5 @@
-import { CCW, CW, Orientation, Point, Polygon, STRAIGHT } from "../2d.js";
+import type { Orientation, Point, Polygon } from "../2d.js";
+import { CCW, CW, STRAIGHT } from "../2d.js";
 import { SQRT_2, SQRT_5 } from "../constant.js";
 
 export type ShapeFixture = {

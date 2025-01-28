@@ -10,7 +10,7 @@ describe(scaleBounded.name, () => {
 		isLowerInc: true,
 		isUpperInc: false,
 		lower: 0,
-		range: "[0 real 1)",
+		label: "[0 real 1)",
 		typeName: "Float01",
 		upper: 1,
 	};
@@ -19,7 +19,7 @@ describe(scaleBounded.name, () => {
 		isLowerInc: true,
 		isUpperInc: true,
 		lower: 0,
-		range: "[0 int 255]",
+		label: "[0 int 255]",
 		typeName: "Byte",
 		upper: 255,
 	};
@@ -28,7 +28,7 @@ describe(scaleBounded.name, () => {
 		isLowerInc: true,
 		isUpperInc: true,
 		lower: 2,
-		range: "[2 int 8]",
+		label: "[2 int 8]",
 		typeName: "TwoEight",
 		upper: 8,
 	};

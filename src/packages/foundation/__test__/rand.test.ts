@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it, test } from "mocha";
-import { LCE_PRESET_NAMES, randomNumberGenerator, type RNG } from "../rand.js";
+import type { RNG } from "../rand.js";
+import { LCE_PRESET_NAMES, randomNumberGenerator } from "../rand.js";
 
 const testDistribution = (
 	rng: RNG,

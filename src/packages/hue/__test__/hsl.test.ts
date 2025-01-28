@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { cssFormatHSL, type HSL, hslComparator, toHSL } from "../hsl.js";
+import type { HSL } from "../hsl.js";
+import { cssFormatHSL, hslComparator, toHSL } from "../hsl.js";
 import { testComparator } from "./wiki-colors.fixture.js";
 
 describe(hslComparator.name, () => {

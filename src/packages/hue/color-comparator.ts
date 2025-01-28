@@ -1,12 +1,14 @@
-import { closeTo, type Unbound } from "@rickosborne/foundation";
-import { A_GT_B, A_LT_B, type Comparator, EQ } from "@rickosborne/typical";
+import { closeTo } from "@rickosborne/foundation";
+import type { Unbound } from "@rickosborne/rebound";
+import type { Comparator } from "@rickosborne/typical";
+import { A_GT_B, A_LT_B, EQ } from "@rickosborne/typical";
 
 /**
  * Remove the branding from number values, to make type operations
  * less onerous for generics.
  */
 export type UnbrandedNumbers<C extends object> = {
-	[K in keyof C]: Unbound<C[K]>;
+	[K in keyof C]: C[K] extends number ? Unbound<C[K]> : C[K];
 }
 
 /**

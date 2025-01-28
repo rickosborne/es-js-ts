@@ -1,5 +1,6 @@
 import { Extractor, ExtractorConfig } from "@microsoft/api-extractor";
-import { ApiDeclaredItem, ApiDocumentedItem, ApiItem, ApiItemKind, ApiModel } from "@microsoft/api-extractor-model";
+import type { ApiItem, ApiItemKind } from "@microsoft/api-extractor-model";
+import { ApiDeclaredItem, ApiDocumentedItem, ApiModel } from "@microsoft/api-extractor-model";
 import * as tsdoc from "@microsoft/tsdoc";
 import { comparatorBuilder, memoizeSupplier } from "@rickosborne/foundation";
 import { readFile, writeText } from "@rickosborne/term";

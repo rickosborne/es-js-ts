@@ -1,11 +1,19 @@
-import { assertInt255, assertInt360, assertReal01, type Int255, int255From01, type Int360, isInt255, isInt360, isReal01, type Real01, real01From255, toInt255, toInt360, toReal01 } from "../bounds.js";
 import { expect } from "chai";
 import { describe, it } from "mocha";
+import type { FromNumberIfPresent } from "../index.js";
+import { int255From01 } from "../int255-from-01.js";
+import type { Int255 } from "../int255.js";
+import { assertInt255, isInt255, toInt255 } from "../int255.js";
+import type { Int360 } from "../int360.js";
+import { assertInt360, isInt360, toInt360 } from "../int360.js";
+import { real01From255 } from "../real01-from-255.js";
+import type { Real01 } from "../real01.js";
+import { assertReal01, isReal01, toReal01 } from "../real01.js";
 
-const rangeTest = <T>(
+const rangeTest = <T extends number>(
 	guard: (value: unknown) => value is T,
 	asserter: (value: unknown, name?: string) => asserts value is T,
-	upgrade: (value: number | undefined) => T | undefined,
+	upgrade: FromNumberIfPresent<T>,
 	minValue: number,
 	minInclusive: boolean,
 	maxValue: number,

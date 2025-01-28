@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { ANGLE_CONVERSIONS, type CSSAngleUnit } from "../angle.js";
+import type { CSSAngleUnit } from "../angle.js";
+import { ANGLE_CONVERSIONS } from "../angle.js";
 import { CSSError } from "../css-error.js";
 import { convertBetweenUnits, dimensionFromCSS } from "../units.js";
 

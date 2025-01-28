@@ -1,5 +1,5 @@
 import { hasNumber } from "@rickosborne/guard";
-import { Polygon } from "./2d.js";
+import type { Polygon } from "./2d.js";
 
 /**
  * Reverse the point order of a polygon, while keeping the starting

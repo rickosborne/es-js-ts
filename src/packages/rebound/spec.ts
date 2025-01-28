@@ -116,12 +116,12 @@ export interface TypedBounds extends RangedBounds {
 }
 
 export interface TypedCheckedBounds extends CheckedBounds {
-	range: string;
+	label: string;
 	typeName: string;
 }
 
 export const TYPED_BOUNDS_KEYS: (keyof TypedBounds)[] = [ "typeName", "range", "lowerInc", "lower", "int", "upper", "upperInc" ];
-export const TYPED_CHECKED_BOUNDS_KEYS: (keyof TypedCheckedBounds)[] = [ "typeName", "range", "lower", "upper", "isInt", "isLowerInc", "isUpperInc" ];
+export const TYPED_CHECKED_BOUNDS_KEYS: (keyof TypedCheckedBounds)[] = [ "typeName", "label", "lower", "upper", "isInt", "isLowerInc", "isUpperInc" ];
 
 export type BoundsLabel<C extends DefinedBounds> = `${
 C extends { lowerInc: infer LowerInc extends LowerInEx } ? LowerInc : never

@@ -2,7 +2,8 @@ import { NO_THROW } from "@rickosborne/guard";
 import { expect } from "chai";
 import { describe, it } from "mocha";
 import { ColorConversionError } from "../color-conversion-error.js";
-import { chroma01FromRGB, cssFormatRGB, type RGB, rgbComparator, rgbFromHex, toRGB } from "../rgb.js";
+import type { IntRGB } from "../rgb.js";
+import { chroma01FromRGB, cssFormatRGB, rgbComparator, rgbFromHex, rgbIntFrom01, toRGB } from "../rgb.js";
 import { hue360FromRGB } from "../color-conversion.js";
 import { testComparator } from "./wiki-colors.fixture.js";
 
@@ -68,8 +69,8 @@ describe(hue360FromRGB.name, () => {
 
 describe(rgbComparator.name, () => {
 	it("sorts", () => {
-		testComparator<RGB>(
-			(w) => w.rgb,
+		testComparator<IntRGB>(
+			(w) => rgbIntFrom01(w.rgb01),
 			rgbComparator,
 			"r", "g", "b", "a",
 		);

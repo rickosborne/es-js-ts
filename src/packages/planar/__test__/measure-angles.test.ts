@@ -1,7 +1,8 @@
 import { assertDefined } from "@rickosborne/guard";
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { Angle, CCW, CW, Point, type Polygon, STRAIGHT } from "../2d.js";
+import type { Angle, Point, Polygon } from "../2d.js";
+import { CCW, CW, STRAIGHT } from "../2d.js";
 import { PI, PI_2, PI_3_4, PI_4 } from "../constant.js";
 import { measureAngle, measureAngles } from "../measure-angles.js";
 import { ORIGIN, point, pointAdd, pointEq } from "../point.js";

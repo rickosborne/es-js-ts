@@ -1,5 +1,7 @@
 import { window2 } from "@rickosborne/foundation";
-import { A_GT_B, A_LT_B, EQ, type ItemType } from "@rickosborne/typical";
+import { toReal01 } from "@rickosborne/rebound";
+import type { ItemType } from "@rickosborne/typical";
+import { A_GT_B, A_LT_B, EQ } from "@rickosborne/typical";
 import { expect } from "chai";
 import type { UnbrandedNumbers } from "../color-comparator.js";
 import { toHSL } from "../hsl.js";
@@ -50,7 +52,8 @@ export const WIKI_COLORS = ([
 	hex, r01, g01, b01, h360, h2, c01, _c2, v01, l01, _i, _y601, sv01, sl01,
 	hsl: toHSL(Math.round(h360 ?? 0), sl01, l01),
 	hsv: toHSV(Math.round(h360 ?? 0), sv01, v01),
-	rgb: toRGB(Math.round(r01 * 255), Math.round(g01 * 255), Math.round(b01 * 255)),
+	rgb: toRGB(r01 * 255, g01 * 255, b01 * 255),
+	rgb01: { r: toReal01(r01), g: toReal01(g01), b: toReal01(b01) },
 }));
 
 

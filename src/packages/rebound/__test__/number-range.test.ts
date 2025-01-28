@@ -1,7 +1,9 @@
 import { expect } from "chai";
 import { describe, it, test } from "mocha";
-import { IntegerRange, NumberRange, RealRange } from "../number-range.js";
+import { IntegerRange } from "../integer-range.js";
+import type { NumberRange } from "../number-range.js";
 import { RangeBase } from "../range-base.js";
+import { RealRange } from "../real-range.js";
 
 describe(IntegerRange.name, () => {
 	const oneFiveII = new IntegerRange(1, 5);

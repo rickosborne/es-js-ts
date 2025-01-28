@@ -1,5 +1,6 @@
 import { window3, withLazyProperty } from "@rickosborne/foundation";
-import { Angle, Orientation, Point, Polygon, PolygonWithRadians, WithAngles } from "./2d.js";
+import type { Angle, Point, Polygon, PolygonWithRadians, WithAngles } from "./2d.js";
+import { Orientation } from "./2d.js";
 
 /**
  * Mixin for the intermediary values used for calculating angles defined

@@ -1,4 +1,5 @@
-import { Orientation, Polygon } from "./2d.js";
+import type { Polygon } from "./2d.js";
+import { Orientation } from "./2d.js";
 import { signedAreaOfPolygon } from "./signed-area.js";
 
 /**

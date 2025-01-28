@@ -1,15 +1,23 @@
 import { computeIfAbsent, lowerFirst } from "@rickosborne/foundation";
 import { scrubStackTrace } from "@rickosborne/guard";
 import type { AnyFunction } from "@rickosborne/typical";
-import { type AssertExact, assertForBounds, type AssertIfPresent } from "./assert-bounded.js";
-import { type FromNumber, fromNumberForBounds, type FromNumberIfPresent } from "./from-number-bounded.js";
-import { type GuardExact, guardForBounds, type GuardIfPresent, type If } from "./guard-bounded.js";
-import { CEIL, type ConvertTo, FLOOR, integerFrom, type IntStrategy, ROUND, TRUNC } from "./integer-from.js";
-import { integerGenerator, type IntegerGeneratorOptions } from "./integer-generator.js";
-import { type RandomBounded, randomBounded } from "./random-bounded.js";
-import { rangeFromConfig } from "./range.js";
-import { ReboundBuilder, type ReboundConfigBuilder } from "./rebound-builder.js";
-import { type BoundedNumber, BOUNDS, type BoundsConfig, type BoundsLabel, type BoundsWithRange, INT_SET, LOWER_IN, type LowerInEx, type NumberSet, type OutOfBoundsErrorProvider, REAL_SET, type Rebounded, UPPER_IN, type UpperInEx } from "./spec.js";
+import { assertForBounds } from "./assert-bounded.js";
+import type { AssertExact, AssertIfPresent } from "./assert-bounded.js";
+import { fromNumberForBounds } from "./from-number-bounded.js";
+import type { FromNumber, FromNumberIfPresent } from "./from-number-bounded.js";
+import { guardForBounds } from "./guard-bounded.js";
+import type { GuardExact, GuardIfPresent, If } from "./guard-bounded.js";
+import type { ConvertTo, IntStrategy } from "./integer-from.js";
+import { CEIL, FLOOR, integerFrom, ROUND, TRUNC } from "./integer-from.js";
+import type { IntegerGeneratorOptions } from "./integer-generator.js";
+import { integerGenerator } from "./integer-generator.js";
+import type { NumberRange } from "./number-range.js";
+import { randomBounded } from "./random-bounded.js";
+import type { RandomBounded } from "./random-bounded.js";
+import type { ReboundConfigBuilder } from "./rebound-builder.js";
+import { ReboundBuilder } from "./rebound-builder.js";
+import { BOUNDS } from "./spec.js";
+import type { BoundedNumber, BoundsConfig, LowerInEx, NumberSet, OutOfBoundsErrorProvider, TypedCheckedBounds, UpperInEx } from "./spec.js";
 import { ifIfPresent } from "./util.js";
 
 export interface ReboundAllowUndef {
@@ -39,58 +47,48 @@ export interface ResolvedToIntOptions extends Required<ReboundToIntOptions> {
 	defaultName: string;
 }
 
-export class Rebound<
-	Range extends BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>,
-	LowerInc extends LowerInEx,
-	Lower extends number,
-	Int extends NumberSet,
-	Upper extends number,
-	UpperInc extends UpperInEx,
-> implements BoundsWithRange<Range, LowerInc, Lower, Int, Upper, UpperInc>, Rebounded<Range, LowerInc, Lower, Int, Upper, UpperInc> {
+export class Rebound<N extends number> implements TypedCheckedBounds {
 	public static buildType(typeName: string): ReboundConfigBuilder<LowerInEx, number, NumberSet, number, UpperInEx> {
 		return new ReboundBuilder(
 			{} as BoundsConfig<LowerInEx, number, NumberSet, number, UpperInEx>,
-			<LowerInc extends LowerInEx, Lower extends number, Int extends NumberSet, Upper extends number, UpperInc extends UpperInEx, Config extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(
-				config: Config,
-			) => new Rebound<BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>, LowerInc, Lower, Int, Upper, UpperInc>(typeName, config));
+			<Config extends BoundsConfig<LowerInEx, number, NumberSet, number, UpperInEx>>(
+				_config: Config,
+				range: NumberRange,
+			) => new Rebound<BoundedNumber<Config>>(typeName, range));
 	}
 
 	private readonly fnCache = new Map<string, AnyFunction>();
-	public readonly int: Int;
 	public readonly isInt: boolean;
 	public readonly isLowerInc: boolean;
-	public readonly isReal: boolean;
 	public readonly isUpperInc: boolean;
-	public readonly lower: Lower;
-	public readonly lowerInc: LowerInc;
-	public readonly numberType: BoundedNumber<this> = NaN as BoundedNumber<this>;
+	public readonly label: string;
+	public readonly lower: number;
+	public readonly numberType: N = NaN as N;
 	public readonly outOfBoundsErrorProvider: OutOfBoundsErrorProvider;
-	public readonly range: Range;
-	public readonly upper: Upper;
-	public readonly upperInc: UpperInc;
+	public readonly range: NumberRange;
+	public readonly typeName: string;
+	public readonly upper: number;
 
 	protected constructor(
-		public readonly typeName: string,
-		config: BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>,
+		typeName: string,
+		range: NumberRange,
 	) {
-		this.int = config.int;
-		this.upper = config.upper;
-		this.lower = config.lower;
-		this.lowerInc = config.lowerInc;
-		this.upperInc = config.upperInc;
-		this.range = rangeFromConfig(config) as Range;
-		this.isInt = config.int === INT_SET;
-		this.isReal = config.int === REAL_SET;
-		this.isLowerInc = config.lowerInc === LOWER_IN;
-		this.isUpperInc = config.upperInc === UPPER_IN;
+		this.range = range;
+		this.typeName = typeName;
+		this.isInt = range.isInt;
+		this.isUpperInc = range.isUpperInc;
+		this.isLowerInc = range.isLowerInc;
+		this.lower = range.lower;
+		this.upper = range.upper;
+		this.label = range.label;
 		this.outOfBoundsErrorProvider = (v, n) => this.outOfRangeError(v, n);
 	}
 
-	public get assert(): AssertExact<BoundedNumber<this>> {
+	public get assert(): AssertExact<BoundedNumber<N>> {
 		return this.assertWith();
 	}
 
-	public assertWith<Options extends ReboundFnOptions>(options?: Options): Options extends ReboundAllowUndef ? AssertIfPresent<BoundedNumber<this>> : AssertExact<BoundedNumber<this>> {
+	public assertWith<Options extends ReboundFnOptions>(options?: Options): Options extends ReboundAllowUndef ? AssertIfPresent<BoundedNumber<N>> : AssertExact<BoundedNumber<N>> {
 		const config = this.withOptions(options, "assert");
 		const guard = ifIfPresent(config.ifPresent, this.guardWith({ ifPresent: true }), this.guard);
 		return this.cacheFn(config, () => assertForBounds(guard, config.errorProvider, config.ifPresent));
@@ -101,53 +99,53 @@ export class Rebound<
 		return computeIfAbsent(key, this.fnCache as Map<string, F>, compute);
 	}
 
-	public get ceil(): ConvertTo<BoundedNumber<this>> {
+	public get ceil(): ConvertTo<N> {
 		return this.toIntWith({ strategy: CEIL });
 	}
 
-	public get floor(): ConvertTo<BoundedNumber<this>> {
+	public get floor(): ConvertTo<N> {
 		return this.toIntWith({ strategy: FLOOR });
 	}
 
-	public get fromNumber(): FromNumber<BoundedNumber<this>> {
+	public get fromNumber(): FromNumber<N> {
 		return this.fromNumberWith({ ifPresent: false });
 	}
 
-	public fromNumberWith<Options extends ReboundFnOptions>(options?: Options): Options extends ReboundAllowUndef ? FromNumberIfPresent<BoundedNumber<this>> : FromNumber<BoundedNumber<this>> {
+	public fromNumberWith<Options extends ReboundFnOptions>(options?: Options): Options extends ReboundAllowUndef ? FromNumberIfPresent<N> : FromNumber<N> {
 		const config = this.withOptions(options, "", "FromNumber");
-		return this.cacheFn(config, () => fromNumberForBounds(this.guard, config.errorProvider, config.ifPresent, config.fnName)) as Options extends ReboundAllowUndef ? FromNumberIfPresent<BoundedNumber<this>> : FromNumber<BoundedNumber<this>>;
+		return this.cacheFn(config, () => fromNumberForBounds(this.guard, config.errorProvider, config.ifPresent, config.fnName)) as Options extends ReboundAllowUndef ? FromNumberIfPresent<N> : FromNumber<N>;
 	}
 
-	public get guard(): GuardExact<BoundedNumber<this>> {
+	public get guard(): GuardExact<N> {
 		return this.guardWith({ ifPresent: false });
 	};
 
-	public guardWith<Options extends Omit<ReboundFnOptions, "errorProvider">>(options?: Options): If<Options["ifPresent"], GuardIfPresent<BoundedNumber<this>>, GuardExact<BoundedNumber<this>>> {
+	public guardWith<Options extends Omit<ReboundFnOptions, "errorProvider">>(options?: Options): If<Options["ifPresent"], GuardIfPresent<N>, GuardExact<N>> {
 		const config = this.withOptions(options, "is");
 		return this.cacheFn(
 			config,
-			() => guardForBounds(this, this.typeName, config.fnName, config.ifPresent) as If<Options["ifPresent"], GuardIfPresent<BoundedNumber<this>>, GuardExact<BoundedNumber<this>>>,
+			() => guardForBounds(this.range, this.typeName, config.fnName, config.ifPresent) as If<Options["ifPresent"], GuardIfPresent<N>, GuardExact<N>>,
 		);
 	}
 
-	public get integers(): Generator<BoundedNumber<this>, undefined, undefined> {
+	public get integers(): Generator<N, undefined, undefined> {
 		return this.integersWith();
 	}
 
-	public integersWith(options: IntegerGeneratorOptions = {}): Generator<BoundedNumber<this>, undefined, undefined> {
-		return integerGenerator(this, options);
+	public integersWith(options: IntegerGeneratorOptions = {}): Generator<N, undefined, undefined> {
+		return integerGenerator(this.range, options);
 	}
 
 	public outOfRangeError(value: unknown, name?: string | undefined): RangeError {
 		const type = value === null ? "null" : value === undefined ? "undefined" : typeof value;
-		return scrubStackTrace(new RangeError(`Expected ${ name == null ? "" : name.concat(":") } ${ this.typeName } ${ this.range }, actual: ${ type === "number" ? value as number : type }`), /at ((?:Rebound[.])?outOfRangeError|buildError)/);
+		return scrubStackTrace(new RangeError(`Expected ${ name == null ? "" : name.concat(":") } ${ this.typeName } ${ this.range.toString() }, actual: ${ type === "number" ? value as number : type }`), /at ((?:Rebound[.])?outOfRangeError|buildError)/);
 	}
 
-	public get random(): RandomBounded<BoundedNumber<this>> {
+	public get random(): RandomBounded<N> {
 		return this.randomWith();
 	}
 
-	public randomWith(options: ReboundRandomOptions | undefined = {}): RandomBounded<BoundedNumber<this>> {
+	public randomWith(options: ReboundRandomOptions | undefined = {}): RandomBounded<N> {
 		const defaultName = `random${ this.typeName }`;
 		const {
 			fnName = defaultName,
@@ -158,20 +156,20 @@ export class Rebound<
 			errorProvider: this.outOfBoundsErrorProvider,
 			fnName: options?.fnName ?? defaultName,
 			ifPresent: false,
-		}, () => randomBounded(this.typeName, this.isLowerInc, this.lower, this.isInt, this.upper, this.isUpperInc, rng, fnName));
+		}, () => randomBounded(this.typeName, this.range.label, this.range.isLowerInc, this.range.lower, this.range.isInt, this.range.upper, this.range.isUpperInc, rng, fnName));
 	}
 
-	public get round(): ConvertTo<BoundedNumber<this>> {
+	public get round(): ConvertTo<N> {
 		return this.toIntWith({ strategy: ROUND });
 	}
 
-	public toIntWith<Options extends ReboundToIntOptions>(options: Options): ConvertTo<BoundedNumber<this>> {
+	public toIntWith<Options extends ReboundToIntOptions>(options: Options): ConvertTo<N> {
 		const config = this.withIntStrategy(options);
 		const { errorProvider, fnName, ifPresent, strategy } = config;
-		return this.cacheFn(config, () => integerFrom(this.typeName, this, errorProvider, ifPresent, strategy, fnName));
+		return this.cacheFn(config, () => integerFrom(this.typeName, this.range, errorProvider, ifPresent, strategy, fnName));
 	}
 
-	public get trunc(): ConvertTo<BoundedNumber<this>> {
+	public get trunc(): ConvertTo<N> {
 		return this.toIntWith({ strategy: TRUNC });
 	}
 

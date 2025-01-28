@@ -1,6 +1,6 @@
 import { describe, expect, it } from "tstyche";
 import type { Either } from "../either.js";
-import { type Fruit, type Vegetable } from "./fixture.js";
+import type { Fruit, Vegetable } from "./fixture.js";
 
 describe("Either", () => {
 	it("masks out each side", () => {

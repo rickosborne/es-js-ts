@@ -1,13 +1,7 @@
 import { describe, expect, it } from "tstyche";
 import type { Equals } from "../equal.js";
-import type { IfSpecificKeys } from "../keys.js";
-import type { SpecificKey } from "../keys.js";
-import { type CombinedKeys, FlagKeys, OptionalKeys, type ReadOnlyKeys, RequiredKeys, type SharedKeys, type SpecificKeys } from "../keys.js";
-import type { Vegetable } from "./fixture.js";
-import type { Fruit } from "./fixture.js";
-import type { Basics } from "./fixture.js";
-import type { someSymbol } from "./fixture.js";
-
+import type { CombinedKeys, FlagKeys, IfSpecificKeys, OptionalKeys, ReadOnlyKeys, RequiredKeys, SharedKeys, SpecificKey, SpecificKeys } from "../keys.js";
+import type { Basics, Fruit, someSymbol, Vegetable } from "./fixture.js";
 
 type BasicsNoAdmin = {
 	readonly id: string;
@@ -16,12 +10,10 @@ type BasicsNoAdmin = {
 	nick?: string;
 }
 
-
 type IdAndMaybe = {
 	readonly id: string;
 	maybe?: boolean;
 }
-
 
 type IdAndMaybeBroken = {
 	id: string;

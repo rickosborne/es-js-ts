@@ -1,4 +1,5 @@
-import { A_GT_B, A_LT_B, type Comparator } from "@rickosborne/typical";
+import type { Comparator } from "@rickosborne/typical";
+import { A_GT_B, A_LT_B } from "@rickosborne/typical";
 
 /**
  * Pattern for an array index key, basically any integer.

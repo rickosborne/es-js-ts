@@ -1,7 +1,7 @@
 import { describe, expect, it, test } from "tstyche";
 import type { ReboundConfigBuilder } from "../rebound-builder.js";
 import { Rebound } from "../rebound.js";
-import { type BoundedNumber, type IntegerSet, type LowerExclusive, type LowerInclusive, type LowerInEx, type NegInfinity, type NumberSet, type RealSet, type UpperExclusive, type UpperInclusive, type UpperInEx } from "../spec.js";
+import type { BoundedNumber, BoundsConfig, IntegerSet, LowerExclusive, LowerInclusive, LowerInEx, NegInfinity, NumberSet, RealSet, UpperExclusive, UpperInclusive, UpperInEx } from "../spec.js";
 
 describe("Rebound", () => {
 	describe("builder", () => {
@@ -22,7 +22,7 @@ describe("Rebound", () => {
 			expect(ints).type.toHaveProperty("fromInclusive");
 			expect(ints).type.toHaveProperty("fromNegInfinity");
 			expect(ints).type.toHaveProperty("fromValue");
-			const lower = ints.fromNegInfinity(false);
+			const lower = ints.fromNegInfinity();
 			expect(lower).type.toBe<ReboundConfigBuilder<LowerExclusive, NegInfinity, IntegerSet, number, UpperInEx>>();
 			expect(lower).type.not.toHaveProperty("build");
 			expect(lower).type.not.toHaveProperty("fromExclusive");
@@ -41,7 +41,7 @@ describe("Rebound", () => {
 			expect(ready).type.not.toHaveProperty("toValue");
 			expect(ready).type.toHaveProperty("build");
 			const rebound = ready.build();
-			expect(rebound).type.toBe<Rebound<"(-∞..17]", LowerExclusive, NegInfinity, IntegerSet, 17, UpperInclusive>>();
+			expect(rebound).type.toBe<Rebound<BoundedNumber<BoundsConfig<LowerExclusive, NegInfinity, IntegerSet, 17, UpperInclusive>>>>();
 		});
 		test(Rebound.prototype.guardWith.name, () => {
 			const zeroOne = Rebound.buildType("ZeroOne").fromInclusive(0).toExclusive(1).reals().build();

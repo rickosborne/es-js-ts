@@ -1,12 +1,17 @@
-import { type CSSColorName, cssFormatHex, cssNameFromHex } from "@rickosborne/css";
-import { type Int360, type Real01, real01From255, type Real255, real255From01, toReal01 } from "@rickosborne/foundation";
+import { cssFormatHex, cssNameFromHex } from "@rickosborne/css";
+import type { CSSColorName } from "@rickosborne/css";
+import { real01From255, real255From01, toReal01 } from "@rickosborne/rebound";
+import type { Int360, Real01, Real255 } from "@rickosborne/rebound";
 import { config } from "chai";
 import { ColorConversionError } from "./color-conversion-error.js";
 import { hslFromHSV, hslFromRGB, hsvFromHSL, hsvFromRGB, rgbFromHSL, rgbFromHSV } from "./color-conversion.js";
 import { colorFromCSS } from "./color-from-css.js";
-import { chroma01FromHSL, cssFormatHSL, type HSL, type HSLA } from "./hsl.js";
-import { chroma01FromHSV, cssFormatHSV, type HSV, type HSVA } from "./hsv.js";
-import { chroma01FromRGB, cssFormatRGB, hexFromRGB, type RealRGB, type RealRGBA, type RGB, type RGB255, rgb255From01, type RGBA, rgbFromHex, rgbFromReal } from "./rgb.js";
+import type { HSL, HSLA } from "./hsl.js";
+import { chroma01FromHSL, cssFormatHSL } from "./hsl.js";
+import type { HSV, HSVA } from "./hsv.js";
+import { chroma01FromHSV, cssFormatHSV } from "./hsv.js";
+import type { IntRGB, IntRGBA, RealRGB, RealRGBA, RGB255 } from "./rgb.js";
+import { chroma01FromRGB, cssFormatRGB, hexFromRGB, rgb255From01, rgbFromHex, rgbFromReal } from "./rgb.js";
 
 interface ColorConfig {
 	alpha01: Real01;
@@ -70,7 +75,7 @@ export class Color implements ColorParts {
 		return Color.fromRGB(rgb);
 	}
 
-	public static fromRGB(rgb: RGB): Color {
+	public static fromRGB(rgb: IntRGB): Color {
 		const chroma01 = chroma01FromRGB(rgb);
 		const hsl = hslFromRGB(rgb);
 		const hsv = hsvFromRGB(rgb);
@@ -167,7 +172,7 @@ export class Color implements ColorParts {
 		};
 	}
 
-	public get rgb(): RGBA {
+	public get rgb(): IntRGBA {
 		return rgbFromReal(this.realRGB);
 	}
 

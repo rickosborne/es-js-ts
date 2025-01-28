@@ -1,5 +1,6 @@
 import { cssFormatAlpha01, cssFormatDimension, cssFormatPercent } from "@rickosborne/css";
-import { type Int360, type Real01, toInt360, toReal01 } from "@rickosborne/foundation";
+import { toInt360, toReal01 } from "@rickosborne/rebound";
+import type { Int360, Real01 } from "@rickosborne/rebound";
 import { colorComparatorBuilder, colorEqBuilder } from "./color-comparator.js";
 
 export interface HSV {

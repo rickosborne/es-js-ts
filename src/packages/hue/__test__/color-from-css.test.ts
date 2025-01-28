@@ -4,7 +4,8 @@ import { describe, it } from "mocha";
 import { ColorConversionError } from "../color-conversion-error.js";
 import { colorFromCSS } from "../color-from-css.js";
 import type { UncheckedColorParts } from "../color.js";
-import { type CombinedParts, testColor } from "./test-color.fixture.js";
+import { testColor } from "./test-color.fixture.js";
+import type { CombinedParts } from "./test-color.fixture.js";
 
 const purpleParts: UncheckedColorParts = {};
 

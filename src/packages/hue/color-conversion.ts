@@ -1,8 +1,12 @@
-import { type Int255, type Int360, type Real01, type Real255, toReal01 } from "@rickosborne/foundation";
+import type { Int255, Int360, Real01, Real255 } from "@rickosborne/rebound";
+import { toReal01 } from "@rickosborne/rebound";
 import { positiveMod } from "../foundation/modulo.js";
-import { chroma01FromHSL, type HSL } from "./hsl.js";
-import { chroma01FromHSV, type HSV } from "./hsv.js";
-import { chroma01FromRGB, type RGB01, type RGB255 } from "./rgb.js";
+import type { HSL, HSLA } from "./hsl.js";
+import { chroma01FromHSL } from "./hsl.js";
+import type { HSV } from "./hsv.js";
+import { chroma01FromHSV } from "./hsv.js";
+import type { RGB01, RGB255, RGBA01 } from "./rgb.js";
+import { chroma01FromRGB, chroma01FromRGB01, rgb01From255 } from "./rgb.js";
 
 export function hslFromHSV(hsv: HSV): HSL;
 export function hslFromHSV(hsv: HSV | undefined): HSL | undefined;
@@ -118,6 +122,35 @@ export function rgbFromHSV(hsv: HSV | undefined): RGB01 | undefined {
 	return rgb01FromHueChromaMin(h, c, m, a);
 }
 
+const hue360From = <N extends Real255 | Real01 | Int255>(
+	chroma: N, r: N, g: N, b: N, max: N | undefined,
+): Int360 => {
+	if (chroma === 0) {
+		return 0 as Int360;
+	}
+	const m255 = max ?? Math.max(r, g, b);
+	let hPrime;
+	if (m255 === r) {
+		hPrime = (g - b) / chroma;
+	} else if (m255 === g) {
+		hPrime = (b - r) / chroma + 2;
+	} else {
+		hPrime = (r - g) / chroma + 4;
+	}
+	return positiveMod(Math.round(hPrime * 60), 360) as Int360;
+};
+
+export function hue360FromRGB01(rgb01: RGB01, chroma01?: Real01 | undefined, max01?: Real01 | undefined): Int360;
+export function hue360FromRGB01(rgb01: RGB01 | undefined, chroma01?: Real01 | undefined, max01?: Real01 | undefined): Int360 | undefined;
+export function hue360FromRGB01(rgb01: RGB01 | undefined, chroma01?: Real01 | undefined, max01?: Real01 | undefined): Int360 | undefined {
+	if (rgb01 == null) {
+		return undefined;
+	}
+	const c01 = chroma01 ?? chroma01FromRGB01(rgb01);
+	const { r: r01, g: g01, b: b01 } = rgb01;
+	return hue360From(c01, r01, g01, b01, max01);
+}
+
 export function hue360FromRGB(rgb: RGB255, chroma01?: Real01 | undefined, max255?: Int255 | Real255 | undefined): Int360;
 export function hue360FromRGB(rgb: RGB255 | undefined, chroma01?: Real01 | undefined, max255?: Int255 | Real255 | undefined): Int360 | undefined;
 export function hue360FromRGB(rgb: RGB255 | undefined, chroma01?: Real01 | undefined, max255?: Int255 | Real255 | undefined): Int360 | undefined {
@@ -127,19 +160,7 @@ export function hue360FromRGB(rgb: RGB255 | undefined, chroma01?: Real01 | undef
 	const c01 = chroma01 ?? chroma01FromRGB(rgb);
 	const c255 = c01 * 255;
 	const { r, g, b } = rgb;
-	if (c01 === 0) {
-		return 0 as Int360;
-	}
-	const m255 = max255 ?? Math.max(r, g, b);
-	let hPrime;
-	if (m255 === r) {
-		hPrime = (g - b) / c255;
-	} else if (m255 === g) {
-		hPrime = (b - r) / c255 + 2;
-	} else {
-		hPrime = (r - g) / c255 + 4;
-	}
-	return positiveMod(Math.round(hPrime * 60), 360) as Int360;
+	return hue360From<Int255 | Real255>(c255 as Int255 | Real255, r, g, b, max255);
 }
 
 export function hsvFromRGB(rgb: RGB255): HSV;
@@ -167,17 +188,16 @@ export function hsvFromRGB(rgb: RGB255 | undefined): HSV | undefined {
 	return { h, s, v, ...(a01 == null ? {} : { a: a01 }) };
 }
 
-export function hslFromRGB(rgb: RGB255): HSL;
-export function hslFromRGB(rgb: RGB255 | undefined): HSL | undefined;
-export function hslFromRGB(rgb: RGB255 | undefined): HSL | undefined {
-	if (rgb == null) {
+export function hslFromRGB01(rgba01: RGBA01): HSLA;
+export function hslFromRGB01(rgb01: RGB01): HSL;
+export function hslFromRGB01(rgb01: RGB01 | undefined): HSL | undefined;
+export function hslFromRGB01(rgb01: RGB01 | undefined): HSL | undefined {
+	if (rgb01 == null) {
 		return undefined;
 	}
-	const { r, g, b, a: a255 } = rgb;
-	const a01: Real01 | undefined = a255 == null ? undefined : toReal01(a255 / 255);
-	const min01 = Math.min(r, g, b) / 255;
-	const max255 = Math.max(r, g, b) as Int255;
-	const max01 = max255 / 255;
+	const { r: r01, g: g01, b: b01, a: a01 } = rgb01;
+	const min01 = Math.min(r01, g01, b01) as Real01;
+	const max01 = Math.max(r01, g01, b01) as Real01;
 	const sum01 = max01 + min01;
 	// L = (M + m) / 2
 	const l: Real01 = toReal01(sum01 / 2, "luminosity");
@@ -197,7 +217,17 @@ export function hslFromRGB(rgb: RGB255 | undefined): HSL | undefined {
 		} else {
 			s = toReal01(c01 / (2 - sum01), "saturation");
 		}
-		h = hue360FromRGB(rgb, c01, max255);
+		h = hue360FromRGB01(rgb01, c01, max01);
 	}
 	return { h, s, l, ...(a01 == null ? {} : { a: a01 }) };
+}
+
+export function hslFromRGB(rgb: RGB255): HSL;
+export function hslFromRGB(rgb: RGB255 | undefined): HSL | undefined;
+export function hslFromRGB(rgb: RGB255 | undefined): HSL | undefined {
+	if (rgb == null) {
+		return undefined;
+	}
+	const rgb01 = rgb01From255(rgb);
+	return hslFromRGB01(rgb01);
 }

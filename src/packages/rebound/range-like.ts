@@ -1,4 +1,5 @@
 import type { Comparator } from "@rickosborne/typical";
+import type { Bound } from "./bound.js";
 
 export const unbounded = Symbol.for("Unbounded");
 export type Unbounded = typeof unbounded;
@@ -13,8 +14,8 @@ export interface RangeLike<T> {
 	readonly isSingleton: boolean;
 	readonly isUpperInc: boolean;
 	readonly label: string;
-	readonly lowerBound: T | Unbounded;
+	readonly lowerBound: Bound<T> | Unbounded;
 	readonly lowerEndpoint: T | undefined;
-	readonly upperBound: T | Unbounded;
+	readonly upperBound: Bound<T> | Unbounded;
 	readonly upperEndpoint: T | undefined;
 }

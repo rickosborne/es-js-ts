@@ -1,10 +1,9 @@
-import type { Comparator } from "@rickosborne/typical";
+import { numberAsc } from "@rickosborne/foundation";
 import { RangeBase } from "./range-base.js";
-import { type RangeLike, unbounded } from "./range-like.js";
+import type { RangeLike } from "./range-like.js";
+import { unbounded } from "./range-like.js";
 import { rangeFromChecked } from "./range.js";
 import type { CheckedBounds } from "./spec.js";
-
-export const numberComparator: Comparator<number> = (a, b) => a - b;
 
 export abstract class NumberRange extends RangeBase<number> implements CheckedBounds, RangeLike<number> {
 	public abstract readonly discreteIntegers: number | undefined;
@@ -40,7 +39,7 @@ export abstract class NumberRange extends RangeBase<number> implements CheckedBo
 			Number.isFinite(lower) ? lower : unbounded,
 			Number.isFinite(upper) ? upper : unbounded,
 			isUpperInc,
-			numberComparator,
+			numberAsc,
 		);
 		this.isSingleton = isSingleton;
 		this.isEmpty = isEmpty;
@@ -71,11 +70,6 @@ export abstract class NumberRange extends RangeBase<number> implements CheckedBo
 		return 0;
 	}
 
-	public override contains(value: number): boolean {
-		return (this.lowerBound === unbounded || (this.isLowerInc ? (value >= this.lowerBound) : (value > this.lowerBound)))
-			&& (this.upperBound === unbounded || (this.isUpperInc ? (value <= this.upperBound) : (value < this.upperBound)));
-	}
-
 	public override encloses(other: RangeLike<number>): boolean {
 		if (other instanceof NumberRange && this.step > other.step) {
 			return false;
@@ -88,62 +82,4 @@ export abstract class NumberRange extends RangeBase<number> implements CheckedBo
 	}
 
 	public abstract scaleValueFrom(value: number, other: NumberRange): number;
-}
-
-export class IntegerRange extends NumberRange {
-	public readonly discreteIntegers: number;
-	public override readonly step = 1;
-
-	constructor(
-		lower: number,
-		upper: number,
-	) {
-		super(true, lower, true, upper, true);
-		this.discreteIntegers = upper - lower + 1;
-	}
-
-	public override contains(value: number): boolean {
-		return (Number.isSafeInteger(value) || !Number.isFinite(value)) && super.contains(value);
-	}
-
-	public override scaleValueFrom(value: number, other: NumberRange): number {
-		super.assertCanScaleFrom(other);
-		if (this.isSingleton) {
-			return this.lower;
-		}
-		return Math.round((value - other.lower) * (this.upper - this.lower) / (other.upper - other.lower)) + this.lower;
-	}
-}
-
-export class RealRange extends NumberRange {
-	public readonly discreteIntegers = undefined;
-	public override readonly step = Number.MIN_VALUE;
-
-	constructor(
-		isLowerInc: boolean,
-		lower: number,
-		upper: number,
-		isUpperInc: boolean,
-	) {
-		super(isLowerInc, lower, false, upper, isUpperInc);
-	}
-
-	public override scaleValueFrom(value: number, other: NumberRange): number {
-		if (this.isSingleton) {
-			return this.isLowerInc ? this.lower : this.upper;
-		}
-		super.assertCanScaleFrom(other);
-		if (other.discreteIntegers != null) {
-			const units = other.discreteIntegers + (this.isLowerInc && this.isUpperInc ? -1 : 0);
-			const divisor = (this.upper - this.lower) / units;
-			const inset = this.isLowerInc ? 0 : this.isUpperInc ? divisor : (divisor / 2);
-			const percent = (value - other.lower) / divisor;
-			return this.lower + inset + (percent * divisor);
-		}
-		if (this.isLowerInc !== other.isLowerInc || this.isUpperInc !== other.isUpperInc) {
-			throw new RangeError("Incompatible bounds for scaling");
-		}
-		const factor = (this.upper - this.lower) / (other.upper - other.lower);
-		return ((value - other.lower) * factor) + this.lower;
-	}
 }

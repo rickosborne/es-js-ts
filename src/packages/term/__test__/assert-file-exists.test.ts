@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import * as fs from "node:fs";
+import type { Stats } from "node:fs";
 import { assertFileExists } from "../assert-file-exists.js";
 import { FileMissingError } from "../file-missing-error.js";
 import { NotFileError } from "../not-file-error.js";
@@ -40,7 +40,7 @@ describe(assertFileExists.name, () => {
 					calledPath = path;
 					return {
 						isFile: () => false,
-					} as fs.Stats;
+					} as Stats;
 				},
 			});
 		} catch (err: unknown) {
@@ -64,7 +64,7 @@ describe(assertFileExists.name, () => {
 				calledPath = path;
 				return {
 					isFile: () => true,
-				} as fs.Stats;
+				} as Stats;
 			},
 		});
 		expect(calledPath).eq("some/file.txt");

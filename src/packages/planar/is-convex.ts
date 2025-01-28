@@ -1,7 +1,7 @@
 import { window3 } from "@rickosborne/foundation";
 import type { Either } from "@rickosborne/typical";
-import type { Polygon, Sign } from "./2d.js";
-import { CCW, CW, Orientation, STRAIGHT } from "./2d.js";
+import type { Orientation, Polygon , Sign } from "./2d.js";
+import { CCW, CW, STRAIGHT } from "./2d.js";
 import { angleMeasures } from "./measure-angles.js";
 
 type SignTracker = {

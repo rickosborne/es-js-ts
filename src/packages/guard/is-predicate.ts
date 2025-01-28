@@ -1,4 +1,4 @@
-import { UnaryPredicate } from "@rickosborne/typical";
+import type { UnaryPredicate } from "@rickosborne/typical";
 
 /**
  * Tests whether the given object is a function and takes at

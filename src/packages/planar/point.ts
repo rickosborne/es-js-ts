@@ -1,4 +1,4 @@
-import { Point } from "./2d.js";
+import type { Point } from "./2d.js";
 
 export const point = (x: number, y: number): Point => ({ x, y });
 

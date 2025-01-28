@@ -45,10 +45,10 @@ describe(StringRange.name, () => {
 		}
 	});
 	test("isA", () => {
-		expect(any.isA({})).eq(false);
-		expect(any.isA(undefined)).eq(false);
-		expect(any.isA("")).eq(true);
-		expect(bOnly.isA("")).eq(false);
-		expect(bOnly.isA("bat")).eq(true);
+		expect(any.isA({}), "any {}").eq(false);
+		expect(any.isA(undefined), "any undefined").eq(false);
+		expect(any.isA(""), "any ''").eq(true);
+		expect(bOnly.isA(""), "bOnly ''").eq(false);
+		expect(bOnly.isA("bat"), "bOnly 'bat'").eq(true);
 	});
 });

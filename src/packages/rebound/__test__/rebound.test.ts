@@ -3,16 +3,16 @@ import { describe, it } from "mocha";
 import type { AssertExact, AssertIfPresent } from "../assert-bounded.js";
 import { Rebound } from "../rebound.js";
 import { assertSameBounds, sameBounds } from "../same-bounds.js";
-import { BOUNDS, INT_SET, LOWER_EX, UPPER_IN } from "../spec.js";
+import { BOUNDS } from "../spec.js";
 
 describe(Rebound.name, () => {
 	describe("builder", () => {
-		const grade = Rebound.buildType("Grade").integers().fromExclusive(0).toInclusive(100).build();
+		const grade = Rebound.buildType("Grade").integers().fromInclusive(0).toInclusive(100).build();
 		it("slowly progresses to being done", () => {
 			expect(grade.lower, "lowerValue").eq(0);
-			expect(grade.lowerInc, "lowerInc").eq(LOWER_EX);
-			expect(grade.int, "int").eq(INT_SET);
-			expect(grade.upperInc, "upperInc").eq(UPPER_IN);
+			expect(grade.isLowerInc, "isLowerInc").eq(true);
+			expect(grade.isInt, "isInt").eq(true);
+			expect(grade.isUpperInc, "isUpperInc").eq(true);
 			expect(grade.upper, "upperValue").eq(100);
 		});
 		it("throws for invalid bounds", () => {
@@ -25,7 +25,7 @@ describe(Rebound.name, () => {
 		});
 	});
 	describe("guard", () => {
-		const grade = Rebound.buildType("Grade").integers().fromExclusive(0).toInclusive(100).build();
+		const grade = Rebound.buildType("Grade").integers().fromInclusive(1).toInclusive(100).build();
 		type Grade = typeof grade.numberType;
 		it("guards do not require this", () => {
 			const { guard } = grade;
@@ -66,9 +66,9 @@ describe(Rebound.name, () => {
 		});
 	});
 	describe("outOfRangeError", () => {
-		const positiveInt = Rebound.buildType("PositiveInt").fromExclusive(0).toPosInfinity(false).integers().build();
+		const positiveInt = Rebound.buildType("PositiveInt").fromInclusive(1).toPosInfinity().integers().build();
 		type PositiveInt = typeof positiveInt.numberType;
-		const positiveReal = Rebound.buildType("PositiveReal").fromExclusive(0).toPosInfinity(false).reals().build();
+		const positiveReal = Rebound.buildType("PositiveReal").fromExclusive(0).toPosInfinity().reals().build();
 		it("is a RangeError", () => {
 			const four: PositiveInt | number = 4;
 			const assertPositiveInt: AssertExact<PositiveInt> = positiveInt.assert;
@@ -85,7 +85,7 @@ describe(Rebound.name, () => {
 				}
 			}
 			expect(error).instanceOf(RangeError);
-			expect(error!.message).eq("Expected nope: PositiveInt (0..+∞), actual: 7.5");
+			expect(error!.message).eq("Expected nope: PositiveInt [1..+∞], actual: 7.5");
 			expect(error!.stack).to.not.match(/buildError|outOfRangeError/);
 			expect(sameBounds(positiveInt, assertPositiveInt), "sameBounds").eq(true);
 			const assertPositiveReal: AssertIfPresent<typeof positiveReal.numberType> = positiveReal.assertWith({ ifPresent: true });
@@ -96,7 +96,7 @@ describe(Rebound.name, () => {
 	});
 	describe("fromNumber", () => {
 		it("upgrades", () => {
-			const positiveInt = Rebound.buildType("PositiveInt").fromExclusive(0).toPosInfinity(false).integers().build();
+			const positiveInt = Rebound.buildType("PositiveInt").fromInclusive(1).toPosInfinity().integers().build();
 			const pos = 7;
 			const neg = -5;
 			const posNum = positiveInt.fromNumber(pos);
@@ -110,12 +110,10 @@ describe(Rebound.name, () => {
 	});
 	describe("random", () => {
 		it("throws for bad ranges", () => {
-			expect(() => Rebound.buildType("PosInf").fromInclusive(0).toPosInfinity(true).reals().build().random()).throws(RangeError, "Unbounded random");
-			expect(() => Rebound.buildType("NegInf").fromNegInfinity(true).toInclusive(0).reals().build().random()).throws(RangeError, "Unbounded random");
-			expect(() => Rebound.buildType("[0 real 0]").fromInclusive(0).toInclusive(0).reals().build().random()).throws(RangeError, "Random range too narrow");
-			expect(() => Rebound.buildType("(0 int 2)").fromExclusive(0).toExclusive(2).integers().build().random()).throws(RangeError, "Random range too narrow");
-			expect(() => Rebound.buildType("(0 int 1]").fromExclusive(0).toInclusive(1).integers().build().random()).throws(RangeError, "Random range too narrow");
-			expect(() => Rebound.buildType("[0 int 2)").fromInclusive(1).toExclusive(2).integers().build().random()).throws(RangeError, "Random range too narrow");
+			expect(() => Rebound.buildType("PosInf").fromInclusive(0).toPosInfinity().reals().build().random()).throws(RangeError, "Unbounded random");
+			expect(() => Rebound.buildType("NegInf").fromNegInfinity().toInclusive(0).reals().build().random()).throws(RangeError, "Unbounded random");
+			expect(() => Rebound.buildType("[0,0]").fromInclusive(0).toInclusive(0).reals().build().random()).throws(RangeError, "Random range too narrow");
+			expect(() => Rebound.buildType("[1..1]").fromInclusive(1).toInclusive(1).integers().build().random()).throws(RangeError, "Random range too narrow");
 		});
 		it("generates random integers", () => {
 			const positive = Rebound.buildType("positive").fromInclusive(0).toInclusive(100).integers().build();
@@ -125,7 +123,7 @@ describe(Rebound.name, () => {
 				expect(r).gte(0);
 				expect(r).lte(100);
 			}
-			const narrow = Rebound.buildType("narrow").fromInclusive(3).toExclusive(5).integers().build();
+			const narrow = Rebound.buildType("narrow").fromInclusive(3).toInclusive(4).integers().build();
 			for (let n = 0; n < 100; n++) {
 				const r = narrow.random();
 				expect(Math.trunc(r)).eq(r);
@@ -158,7 +156,7 @@ describe(Rebound.name, () => {
 			expect(Array.from(stars.integersWith({ step: -2 }))).eql([ 5, 3, 1 ]);
 		});
 		it("throws for garbage", () => {
-			expect(() => Array.from(Rebound.buildType("NegInf").fromNegInfinity(true).toInclusive(0).integers().build().integers)).throws(RangeError, "Unbounded start");
+			expect(() => Array.from(Rebound.buildType("NegInf").fromNegInfinity().toInclusive(0).integers().build().integers)).throws(RangeError, "Unbounded start");
 		});
 		it("fast-returns for impossible ranges", () => {
 			const stars = Rebound.buildType("Stars").fromInclusive(0).toInclusive(5).reals().build();

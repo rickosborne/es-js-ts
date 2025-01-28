@@ -1,5 +1,7 @@
-import { ANGLE_CONVERSIONS, colorTokensFromCSS, convertBetweenUnits, type CSSAngleUnit, type DimensionPair, hexFromCSSName, isAngleUnit } from "@rickosborne/css";
-import { type Int255, type Int360, type Real01, toInt255, toInt360, toReal01 } from "@rickosborne/foundation";
+import type { CSSAngleUnit, DimensionPair } from "@rickosborne/css";
+import { ANGLE_CONVERSIONS, colorTokensFromCSS, convertBetweenUnits, hexFromCSSName, isAngleUnit } from "@rickosborne/css";
+import type { Int255, Int360, Real01 } from "@rickosborne/rebound";
+import { toInt255, toInt360, toReal01 } from "@rickosborne/rebound";
 import { ColorConversionError } from "./color-conversion-error.js";
 import { Color } from "./color.js";
 

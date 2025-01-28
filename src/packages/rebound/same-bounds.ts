@@ -1,5 +1,6 @@
 import { scrubStackTrace } from "@rickosborne/guard";
-import { TYPED_CHECKED_BOUNDS_KEYS, type TypedCheckedBounds } from "./spec.js";
+import type { TypedCheckedBounds } from "./spec.js";
+import { TYPED_CHECKED_BOUNDS_KEYS } from "./spec.js";
 
 export const sameBounds = (left: TypedCheckedBounds, right: TypedCheckedBounds): boolean => {
 	return TYPED_CHECKED_BOUNDS_KEYS.every((key) => left[key] === right[key]);

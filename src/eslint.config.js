@@ -77,6 +77,13 @@ module.exports = [
 		rules: {
 			...("rules" in c ? c[ "rules" ] : {}),
 			"@typescript-eslint/consistent-type-definitions": "off",
+			"@typescript-eslint/consistent-type-imports": [
+				"error",
+				{
+					fixStyle: "separate-type-imports",
+					prefer: "type-imports",
+				},
+			],
 			"@typescript-eslint/no-inferrable-types": "off",
 			"@typescript-eslint/no-unused-vars": [
 				"error",

@@ -1,12 +1,13 @@
 import { assertDefined } from "@rickosborne/guard";
-import { type BooleanCommandParam, FALSES, TRUES } from "./boolean-param.js";
+import type { BooleanCommandParam } from "./boolean-param.js";
+import { FALSES, TRUES } from "./boolean-param.js";
 import type { IfOptional, IfRepeated } from "./common.js";
-import { type DateCommandParam } from "./date-param.js";
-import { type FileArg, type FileCommandParam } from "./file-param.js";
+import type { DateCommandParam } from "./date-param.js";
+import type { FileArg, FileCommandParam } from "./file-param.js";
 import { labelForParam } from "./label-for-param.js";
-import { type NumberCommandParam } from "./number-param.js";
+import type { NumberCommandParam } from "./number-param.js";
 import { findParamHandler } from "./param-handler.js";
-import { type StringCommandParam } from "./string-param.js";
+import type { StringCommandParam } from "./string-param.js";
 
 /**
  * One of the built-in param types.

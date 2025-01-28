@@ -1,4 +1,4 @@
-import { LineSegment, type Point, Polygon, Rect } from "./2d.js";
+import type { LineSegment, Point, Polygon, Rect } from "./2d.js";
 
 /**
  * Convert the given {@link Rect} to {@link Polygon} format.

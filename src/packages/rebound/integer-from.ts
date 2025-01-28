@@ -42,7 +42,7 @@ export function boundedIntFromNumber<N extends number, IsLowerInc extends boolea
 
 export function integerFrom<N extends number, IsLowerInc extends boolean, Lower extends number, Upper extends number, IsUpperInc extends boolean, IfPresent extends boolean>(
 	typeName: string,
-	bounds: CheckedBoundsConfig<IsLowerInc, Lower, boolean, Upper, IsUpperInc>,
+	bounds: CheckedBoundsConfig<IsLowerInc, Lower, boolean, Upper, IsUpperInc> & { label: string },
 	errorProvider: OutOfBoundsErrorProvider,
 	ifPresent: IfPresent,
 	strategy: IntStrategy = ROUND,

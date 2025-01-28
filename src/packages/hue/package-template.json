@@ -7,6 +7,7 @@
 		"@rickosborne/css": "file:../css",
 		"@rickosborne/foundation": "file:../foundation",
 		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/rebound": "file:../rebound",
 		"@rickosborne/typical": "file:../typical"
 	},
 	"description": "Rick Osborne's collection of color-related code.",

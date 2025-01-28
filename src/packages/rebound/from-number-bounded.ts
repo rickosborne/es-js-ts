@@ -9,7 +9,8 @@ export interface FromNumber<N extends number> extends TypedCheckedBounds {
 }
 
 export interface FromNumberIfPresent<N extends number> extends FromNumber<N> {
-	(this: void, value: number | undefined | null, name?: string | undefined): N | undefined;
+	(this: void, value: number, name?: string | undefined): N;
+	(this: void, value: undefined | null, name?: string | undefined): undefined;
 }
 
 export function boundedFromNumber<N extends number, IfPresent extends boolean>(

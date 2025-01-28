@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { describe, it } from "mocha";
-import { type RandomBounded, randomBounded } from "../random-bounded.js";
+import { randomBounded } from "../random-bounded.js";
+import type { RandomBounded } from "../random-bounded.js";
 
 const testDistribution = (
 	fn: RandomBounded<number>,
@@ -37,9 +38,9 @@ const testDistribution = (
 
 describe(randomBounded.name, () => {
 	it("provides a uniform distribution", () => {
-		const randomGrade = randomBounded("Grade", true, 0, true, 100, true);
+		const randomGrade = randomBounded("Grade", "Grade", true, 0, true, 100, true);
 		testDistribution(randomGrade);
-		const randomStars = randomBounded("Grade", false, 0, true, 5, true);
+		const randomStars = randomBounded("Grade", "Grade", false, 0, true, 5, true);
 		testDistribution(randomStars);
 	});
 });

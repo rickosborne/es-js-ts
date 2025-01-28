@@ -1,6 +1,9 @@
-
-import { Rebound } from "./rebound.js";
-import { type BoundsConfig, type BoundsLabel, INT_SET, type IntegerSet, LOWER_EX, LOWER_IN, type LowerExclusive, type LowerInclusive, type LowerInEx, type LowerInExFrom, type NegInfinity, type NumberSet, type NumberSetFrom, type PosInfinity, REAL_SET, type RealSet, UPPER_EX, UPPER_IN, type UpperExclusive, type UpperInclusive, type UpperInEx, type UpperInExFrom } from "./spec.js";
+import { IntegerRange } from "./integer-range.js";
+import type { NumberRange } from "./number-range.js";
+import { RealRange } from "./real-range.js";
+import type { Rebound } from "./rebound.js";
+import type { BoundedNumber, BoundsConfig, IntegerSet, LowerExclusive, LowerInclusive, LowerInEx, LowerInExFrom, NegInfinity, NumberSet, NumberSetFrom, PosInfinity, RealSet, UpperExclusive, UpperInclusive, UpperInEx, UpperInExFrom } from "./spec.js";
+import { INT_SET, LOWER_EX, LOWER_IN, REAL_SET, UPPER_EX, UPPER_IN } from "./spec.js";
 
 type IsCompleteConfig<
 	LowerInc extends LowerInEx,
@@ -19,11 +22,11 @@ export type ReboundConfigBuilder<
 > = {
 	readonly config: BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>;
 } & IsCompleteConfig<LowerInc, Lower, Int, Upper, UpperInc> extends true ? {
-	build(): Rebound<BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>, LowerInc, Lower, Int, Upper, UpperInc>;
+	build(): Rebound<BoundedNumber<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>>;
 } : ((number extends Lower ? {
 	fromExclusive<L extends number>(value: L): ReboundConfigBuilder<LowerExclusive, L, Int, Upper, UpperInc>;
 	fromInclusive<L extends number>(value: L): ReboundConfigBuilder<LowerInclusive, L, Int, Upper, UpperInc>;
-	fromNegInfinity<LI extends boolean>(inclusive: LI): ReboundConfigBuilder<LowerInExFrom<LI>, NegInfinity, Int, Upper, UpperInc>;
+	fromNegInfinity(): ReboundConfigBuilder<LowerInExFrom<true>, NegInfinity, Int, Upper, UpperInc>;
 	fromValue<L extends number, LI extends boolean>(value: L, inclusive: LI): ReboundConfigBuilder<LowerInExFrom<LI>, L, Int, Upper, UpperInc>;
 } : object) & (NumberSet extends Int ? {
 	intOnly<IR extends boolean>(int: IR): ReboundConfigBuilder<LowerInc, Lower, NumberSetFrom<IR>, Upper, UpperInc>;
@@ -32,7 +35,7 @@ export type ReboundConfigBuilder<
 } : object) & (number extends Upper ? {
 	toExclusive<U extends number>(value: U): ReboundConfigBuilder<LowerInc, Lower, Int, U, UpperExclusive>;
 	toInclusive<U extends number>(value: U): ReboundConfigBuilder<LowerInc, Lower, Int, U, UpperInclusive>;
-	toPosInfinity<UI extends boolean>(inclusive: UI): ReboundConfigBuilder<LowerInc, Lower, Int, PosInfinity, UpperInExFrom<UI>>;
+	toPosInfinity(): ReboundConfigBuilder<LowerInc, Lower, Int, PosInfinity, UpperInExFrom<true>>;
 	toValue<U extends number, UI extends boolean>(value: U, inclusive: UI): ReboundConfigBuilder<LowerInc, Lower, Int, U, UpperInExFrom<UI>>;
 } : object));
 
@@ -61,13 +64,19 @@ export class ReboundBuilder<
 > {
 	constructor(
 		private readonly config: BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>,
-		private readonly toRebound: <BWR extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(config: BWR) => Rebound<BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>, LowerInc, Lower, Int, Upper, UpperInc>,
+		private readonly toRebound: <Config extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(config: Config, range: NumberRange) => Rebound<BoundedNumber<Config>>,
 	) {
 	}
 
-	public build(): Rebound<BoundsLabel<typeof this.config>, LowerInc, Lower, Int, Upper, UpperInc> {
+	public build(): Rebound<BoundedNumber<typeof this.config>> {
 		checkMissing(this.config);
-		return this.toRebound(this.config);
+		let range: NumberRange;
+		if (this.config.int === INT_SET) {
+			range = new IntegerRange(this.config.lower, this.config.upper);
+		} else {
+			range = new RealRange(this.config.lowerInc === LOWER_IN, this.config.lower, this.config.upper, this.config.upperInc === UPPER_IN);
+		}
+		return this.toRebound(this.config, range);
 	}
 
 	public fromExclusive<L extends number>(value: L): ReboundConfigBuilder<LowerExclusive, L, Int, Upper, UpperInc> {
@@ -80,9 +89,8 @@ export class ReboundBuilder<
 		return this;
 	}
 
-	public fromNegInfinity<LI extends boolean>(inclusive: LI): ReboundConfigBuilder<LowerInExFrom<LI>, NegInfinity, Int, Upper, UpperInc> {
-		const lowerInc = (inclusive ? LOWER_IN : LOWER_EX) satisfies LowerInEx as LowerInExFrom<LI>;
-		this.setLower(-Infinity as NegInfinity, lowerInc);
+	public fromNegInfinity(): ReboundConfigBuilder<LowerInExFrom<true>, NegInfinity, Int, Upper, UpperInc> {
+		this.setLower(-Infinity as NegInfinity, LOWER_IN);
 		return this;
 	}
 
@@ -109,6 +117,9 @@ export class ReboundBuilder<
 	}
 
 	protected setIntReal<IR extends NumberSet>(int: IR): asserts this is ReboundConfigBuilder<LowerInc, Lower, IR, Upper, UpperInc> {
+		if (int === INT_SET && ((this.config.lowerInc != null && this.config.lowerInc === LOWER_EX) || (this.config.upperInc != null && this.config.upperInc === UPPER_EX))) {
+			throw new Error("Integer ranges must have inclusive bounds");
+		}
 		(this.config.int as unknown as NumberSet) = int;
 	}
 
@@ -121,6 +132,9 @@ export class ReboundBuilder<
 		}
 		if (this.config.upper != null && lower > this.config.upper) {
 			throw new Error("Bounds are reversed");
+		}
+		if (lowerInc === LOWER_EX && this.config.int == INT_SET) {
+			throw new Error("Integer bounds must be inclusive");
 		}
 		(this.config.lower as unknown as L) = lower;
 		(this.config.lowerInc as unknown as LowerInEx) = lowerInc;
@@ -136,6 +150,9 @@ export class ReboundBuilder<
 		if (this.config.lower != null && upper < this.config.lower) {
 			throw new Error("Bounds are reversed");
 		}
+		if (upperInc === UPPER_EX && this.config.int == INT_SET) {
+			throw new Error("Integer bounds must be inclusive");
+		}
 		(this.config.upper as unknown as U) = upper;
 		(this.config.upperInc as unknown as UpperInEx) = upperInc;
 	}
@@ -150,9 +167,8 @@ export class ReboundBuilder<
 		return this;
 	}
 
-	public toPosInfinity<UI extends boolean>(inclusive: UI): ReboundConfigBuilder<LowerInc, Lower, Int, PosInfinity, UpperInExFrom<UI>> {
-		const upperInc = (inclusive ? UPPER_IN : UPPER_EX) satisfies UpperInEx as UpperInExFrom<UI>;
-		this.setUpper(Infinity as PosInfinity, upperInc);
+	public toPosInfinity(): ReboundConfigBuilder<LowerInc, Lower, Int, PosInfinity, UpperInExFrom<true>> {
+		this.setUpper(Infinity as PosInfinity, UPPER_IN);
 		return this;
 	}
 

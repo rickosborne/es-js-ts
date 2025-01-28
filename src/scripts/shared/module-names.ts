@@ -1,8 +1,9 @@
 import { DEPENDENCIES_KEYS, fileExists, type PackageJsonLike, positionalArgs, readPackageJson } from "@rickosborne/term";
 import type { Comparator } from "@rickosborne/typical";
+import { A_GT_B, A_LT_B } from "@rickosborne/typical";
 import { type Dirent, readdirSync } from "node:fs";
-import * as process from "node:process";
-import { packagesPlus, packagesRoot, packageTemplate } from "./project-root.js";
+import { argv } from "node:process";
+import { packagesPlus, packagesRoot, packageTemplate, projectNamespace, withoutNamespace } from "./project-root.js";
 
 export interface GetModuleNamesConfig {
 	args?: string[];
@@ -13,7 +14,7 @@ export interface GetModuleNamesConfig {
 export const getModuleNames = (
 	config: GetModuleNamesConfig = {},
 ): string[] => {
-	const args = config.args ?? process.argv.slice(2);
+	const args = config.args ?? argv.slice(2);
 	const rootDir = config.rootDir ?? packagesRoot;
 	const dirEntPredicate = config.dirEntPredicate ?? (() => true);
 	let moduleNames: string[];
@@ -29,41 +30,78 @@ export const getModuleNames = (
 	return moduleNames;
 };
 
-export type ModulePackage = {
+export interface ModulePackage {
 	moduleName: string;
-	modulePackage: PackageJsonLike
+	modulePackage: PackageJsonLike;
+}
+
+export interface ModulePackageWithDependencies extends ModulePackage {
+	dependsOn?: ModulePackageWithDependencies[];
+}
+
+export const moduleDependsOn = (depending: ModulePackageWithDependencies, dependency: ModulePackageWithDependencies): boolean => {
+	if (depending.dependsOn == null || depending === dependency) {
+		return false;
+	}
+	if (depending.dependsOn.includes(dependency)) {
+		return true;
+	}
+	return depending.dependsOn.some((d) => moduleDependsOn(d, dependency));
 };
 
-export const moduleBuildOrder: Comparator<ModulePackage> = (a, b) => {
-	const aPackage = a.modulePackage;
-	const bPackage = b.modulePackage;
-	const aName = aPackage.name;
-	const bName = bPackage.name;
-	for (const key of DEPENDENCIES_KEYS) {
-		const aDeps = aPackage[ key ] ?? {};
-		const bDeps = bPackage[ key ] ?? {};
-		if (aDeps[ bName ] != null) {
-			return 1;
-		}
-		if (bDeps[ aName ] != null) {
-			return -1;
-		}
+export const moduleDependencyCount = (mod: ModulePackageWithDependencies): number => {
+	const allDeps = new Set<ModulePackageWithDependencies>();
+	const recurse = (m: ModulePackageWithDependencies): void => {
+		if (allDeps.has(m)) return;
+		allDeps.add(m);
+		m.dependsOn?.forEach((d) => recurse(d));
+	};
+	recurse(mod);
+	return allDeps.size - 1;
+};
+
+export const moduleBuildOrder: Comparator<ModulePackageWithDependencies> = (a, b) => {
+	if (moduleDependsOn(a, b)) {
+		return A_GT_B;
 	}
-	return 0;
+	if (moduleDependsOn(b, a)) {
+		return A_LT_B;
+	}
+	return moduleDependencyCount(a) - moduleDependencyCount(b);
 };
 
 export interface GetModulePackagesConfig extends GetModuleNamesConfig {
-	sortBy?: Comparator<ModulePackage>;
+	sortBy?: Comparator<ModulePackageWithDependencies>;
 }
 
 export const getModulePackages = (
 	config: GetModulePackagesConfig = {},
-): ModulePackage[] => {
-	const comparator = config.sortBy ?? moduleBuildOrder;
-	return getModuleNames(config)
+): ModulePackageWithDependencies[] => {
+	const modulePackages: ModulePackageWithDependencies[] = getModuleNames(config)
 		.map((moduleName) => ({
 			moduleName,
 			modulePackage: readPackageJson(packagesPlus(moduleName, packageTemplate)),
-		}))
-		.sort(comparator);
+			dependsOn: [],
+		}));
+	for (const modulePackage of modulePackages) {
+		for (const depsKey of DEPENDENCIES_KEYS) {
+			const deps = modulePackage.modulePackage[depsKey] ?? {};
+			for (const depName of Object.keys(deps)) {
+				if (depName.startsWith(projectNamespace)) {
+					const name = withoutNamespace(depName);
+					const dep = modulePackages.find((mp) => mp.moduleName === name);
+					if (dep == null) {
+						throw new Error(`Could not find ${depName}, dependency of ${modulePackage.moduleName}`);
+					}
+					modulePackage.dependsOn ??= [];
+					if (!(modulePackage.dependsOn.includes(dep))) {
+						modulePackage.dependsOn.push(dep);
+					}
+				}
+			}
+		}
+	}
+	const comparator = config.sortBy ?? moduleBuildOrder;
+	modulePackages.sort(comparator);
+	return modulePackages;
 };

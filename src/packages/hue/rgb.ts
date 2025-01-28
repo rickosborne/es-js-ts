@@ -1,6 +1,9 @@
 import { cssFormatAlpha01, cssFormatHex } from "@rickosborne/css";
-import { type Int255, minMax, type Real01, type Real255, roundBound, toReal255 } from "@rickosborne/foundation";
-import { NO_THROW, type ThrowOnError } from "@rickosborne/guard";
+import { minMax } from "@rickosborne/foundation";
+import type { NO_THROW } from "@rickosborne/guard";
+import type { ThrowOnError } from "@rickosborne/guard";
+import type { Int255, Real01, Real255 } from "@rickosborne/rebound";
+import { int255, int255From01, toReal255 } from "@rickosborne/rebound";
 import { colorComparatorBuilder, colorEqBuilder } from "./color-comparator.js";
 import { ColorConversionError } from "./color-conversion-error.js";
 
@@ -8,7 +11,7 @@ import { ColorConversionError } from "./color-conversion-error.js";
  * A color with RGB values, and possibly an alpha.
  * All values are integers in the range [0..255].
  */
-export interface RGB {
+export interface IntRGB {
 	a?: Int255 | undefined;
 	b: Int255;
 	g: Int255;
@@ -19,7 +22,7 @@ export interface RGB {
  * A color with RGBA values.
  * All values are integers in the range [0,255].
  */
-export interface RGBA extends RGB {
+export interface IntRGBA extends IntRGB {
 	a: Int255;
 }
 
@@ -46,8 +49,8 @@ export interface RealRGBA extends RealRGB {
  * A color with RGB values, and possibly an alpha.
  * All values are numbers in the range [0,255].
  */
-export type RGB255 = RGB | RealRGB;
-export type RGBA255 = RGBA | RealRGBA;
+export type RGB255 = IntRGB | RealRGB;
+export type RGBA255 = IntRGBA | RealRGBA;
 
 /**
  * A color with RGB values, and possibly an alpha.
@@ -60,12 +63,16 @@ export interface RGB01 {
 	r: Real01;
 }
 
-export function rgbFromHex(text: string, options?: ThrowOnError | undefined): RGB;
-export function rgbFromHex(text: string | undefined, options: typeof NO_THROW): RGB | undefined;
+export interface RGBA01 extends RGB01 {
+	a: Real01;
+}
+
+export function rgbFromHex(text: string, options?: ThrowOnError | undefined): IntRGB;
+export function rgbFromHex(text: string | undefined, options: typeof NO_THROW): IntRGB | undefined;
 /**
  * Parse a hex-encoded RGB value.
  */
-export function rgbFromHex(text: string | undefined, options: ThrowOnError | undefined = {}): RGB | undefined {
+export function rgbFromHex(text: string | undefined, options: ThrowOnError | undefined = {}): IntRGB | undefined {
 	if (text == null) {
 		return undefined;
 	}
@@ -123,20 +130,26 @@ export function toRGB(r: number, g: number, b: number, a?: number | undefined): 
  * Calculate the chroma value for the given RGB, producing a
  * real number in the range [0,1].
  */
-export function chroma01FromRGB(rgb: RGB255): Real01;
-export function chroma01FromRGB(rgb: RGB255 | undefined): Real01 | undefined;
-export function chroma01FromRGB(rgb: RGB255 | undefined): Real01 | undefined {
+export function chroma01FromRGB01(rgb: RGB01): Real01;
+export function chroma01FromRGB01(rgb: RGB01 | undefined): Real01 | undefined;
+export function chroma01FromRGB01(rgb: RGB01 | undefined): Real01 | undefined {
 	if (rgb == null) {
 		return undefined;
 	}
 	const { r, g, b } = rgb;
-	const [ min255, max255 ] = minMax(r, g, b);
-	return (max255 - min255) / 255 as Real01;
+	const [ min01, max01 ] = minMax(r, g, b);
+	return (max01 - min01) as Real01;
 }
 
-export const rgbComparator = colorComparatorBuilder<RGB>("rgbComparator", "r", "g", "b", "a");
+export function chroma01FromRGB(rgb: RGB255): Real01;
+export function chroma01FromRGB(rgb: RGB255 | undefined): Real01 | undefined;
+export function chroma01FromRGB(rgb: RGB255 | undefined): Real01 | undefined {
+	return chroma01FromRGB01(rgb01From255(rgb));
+}
 
-export const rgbEq = colorEqBuilder<RGB255>("rgbEq", [ "r", "g", "b", "a" ], { r: 2, g: 2, b: 2, a: 2 });
+export const rgbComparator = colorComparatorBuilder<IntRGB>("rgbComparator", "r", "g", "b", "a");
+
+export const rgbEq = colorEqBuilder<RGB255 | RGB01>("rgbEq", [ "r", "g", "b", "a" ], { r: 2, g: 2, b: 2, a: 2 });
 
 export const cssFormatRGB = (rgb: RGB255): string => {
 	const { r, g, b, a } = rgb;
@@ -161,17 +174,30 @@ export const hexFromRGB = (rgb: RGB255, format?: "short" | "long"): string => {
 	return cssFormatHex(hex, format);
 };
 
-export function rgbFromReal(real: RealRGBA): RGBA;
-export function rgbFromReal(real: RealRGB): RGB;
-export function rgbFromReal(real: RealRGB | undefined): RGB | undefined;
-export function rgbFromReal(real: RealRGB | undefined): RGB | undefined {
+export function rgbFromReal(real: RealRGBA): IntRGBA;
+export function rgbFromReal(real: RealRGB): IntRGB;
+export function rgbFromReal(real: RealRGB | undefined): IntRGB | undefined;
+export function rgbFromReal(real: RealRGB | undefined): IntRGB | undefined {
 	return real == null ? undefined : {
-		...(real.a == null ? {} : { a: roundBound(real.a) }),
-		b: roundBound(real.b),
-		g: roundBound(real.g),
-		r: roundBound(real.r),
+		...(real.a == null ? {} : { a: int255.round(real.a) }),
+		b: int255.round(real.b),
+		g: int255.round(real.g),
+		r: int255.round(real.r),
 	};
 }
+
+export function rgbIntFrom01(rgba01: RGBA01): IntRGBA;
+export function rgbIntFrom01(rgb01: RGB01): IntRGB;
+export function rgbIntFrom01(rgb01: RGB01 | undefined): IntRGB | undefined;
+export function rgbIntFrom01(rgb01: RGB01 | undefined): IntRGB | undefined {
+	return rgb01 == null ? undefined : {
+		...(rgb01.a == null ? {} : { a: int255From01(rgb01.a) }),
+		b: int255From01(rgb01.b),
+		g: int255From01(rgb01.g),
+		r: int255From01(rgb01.r),
+	};
+}
+
 
 export function rgb255From01(rgb: RGB01): RealRGB;
 export function rgb255From01(rgb: RGB01 | undefined): RealRGB | undefined;

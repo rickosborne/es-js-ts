@@ -1,5 +1,6 @@
 import { describe, expect, test } from "tstyche";
-import { type BoundedNumber, INT_SET, type IntegerSet, type IsBounded, type IsFinite, type IsInfinite, type IsIntegersOnly, LOWER_EX, LOWER_IN, type LowerBound, type LowerBoundIsInc, type LowerInclusive, type NegInfinity, type PosInfinity, REAL_SET, type RealSet, type Unbound, UPPER_EX, type UpperBound, type UpperBoundIsInc, type UpperInclusive } from "../spec.js";
+import { INT_SET, LOWER_EX, LOWER_IN, REAL_SET, UPPER_EX } from "../spec.js";
+import type { BoundedNumber, IntegerSet, IsBounded, IsFinite, IsInfinite, IsIntegersOnly, LowerBound, LowerBoundIsInc, LowerInclusive, NegInfinity, PosInfinity, RealSet, Unbound, UpperBound, UpperBoundIsInc, UpperInclusive } from "../spec.js";
 
 const planetBounds = { lowerInc: LOWER_EX, lower: 0, int: INT_SET, upper: 20, upperInc: UPPER_EX } as const;
 type PlanetBounds = typeof planetBounds;

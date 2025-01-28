@@ -1,5 +1,5 @@
 import { assertDefined } from "@rickosborne/guard";
-import { Comparator } from "@rickosborne/typical";
+import type { Comparator } from "@rickosborne/typical";
 
 /**
  * Mixin for a comparator with chaining functions to constrain
@@ -108,6 +108,19 @@ export const chainableComparator = <T>(comparator: Comparator<T>): ChainableComp
  * Numeric comparator which sorts lower values before higher ones.
  */
 export const numberAsc: Comparator<number> = (a, b) => a - b;
+/**
+ * Numeric (reverse) comparator which sorts higher values before lower ones.
+ */
+export const numberDesc: Comparator<number> = (a, b) => b - a;
+
+/**
+ * String comparator which sorts in lexicographic (dictionary) order.
+ */
+export const stringAsc: Comparator<string> = (a, b) => a.localeCompare(b);
+/**
+ * String comparator which sorts in reverse lexicographic (dictionary) order.
+ */
+export const stringDesc: Comparator<string> = (a, b) => b.localeCompare(a);
 
 /**
  * Build a comparator for the given type, which goes through the

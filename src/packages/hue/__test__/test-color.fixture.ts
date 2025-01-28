@@ -1,12 +1,12 @@
 import { entriesOf } from "@rickosborne/foundation";
 import { expect } from "chai";
-import { Color, type UncheckedColorParts } from "../color.js";
+import type { Color, UncheckedColorParts } from "../color.js";
 import type { HSL } from "../hsl.js";
 import type { HSV } from "../hsv.js";
-import type { RGB } from "../rgb.js";
+import type { IntRGB } from "../rgb.js";
 
 export type CombinedParts = {
-	rgb?: RGB;
+	rgb?: IntRGB;
 	hex?: string;
 	hsl?: HSL;
 	hsv?: HSV;
@@ -35,7 +35,7 @@ export const testColor = (
 				expect(actual, key).eq(expected);
 			} else if (expected != null) {
 				for (const [ subKey, subValue ] of entriesOf(expected)) {
-					expect((actual as RGB | HSL | HSV)[ subKey ], subKey).closeTo(subValue!, 0.0001);
+					expect((actual as IntRGB | HSL | HSV)[ subKey ], subKey).closeTo(subValue!, 0.0001);
 				}
 			}
 		}

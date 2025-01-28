@@ -1,6 +1,6 @@
 import { statsForFile } from "@rickosborne/term";
-import { Stats } from "node:fs";
-import * as path from "node:path";
+import type { Stats } from "node:fs";
+import { join as pathJoin } from "node:path";
 import type { CommandParamBase, ParamHandler, TypedCommandParam } from "./common.js";
 
 /**
@@ -46,7 +46,7 @@ export type FileArg = {
 export const parseFileArg = (text: string, param: FileCommandParam): FileArg => {
 	let filePath = text;
 	if (param.path != null && !filePath.startsWith(param.path)) {
-		filePath = path.join(param.path, filePath);
+		filePath = pathJoin(param.path, filePath);
 	}
 	const stats = statsForFile(filePath);
 	const exists = stats != null;

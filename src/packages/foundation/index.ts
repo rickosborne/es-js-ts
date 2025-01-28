@@ -3,7 +3,6 @@ export * from "./array-eq.js";
 export * from "./as-fraction.js";
 export * from "./binary-heap.js";
 export * from "./binary-index-of.js";
-export * from "./bounds.js";
 export * from "./close-to.js";
 export * from "./comparator.js";
 export * from "./compute-if-absent.js";
