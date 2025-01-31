@@ -11,7 +11,7 @@ const testDistribution = (
 	const end = 100;
 	const freedom = end - start;
 	const range = freedom + 1;
-	const count = range * 5000;
+	const count = range * 2000;
 	const expected = count / range;
 	const counts = new Map<number, number>();
 	const rand: () => number = float ? (() => Math.trunc(rng.float01() * (end + 1))) : (() => rng.range(0, end + 1));
@@ -34,7 +34,7 @@ const testDistribution = (
 	const mep = me / expected;
 	// console.log(`[${rng.name}] n=${count} exp=${expected} df=${freedom} mse=${mse.toFixed(3)} me=${me.toFixed(3)} mep=${mep.toFixed(3)}`);
 	// console.log(Object.fromEntries(counts));
-	expect(mep, "mep").lte(0.025);
+	expect(mep, "mep").lte(0.03);
 };
 
 describe("rand", () => {

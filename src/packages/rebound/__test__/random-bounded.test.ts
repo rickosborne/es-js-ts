@@ -31,7 +31,7 @@ const testDistribution = (
 	const mse = sse / range;
 	const me = Math.sqrt(mse);
 	const mep = me / expected;
-	console.log(`n=${count} exp=${expected} df=${freedom} mse=${mse.toFixed(3)} me=${me.toFixed(3)} mep=${mep.toFixed(3)}`);
+	// console.log(`n=${count} exp=${expected} df=${freedom} mse=${mse.toFixed(3)} me=${me.toFixed(3)} mep=${mep.toFixed(3)}`);
 	// console.log(Object.fromEntries(counts));
 	expect(mep, "mep").lte(0.025);
 };

@@ -21,6 +21,10 @@ export class IntegerRange extends NumberRange {
 		if (this.isSingleton) {
 			return this.lower;
 		}
-		return Math.round((value - other.lower) * (this.upper - this.lower) / (other.upper - other.lower)) + this.lower;
+		const thisWidth = this.discreteIntegers;
+		const otherWidth = other.upper - other.lower;
+		const factor = thisWidth / otherWidth;
+		const offset = value - other.lower;
+		return Math.min(this.upper, this.lower + Math.trunc(offset * factor));
 	}
 }
