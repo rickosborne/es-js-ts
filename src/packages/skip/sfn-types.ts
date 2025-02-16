@@ -65,8 +65,8 @@ export type IntrinsicFunctionName = typeof STATES_ARRAY | typeof STATES_ARRAY_CO
  */
 export interface StateMachine extends CanComment {
 	QueryLanguage?: QueryLanguageIdentifier;
-	StartAt: StepIdentifier;
-	States: Record<StepIdentifier, State>;
+	StartAt: StateIdentifier;
+	States: Record<StateIdentifier, State>;
 	TimeoutSeconds?: number;
 	Version?: typeof VERSION_1;
 }
@@ -75,7 +75,7 @@ export type QueryLanguageJSONata = typeof JSONATA;
 export type QueryLanguageJSONPath = typeof JSONPATH;
 export type QueryLanguageIdentifier = QueryLanguageJSONata | QueryLanguageJSONPath;
 
-export interface StateMachineOf<S extends StepIdentifier, Q extends QueryLanguageIdentifier = QueryLanguageJSONPath> extends StateMachine {
+export interface StateMachineOf<S extends StateIdentifier, Q extends QueryLanguageIdentifier = QueryLanguageJSONPath> extends StateMachine {
 	QueryLanguage?: Q;
 	StartAt: NoInfer<S>;
 	States: Record<S, State>;
@@ -90,6 +90,16 @@ export type SucceedType = typeof TYPE_SUCCEED;
 export type TaskType = typeof TYPE_TASK;
 export type WaitType = typeof TYPE_WAIT;
 export type StateType = TaskType | SucceedType | FailType | ParallelType | MapType | ChoiceType | PassType | WaitType;
+export interface StateForType {
+	[TYPE_CHOICE]: ChoiceState;
+	[TYPE_FAIL]: FailState;
+	[TYPE_MAP]: MapState;
+	[TYPE_PARALLEL]: ParallelState;
+	[TYPE_PASS]: PassState;
+	[TYPE_SUCCEED]: SucceedState;
+	[TYPE_TASK]: TaskState;
+	[TYPE_WAIT]: WaitState;
+}
 
 export interface CommentState {
 	Comment: string;
@@ -405,21 +415,21 @@ export const errorOutputFromError = (error: Error): ErrorOutput => {
 };
 
 export interface NonTerminalState {
-	Next: StepIdentifier;
+	Next: StateIdentifier;
 }
 
 export const isNonTerminalState = (value: unknown): value is NonTerminalState => hasString(value, "Next");
 
-export interface NonTerminalStateOf<S extends StepIdentifier> {
+export interface NonTerminalStateOf<S extends StateIdentifier> {
 	Next: S;
 }
 
 export type EndOrNext = EndState | NonTerminalState;
-export type EndOrNextOf<S extends StepIdentifier> = EndState | NonTerminalStateOf<S>;
+export type EndOrNextOf<S extends StateIdentifier> = EndState | NonTerminalStateOf<S>;
 
 export interface ChoiceStateCommon extends CanAssign {
 	Choices: [ ChoiceRule, ...ChoiceRule[] ];
-	Default?: StepIdentifier;
+	Default?: StateIdentifier;
 	End?: never;
 }
 
@@ -433,8 +443,8 @@ export type ChoiceState = JSONataChoiceState | JSONPathChoiceState;
 
 export interface ItemProcessor {
 	ProcessorConfig?: JSONObject;
-	StartAt: StepIdentifier;
-	States: Record<StepIdentifier, State>;
+	StartAt: StateIdentifier;
+	States: Record<StateIdentifier, State>;
 }
 
 export interface JSONataItemProcessor extends ItemProcessor {
@@ -562,22 +572,22 @@ export interface JSONataMapStateWithoutEndOrNext extends StateOf<MapType, QueryL
 }
 
 export type JSONataMapState = JSONataMapStateWithoutEndOrNext & EndOrNext & CanComment;
-export type JSONataMapStateOf<S extends StepIdentifier> = JSONataMapStateWithoutEndOrNext & EndOrNextOf<S>;
+export type JSONataMapStateOf<S extends StateIdentifier> = JSONataMapStateWithoutEndOrNext & EndOrNextOf<S>;
 
 export interface JSONPathMapStateWithoutEndOrNext extends StateOf<MapType, QueryLanguageJSONPath>, JSONPathMapStateCommon, CanInputOutputPath, CanResultPath, CanParameters, CanResultSelector {
 }
 
 export type JSONPathMapState = JSONPathMapStateWithoutEndOrNext & JSONPathMapMaxConcurrency & EndOrNext & CanComment;
-export type JSONPathMapStateOf<S extends StepIdentifier> = JSONPathMapStateWithoutEndOrNext & JSONPathMapMaxConcurrency & EndOrNextOf<S>;
+export type JSONPathMapStateOf<S extends StateIdentifier> = JSONPathMapStateWithoutEndOrNext & JSONPathMapMaxConcurrency & EndOrNextOf<S>;
 export type MapState = JSONataMapState | JSONPathMapState;
-export type MapStateOf<S extends StepIdentifier> = JSONataMapStateOf<S> | JSONPathMapStateOf<S>;
+export type MapStateOf<S extends StateIdentifier> = JSONataMapStateOf<S> | JSONPathMapStateOf<S>;
 
 export interface ParallelBranch {
-	StartAt: StepIdentifier;
-	States: Record<StepIdentifier, State>;
+	StartAt: StateIdentifier;
+	States: Record<StateIdentifier, State>;
 }
 
-export interface ParallelBranchOf<S extends StepIdentifier> {
+export interface ParallelBranchOf<S extends StateIdentifier> {
 	StartAt: NoInfer<S>;
 	States: Record<S, State>;
 }
@@ -590,15 +600,15 @@ export interface JSONataParallelStateWithoutEndOrNext extends StateOf<ParallelTy
 }
 
 export type JSONataParallelState = JSONataParallelStateWithoutEndOrNext & EndOrNext & CanComment;
-export type JSONataParallelStateOf<S extends StepIdentifier> = JSONataParallelStateWithoutEndOrNext & EndOrNextOf<S>;
+export type JSONataParallelStateOf<S extends StateIdentifier> = JSONataParallelStateWithoutEndOrNext & EndOrNextOf<S>;
 
 export interface JSONPathParallelStateWithoutEndOrNext extends StateOf<ParallelType, QueryLanguageJSONPath>, ParallelStateCommon, CanInputOutputPath, CanResultPath, CanParameters, CanResultSelector, CanCatchOf<QueryLanguageJSONPath> {
 }
 
 export type JSONPathParallelState = JSONPathParallelStateWithoutEndOrNext & EndOrNext & CanComment;
-export type JSONPathParallelStateOf<S extends StepIdentifier> = JSONPathParallelStateWithoutEndOrNext & EndOrNextOf<S>;
+export type JSONPathParallelStateOf<S extends StateIdentifier> = JSONPathParallelStateWithoutEndOrNext & EndOrNextOf<S>;
 export type ParallelState = JSONataParallelState | JSONPathParallelState;
-export type ParallelStateOf<S extends StepIdentifier> = JSONataParallelStateOf<S> | JSONPathParallelStateOf<S>;
+export type ParallelStateOf<S extends StateIdentifier> = JSONataParallelStateOf<S> | JSONPathParallelStateOf<S>;
 
 export interface PassStateCommon extends CanAssign {
 	Result?: JSONSerializable | undefined;
@@ -608,15 +618,15 @@ export interface JSONataPassStateWithoutEndOrNext extends StateOf<PassType, Quer
 }
 
 export type JSONataPassState = JSONataPassStateWithoutEndOrNext & EndOrNext & CanComment;
-export type JSONataPassStateOf<S extends StepIdentifier> = JSONataPassStateWithoutEndOrNext & EndOrNextOf<S>;
+export type JSONataPassStateOf<S extends StateIdentifier> = JSONataPassStateWithoutEndOrNext & EndOrNextOf<S>;
 
 export interface JSONPathPassStateWithoutEndOrNext extends StateOf<PassType, QueryLanguageJSONPath>, PassStateCommon, CanInputOutputPath, CanResultPath, CanParameters {
 }
 
 export type JSONPathPassState = JSONPathPassStateWithoutEndOrNext & EndOrNext & CanComment;
-export type JSONPathPassStateOf<S extends StepIdentifier> = JSONPathPassStateWithoutEndOrNext & EndOrNextOf<S>;
+export type JSONPathPassStateOf<S extends StateIdentifier> = JSONPathPassStateWithoutEndOrNext & EndOrNextOf<S>;
 export type PassState = JSONataPassState | JSONPathPassState;
-export type PassStateOf<S extends StepIdentifier> = JSONataPassStateOf<S> | JSONPathPassStateOf<S>;
+export type PassStateOf<S extends StateIdentifier> = JSONataPassStateOf<S> | JSONPathPassStateOf<S>;
 
 export type ResourceURI = string;
 export type ARN = `arn:aws:${ string }`;
@@ -670,15 +680,15 @@ export interface JSONataTaskStateWithoutEndOrNext extends StateOf<TaskType, Quer
 }
 
 export type JSONataTaskState = JSONataTaskStateWithoutEndOrNext & JSONataTaskTimeout & EndOrNext & CanComment;
-export type JSONataTaskStateOf<S extends StepIdentifier> = JSONataTaskStateWithoutEndOrNext & JSONataTaskTimeout & EndOrNextOf<S>;
+export type JSONataTaskStateOf<S extends StateIdentifier> = JSONataTaskStateWithoutEndOrNext & JSONataTaskTimeout & EndOrNextOf<S>;
 
 export interface JSONPathTaskStateWithoutEndOrNext extends StateOf<TaskType, QueryLanguageJSONPath>, TaskStateCommon, CanInputOutputPath, CanResultPath, CanParameters, CanCatchOf<QueryLanguageJSONPath> {
 }
 
 export type JSONPathTaskState = JSONPathTaskStateWithoutEndOrNext & JSONPathTaskTimeout & EndOrNext & CanComment;
-export type JSONPathTaskStateOf<S extends StepIdentifier> = JSONPathTaskStateWithoutEndOrNext & JSONPathTaskTimeout & EndOrNextOf<S>;
+export type JSONPathTaskStateOf<S extends StateIdentifier> = JSONPathTaskStateWithoutEndOrNext & JSONPathTaskTimeout & EndOrNextOf<S>;
 export type TaskState = JSONataTaskState | JSONPathTaskState;
-export type TaskStateOf<S extends StepIdentifier> = JSONataTaskStateOf<S> | JSONPathTaskStateOf<S>;
+export type TaskStateOf<S extends StateIdentifier> = JSONataTaskStateOf<S> | JSONPathTaskStateOf<S>;
 
 export interface WaitSeconds {
 	Seconds: number;
@@ -715,15 +725,15 @@ export interface JSONataWaitStateWithoutEndOrNext extends StateOf<WaitType, Quer
 }
 
 export type JSONataWaitState = JSONataWaitStateWithoutEndOrNext & JSONataWaitTime & EndOrNext & CanComment;
-export type JSONataWaitStateOf<S extends StepIdentifier> = JSONataWaitStateWithoutEndOrNext & JSONataWaitTime & EndOrNextOf<S>;
+export type JSONataWaitStateOf<S extends StateIdentifier> = JSONataWaitStateWithoutEndOrNext & JSONataWaitTime & EndOrNextOf<S>;
 
 export interface JSONPathWaitStateWithoutEndOrNext extends StateOf<WaitType, QueryLanguageJSONPath>, WaitStateCommon, CanInputOutputPath {
 }
 
 export type JSONPathWaitState = JSONPathWaitStateWithoutEndOrNext & JSONPathWaitTime & EndOrNext & CanComment;
-export type JSONPathWaitStateOf<S extends StepIdentifier> = JSONPathWaitStateWithoutEndOrNext & JSONPathWaitTime & EndOrNextOf<S>;
+export type JSONPathWaitStateOf<S extends StateIdentifier> = JSONPathWaitStateWithoutEndOrNext & JSONPathWaitTime & EndOrNextOf<S>;
 export type WaitState = JSONataWaitState | JSONPathWaitState;
-export type WaitStateOf<S extends StepIdentifier> = JSONataWaitStateOf<S> | JSONPathWaitStateOf<S>;
+export type WaitStateOf<S extends StateIdentifier> = JSONataWaitStateOf<S> | JSONPathWaitStateOf<S>;
 
 export interface FailStateCommon {
 	Cause?: string;
@@ -776,7 +786,7 @@ export type TerminalState = EndState | SucceedState | FailState;
 
 export type VariableName = string;
 
-export type StepIdentifier = string;
+export type StateIdentifier = string;
 
 export type JSONataString = `{%${ string }%}`;
 

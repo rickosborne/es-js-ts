@@ -151,7 +151,7 @@ describe("States Language Examples", () => {
 		} satisfies StateMachine;
 		let endOutput: unknown;
 		const result = await runLocal(states, {
-			onStepComplete({ stateName, output }) {
+			onStateComplete({ stateName, output }) {
 				if (stateName === "End") {
 					endOutput = output;
 				}
