@@ -17,7 +17,7 @@ export const rangeFromChecked = <Config extends CheckedBounds>(config: CheckedBo
 	const { isInt, isLowerInc, isUpperInc, lower, upper } = config;
 	return rangeFromConfig({
 		lowerInc: isLowerInc ? LOWER_IN : LOWER_EX,
-		int: isInt ? INT_SET : REAL_SET,
+		"int": isInt ? INT_SET : REAL_SET,
 		lower,
 		upper,
 		upperInc: isUpperInc ? UPPER_IN : UPPER_EX,

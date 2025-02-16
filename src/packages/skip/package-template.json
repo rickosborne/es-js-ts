@@ -1,0 +1,36 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical",
+		"jsonata": "2.0.6",
+		"jsonpath": "1.1.1"
+	},
+	"description": "Rick Osborne's utilities for working with Step Functions",
+	"devDependencies": {
+		"@types/jsonata": "1.5.1",
+		"@types/jsonpath": "0.2.4"
+	},
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"step functions",
+		"states language"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/skip",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/skip",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.1.10"
+}

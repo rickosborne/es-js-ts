@@ -1,5 +1,5 @@
 import { describe, expect, it } from "tstyche";
-import type { Valued } from "../valued.js";
+import type { DeepValued, Valued } from "../valued.js";
 
 describe("Valued", () => {
 	it("filters out both null and undefined", () => {
@@ -15,5 +15,17 @@ describe("Valued", () => {
 		expect<Valued<object | null>>().type.toBe<object>();
 		expect<Valued<object | undefined>>().type.toBe<object>();
 		expect<Valued<object | null | undefined>>().type.toBe<object>();
+	});
+});
+
+describe("DeepValued", () => {
+	it("Recurses", () => {
+		expect<DeepValued<never>>().type.toBe<never>();
+		expect<DeepValued<undefined>>().type.toBe<never>();
+		expect<DeepValued<null>>().type.toBe<never>();
+		expect<DeepValued<string | null>>().type.toBe<string>();
+		expect<DeepValued<boolean | undefined>>().type.toBe<boolean>();
+		expect<DeepValued<(number | null)[]>>().type.toBe<number[]>();
+		expect<DeepValued<{values: (number | undefined)[]}>>().type.toBe<{values: number[]}>();
 	});
 });

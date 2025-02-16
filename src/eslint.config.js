@@ -85,6 +85,10 @@ module.exports = [
 				},
 			],
 			"@typescript-eslint/no-inferrable-types": "off",
+			"@typescript-eslint/no-empty-interface": [
+				"error",
+				{ allowSingleExtends: true },
+			],
 			"@typescript-eslint/no-unused-vars": [
 				"error",
 				{
@@ -113,7 +117,7 @@ module.exports = [
 			"jsonc/key-spacing": "error",
 			"jsonc/no-irregular-whitespace": "error",
 			"jsonc/sort-keys": "error",
-			"quotes": [
+			quotes: [
 				"error",
 				"double",
 				{
@@ -147,7 +151,12 @@ module.exports = [
 			"no-trailing-spaces": "error",
 			"no-unused-vars": "off",
 			"object-curly-spacing": [ "error", "always" ],
-			"semi": [ "error", "always" ],
+			"quote-props": [
+				"error",
+				"as-needed",
+				{ keywords: true, numbers: true },
+			],
+			semi: [ "error", "always" ],
 			"sort-imports": [
 				"error",
 				{ ignoreCase: true, ignoreDeclarationSort: true },

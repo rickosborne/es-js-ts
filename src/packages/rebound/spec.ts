@@ -90,7 +90,6 @@ export interface DefinedFromChecked<
 	upperInc: UpperInExFrom<IsUpperInc>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DefinedFromCheckedConfig<Config extends CheckedBounds> extends DefinedFromChecked<Config["isLowerInc"], Config["lower"], Config["isInt"], Config["upper"], Config["isUpperInc"]> {}
 
 export interface CheckedBoundsConfig<
@@ -160,7 +159,6 @@ export interface Rebounded<
 	[ BOUNDS ]: BoundsWithRange<Range, LowerInc, Lower, Int, Upper, UpperInc>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ReboundedFromConfig<
 	LowerInc extends LowerInEx,
 	Lower extends number,
@@ -169,7 +167,6 @@ export interface ReboundedFromConfig<
 	UpperInc extends UpperInEx,
 > extends Rebounded<BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>, LowerInc, Lower, Int, Upper, UpperInc> {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ReboundedFromChecked<
 	IsLowerInc extends boolean,
 	Lower extends number,

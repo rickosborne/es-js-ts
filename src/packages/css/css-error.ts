@@ -14,7 +14,7 @@ export class CSSError extends Error {
 		options: CSSErrorOptions = {},
 	) {
 		const message = options.message ?? (text == null ? "Error in CSS" : `Error in CSS: ${text}`);
-		super(message);
+		super(message, options);
 		this.expected = options.expected;
 		this.href = options.href;
 	}

@@ -61,7 +61,7 @@ export const RESOLUTION_BY_UNIT: Record<string, number | undefined> = Object.fre
 	"%": 0.1,
 	cm: 0.01,
 	deg: 0.1,
-	in: 0.01,
+	"in": 0.01,
 	mm: 0.1,
 	pc: 0.1,
 	pt: 0.1,

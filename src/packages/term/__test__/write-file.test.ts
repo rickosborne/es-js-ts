@@ -12,8 +12,8 @@ describe(writeJson.name, () => {
 					// Default should be last.
 					// Types should be earlier, but after custom.
 					custom: "./custom/index.js",
-					default: "./esm/index.mjs",
-					import: "./esm/index.mjs",
+					"default": "./esm/index.mjs",
+					"import": "./esm/index.mjs",
 					require: "./cjs/index.cjs",
 					types: "./types/index.d.ts",
 				},

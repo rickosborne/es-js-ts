@@ -2,11 +2,11 @@ import { describe, expect, test } from "tstyche";
 import { INT_SET, LOWER_EX, LOWER_IN, REAL_SET, UPPER_EX } from "../spec.js";
 import type { BoundedNumber, IntegerSet, IsBounded, IsFinite, IsInfinite, IsIntegersOnly, LowerBound, LowerBoundIsInc, LowerInclusive, NegInfinity, PosInfinity, RealSet, Unbound, UpperBound, UpperBoundIsInc, UpperInclusive } from "../spec.js";
 
-const planetBounds = { lowerInc: LOWER_EX, lower: 0, int: INT_SET, upper: 20, upperInc: UPPER_EX } as const;
+const planetBounds = { lowerInc: LOWER_EX, lower: 0, "int": INT_SET, upper: 20, upperInc: UPPER_EX } as const;
 type PlanetBounds = typeof planetBounds;
 type Planets = BoundedNumber<PlanetBounds>;
 
-const volumeBounds = { lower: 0, lowerInc: LOWER_IN, int: REAL_SET, upper: 100, upperInc: UPPER_EX } as const;
+const volumeBounds = { lower: 0, lowerInc: LOWER_IN, "int": REAL_SET, upper: 100, upperInc: UPPER_EX } as const;
 type VolumeBounds = typeof volumeBounds;
 type Volume = BoundedNumber<VolumeBounds>;
 

@@ -69,15 +69,15 @@ export function repackageModule(
 	pkg.exports = {
 		".": {
 			types: "./index.d.ts",
-			import: "./index.mjs",
+			"import": "./index.mjs",
 			require: "./index.cjs",
-			default: "./index.mjs",
+			"default": "./index.mjs",
 		},
 		"./*.js": {
 			types: "./*.d.ts",
-			import: "./*.mjs",
+			"import": "./*.mjs",
 			require: "./*.cjs",
-			default: "./*.mjs",
+			"default": "./*.mjs",
 		},
 	};
 	pkg.git = {
