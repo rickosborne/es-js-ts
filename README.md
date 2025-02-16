@@ -10,6 +10,8 @@ Individual packages are published under [@rickosborne/*](https://www.npmjs.com/~
 * [@rickosborne/hue](https://www.npmjs.com/package/@rickosborne/hue) — General color-handling tools for RGB, HSV, and HSL/HWB.
 * [@rickosborne/planar](https://www.npmjs.com/package/@rickosborne/planar) — 2D Cartesian and graphics related data structures and algorithms, like polygon convex testing, line segment intersections, etc.
 * [@rickosborne/term](https://www.npmjs.com/package/@rickosborne/term) — Utilities for working at the terminal/console/command-line, with local files and processes, etc.
+* [@rickosborne/skip](./src/packages/skip/README.md) — (In progress.)  Work with [States Language](https://states-language.net/#map-state-failure-tolerance) state machines and AWS Step Functions.
+  Includes a rudimentary, but functional and tested, local States Language runner, so you can unit test and integration test your Step Functions without having to publish to the cloud.
 
 ## Notes
 
