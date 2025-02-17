@@ -3,6 +3,7 @@ import { hasOwn, isJSONArray, isJSONSerializable, validateJSONArray, ValidationE
 import type { JSONArray, JSONSerializable } from "@rickosborne/typical";
 import { assertLanguage } from "./assert-language.js";
 import { assignThenContinue } from "./assign-then-continue.js";
+import { errorOutputFromError } from "./error-output-from-error.js";
 import { evaluateExpression } from "./evaluate-expression.js";
 import { evaluateJSONata } from "./evaluate-jsonata.js";
 import { evaluateJSONPath } from "./evaluate-jsonpath.js";
@@ -12,9 +13,9 @@ import { getMaxConcurrency } from "./get-max-concurrency.js";
 import { getToleratedFailureCount } from "./get-tolerated-failure-count.js";
 import { processArgs } from "./process-args.js";
 import { resourceHandlerResolver } from "./resource-handler-resolver.js";
-import { runLocal } from "./run-local.js";
+import { runStateMachine } from "./run-state-machine.js";
 import type { RunStateContext } from "./run-types.js";
-import { type ErrorOutput, errorOutputFromError, isJSONataItemBatcher, isJSONataItemReader, isJSONataString, isJSONPathItemBatcher, isJSONPathItemReader, isJSONPathPath, isJSONPathPayloadTemplate, JSONATA, JSONPATH, type MapState, STATES_BRANCH_FAILED, STATES_EXCEED_TOLERATED_FAILURE_THRESHOLD, STATES_RESULT_WRITER_FAILED } from "./sfn-types.js";
+import { type ErrorOutput, isJSONataItemBatcher, isJSONataItemReader, isJSONataString, isJSONPathItemBatcher, isJSONPathItemReader, isJSONPathPath, isJSONPathPayloadTemplate, JSONATA, JSONPATH, type MapState, STATES_BRANCH_FAILED, STATES_EXCEED_TOLERATED_FAILURE_THRESHOLD, STATES_RESULT_WRITER_FAILED } from "./sfn-types.js";
 
 /**
  * Run the given Map State.
@@ -135,7 +136,7 @@ export const runMap = async (
 		const batch = inputs.slice(0, batchSize);
 		const done = await Promise.all(batch.map(async ({ inputValue, index }) => {
 			let errorOutput: ErrorOutput | undefined;
-			const result = await runLocal(itemProcessor, {
+			const result = await runStateMachine(itemProcessor, {
 				...options,
 				input: inputValue,
 				language,

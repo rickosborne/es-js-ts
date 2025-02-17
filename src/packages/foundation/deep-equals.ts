@@ -36,13 +36,21 @@ export function deepEquals<T>(actual: unknown, expected: T): actual is T {
 		}
 		const leftKeys = Object.keys(left).sort();
 		const rightKeys = Object.keys(right).sort();
-		if (leftKeys.length !== rightKeys.length) return false;
-		if (!leftKeys.every((key) => compare(Object.getOwnPropertyDescriptor(left, key), Object.getOwnPropertyDescriptor(right, key)))) return false;
+		if (!compare(leftKeys, rightKeys)) return false;
+		if (!leftKeys.every((key) => {
+			const leftVal = left[key as keyof typeof left];
+			const rightVal = right[key as keyof typeof right];
+			return compare(leftVal, rightVal);
+		})) return false;
 		const leftSymbols = Object.getOwnPropertySymbols(left).sort();
 		const rightSymbols = Object.getOwnPropertySymbols(right).sort();
 		if (!compare(leftSymbols, rightSymbols)) return false;
 		// noinspection RedundantIfStatementJS
-		if (!leftSymbols.every((sym) => compare(Object.getOwnPropertyDescriptor(left, sym), Object.getOwnPropertyDescriptor(right, sym)))) return false;
+		if (!leftSymbols.every((sym) => {
+			const leftVal = left[sym as keyof typeof left];
+			const rightVal = right[sym as keyof typeof right];
+			return compare(leftVal, rightVal);
+		})) return false;
 		return true;
 	};
 	return compare(actual, expected);

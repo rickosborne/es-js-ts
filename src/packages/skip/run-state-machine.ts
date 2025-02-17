@@ -5,7 +5,7 @@ import { runState } from "./run-state.js";
 import type { RunStateMachineOptions } from "./run-types.js";
 import { type StateMachine } from "./sfn-types.js";
 
-export const runLocal = async (
+export const runStateMachine = async (
 	stateMachine: StateMachine,
 	options: RunStateMachineOptions = {},
 ): Promise<JSONSerializable> => {

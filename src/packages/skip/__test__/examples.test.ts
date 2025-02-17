@@ -2,10 +2,9 @@ import { sleep } from "@rickosborne/foundation";
 import type { JSONSerializable } from "@rickosborne/typical";
 import { expect } from "chai";
 import { describe, test } from "mocha";
-import { runLocal } from "../run-local.js";
+import { runStateMachine } from "../run-state-machine.js";
 import { type FailState, JSONATA, type JSONataPassState, JSONPATH, type StateMachine, STATES_TIMEOUT, type WaitState } from "../sfn-types.js";
 import { StatesError } from "../states-error.js";
-
 
 describe("States Language Examples", () => {
 	const adderStateMachine = {
@@ -21,14 +20,13 @@ describe("States Language Examples", () => {
 
 
 	test("Data", async () => {
-		const result = await runLocal(adderStateMachine, {
+		const result = await runStateMachine(adderStateMachine, {
 			input: {
 				val1: 3,
 				val2: 4,
 			},
 			fnForResource: {
-				// eslint-disable-next-line @typescript-eslint/require-await
-				[ adderStateMachine.States.Add.Resource ]: async (event: { val1: number; val2: number }): Promise<number> => {
+				[ adderStateMachine.States.Add.Resource ]: (event: { val1: number; val2: number }): number => {
 					return event.val1 + event.val2;
 				},
 			},
@@ -49,7 +47,7 @@ describe("States Language Examples", () => {
 				} satisfies JSONataPassState,
 			},
 		};
-		const result = await runLocal(product);
+		const result = await runStateMachine(product);
 		expect(result, "result").eql({ fiveFac: 120 });
 	});
 	/**
@@ -77,7 +75,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {});
+		const result = await runStateMachine(states, {});
 		// noinspection SpellCheckingInspection
 		expect(result).eql("2006 Infiniti G35");
 	});
@@ -97,7 +95,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			input: {
 				x: 5,
 			},
@@ -150,7 +148,7 @@ describe("States Language Examples", () => {
 			},
 		} satisfies StateMachine;
 		let endOutput: unknown;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			onStateComplete({ stateName, output }) {
 				if (stateName === "End") {
 					endOutput = output;
@@ -187,7 +185,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			fnForResource: {
 				[ states.States[ "My Task" ].Resource ]: () => {
 					return 123;
@@ -249,9 +247,9 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			fnForResource: {
-				[ states.States[ "A Task" ].Resource ]: (...args: unknown[]) => {
+				[ states.States[ "A Task" ].Resource ]: (...args: []) => {
 					aTaskArgs = args;
 				},
 			},
@@ -290,7 +288,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			fnForResource: {
 				[ states.States.X.Resource ]: (...args: []) => {
 					xArgs = args;
@@ -331,7 +329,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			contextObject: {
 				DayOfWeek: "TUESDAY",
 			},
@@ -374,7 +372,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			input: {
 				master: {
 					detail: [ 1, 2, 3 ],
@@ -403,7 +401,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			input: {
 				master: {
 					detail: [ 1, 2, 3 ],
@@ -438,7 +436,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(adder2, {
+		const result = await runStateMachine(adder2, {
 			input: {
 				title: "Numbers to add",
 				numbers: { val1: 3, val2: 4 },
@@ -476,7 +474,7 @@ describe("States Language Examples", () => {
 			},
 		} satisfies StateMachine;
 		// noinspection SpellCheckingInspection
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			input: {
 				georefOf: "Home",
 			},
@@ -504,7 +502,7 @@ describe("States Language Examples", () => {
 			},
 		} satisfies StateMachine;
 		let thrown: unknown;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			fnForResource: {
 				async timedTask() {
 					return sleep(500, "never");
@@ -594,7 +592,7 @@ describe("States Language Examples", () => {
 						},
 					},
 				} satisfies StateMachine;
-				const result = await runLocal(states, {
+				const result = await runStateMachine(states, {
 					input,
 					nowProvider: () => now,
 					onWait(u, s): Promise<void> {
@@ -621,7 +619,7 @@ describe("States Language Examples", () => {
 					TestFail: fail,
 				},
 			} satisfies StateMachine;
-			const result = await runLocal(states, {
+			const result = await runStateMachine(states, {
 				...(input == null ? {} : { input }),
 			}).catch((err: unknown) => {
 				actualError = err;
@@ -697,7 +695,7 @@ describe("States Language Examples", () => {
 				},
 			},
 		} satisfies StateMachine;
-		const result = await runLocal(states, {
+		const result = await runStateMachine(states, {
 			input: [ 3, 2 ],
 			fnForResource: {
 				"arn:aws:states:::task:Add": (values: number[]) => values[ 0 ]! + values[ 1 ]!,
@@ -751,10 +749,10 @@ describe("States Language Examples", () => {
 			} satisfies StateMachine;
 			const allInput = inputProvider();
 			const inputs: unknown[] = [];
-			const result = await runLocal(states, {
+			const result = await runStateMachine(states, {
 				input: allInput,
 				fnForResource: {
-					[states.States["Validate-All"].ItemProcessor.States.Validate.Resource]: (input: unknown) => {
+					[ states.States[ "Validate-All" ].ItemProcessor.States.Validate.Resource ]: (input: unknown) => {
 						inputs.push(input);
 						return inputs.length;
 					},
@@ -804,16 +802,16 @@ describe("States Language Examples", () => {
 			} satisfies StateMachine;
 			const allInput = inputProvider();
 			const inputs: unknown[] = [];
-			const result = await runLocal(states, {
+			const result = await runStateMachine(states, {
 				input: allInput,
 				fnForResource: {
-					[states.States["Validate-All"].ItemProcessor.States.Validate.Resource]: (input: unknown) => {
+					[ states.States[ "Validate-All" ].ItemProcessor.States.Validate.Resource ]: (input: unknown) => {
 						inputs.push(input);
 						return inputs.length;
 					},
 				},
 			});
-			const courier = allInput.detail["delivery-partner"];
+			const courier = allInput.detail[ "delivery-partner" ];
 			expect(inputs, "inputs").eql(allInput.detail.shipped.map((parcel) => ({ courier, parcel })));
 			expect(result, "result").eql({
 				numItemsProcessed: allInput.detail.shipped.length,
@@ -845,10 +843,10 @@ describe("States Language Examples", () => {
 			} satisfies StateMachine;
 			const allInput = inputProvider();
 			const inputs: unknown[] = [];
-			const result = await runLocal(states, {
+			const result = await runStateMachine(states, {
 				input: allInput,
 				fnForResource: {
-					[states.States["Validate-All"].ItemProcessor.States.Validate.Resource]: (input: unknown) => {
+					[ states.States[ "Validate-All" ].ItemProcessor.States.Validate.Resource ]: (input: unknown) => {
 						inputs.push(input);
 						return inputs.length;
 					},
@@ -897,16 +895,16 @@ describe("States Language Examples", () => {
 			} satisfies StateMachine;
 			const allInput = inputProvider();
 			const inputs: unknown[] = [];
-			const result = await runLocal(states, {
+			const result = await runStateMachine(states, {
 				input: allInput,
 				fnForResource: {
-					[states.States["Validate-All"].ItemProcessor.States.Validate.Resource]: (input: unknown) => {
+					[ states.States[ "Validate-All" ].ItemProcessor.States.Validate.Resource ]: (input: unknown) => {
 						inputs.push(input);
 						return inputs.length;
 					},
 				},
 			});
-			const courier = allInput.detail["delivery-partner"];
+			const courier = allInput.detail[ "delivery-partner" ];
 			expect(inputs).eql(allInput.detail.shipped.map((parcel) => ({ courier, parcel })));
 			/**
 			 * the ResultPath results in the output being the same as the input, with the

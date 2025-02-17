@@ -7,7 +7,8 @@ import { evaluateJSONPath } from "./evaluate-jsonpath.js";
 import { positiveIntAssertion } from "./evaluation-assertion.js";
 import { getLanguage } from "./get-language.js";
 import type { RunStateContext } from "./run-types.js";
-import { isIsoDateTime, isJSONataString, JSONATA, JSONPATH, type WaitState } from "./sfn-types.js";
+import { isJSONataString, JSONATA, JSONPATH, type WaitState } from "./sfn-types.js";
+import { isIsoDateTime } from "./timestamps.js";
 
 /**
  * Run the given Wait State.

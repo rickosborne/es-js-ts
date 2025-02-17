@@ -3,15 +3,7 @@ import { assertLanguage } from "./assert-language.js";
 import { evaluateJSONata } from "./evaluate-jsonata.js";
 import { evaluateJSONPathChoice } from "./evaluate-jsonpath-choice.js";
 import type { RunStateMachineOptions } from "./run-types.js";
-import {
-	type ChoiceRule,
-	isJSONataChoiceRule,
-	JSONATA,
-	JSONPATH,
-	type QueryLanguageIdentifier,
-	type State,
-	type StateIdentifier,
-} from "./sfn-types.js";
+import { type ChoiceRule, type ChoiceState, isJSONataChoiceRule, JSONATA, JSONPATH, type QueryLanguageIdentifier, type StateIdentifier } from "./sfn-types.js";
 
 /**
  * Evaluate whether a given Choice Rule matches the current State.
@@ -22,7 +14,7 @@ export const evaluateChoice = async (
 		input: JSONSerializable;
 		language: QueryLanguageIdentifier;
 		options: RunStateMachineOptions;
-		state: State,
+		state: ChoiceState,
 		stateName: StateIdentifier;
 	},
 ): Promise<boolean> => {

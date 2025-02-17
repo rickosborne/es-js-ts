@@ -64,7 +64,7 @@
 		"doc": "tsx ./scripts/simple-readme.ts",
 		"lint": "eslint ..",
 		"lint:fix": "eslint --fix .",
-		"precommit": "npm run lint && npm run build && npm run build:integration && npm run test && npm run tstyche && npm run pub",
+		"precommit": "npm run lint && npm run barrel && npm run type-check && npm run build && npm run build:integration && npm run test && npm run tstyche && npm run pub",
 		"pub": "tsx ./scripts/publish.ts",
 		"pub:commit": "tsx ./scripts/publish.ts --commit",
 		"reinstall": "rimraf ./node_modules && npm ci",

@@ -15,7 +15,8 @@ import type {
  * returns only JSON-serializable results, if any, or a promise for
  * the same.
  */
-export type StepFunctionLambdaLike = (...args: JSONSerializable[]) => (JSONSerializable | undefined | Promise<JSONSerializable | undefined>);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type StepFunctionLambdaLike = (...args: any) => (JSONSerializable | undefined | Promise<JSONSerializable | undefined> | void);
 
 /**
  * Resolve a resource URI to a local runnable function.

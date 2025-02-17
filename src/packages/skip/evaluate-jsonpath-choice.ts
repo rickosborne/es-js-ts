@@ -4,20 +4,34 @@ import * as jsonpath from "jsonpath";
 import { evaluateJSONPath } from "./evaluate-jsonpath.js";
 import { expectJSONPath } from "./expect-jsonpath.js";
 import type { RunStateMachineOptions } from "./run-types.js";
-import {
-	type DataTestExpressions,
-	isAndExpression,
-	isDataTestExpression,
-	isDataTestLiteralExpressionKey,
-	isIsoDateTime,
-	isNonTerminalState,
-	isNotExpression,
-	isOrExpression,
-	type JSONPathChoiceRule,
-	type State,
-	type StateIdentifier,
-	toDataTestLiteralExpressionKey,
-} from "./sfn-types.js";
+import { type ChoiceState, type DataTestExpressions, type DataTestLiteralExpressions, isAndExpression, isDataTestExpression, isDataTestLiteralExpressionKey, isNonTerminalState, isNotExpression, isOrExpression, type JSONPathChoiceRule, type StateIdentifier, toDataTestLiteralExpressionKey } from "./sfn-types.js";
+import { isIsoDateTime } from "./timestamps.js";
+
+const DATA_TEST_HANDLERS: Record<keyof DataTestLiteralExpressions, (left: JSONSerializable, right: JSONSerializable, input: JSONSerializable, jsonPath: string) => boolean> = {
+	BooleanEquals: (left, right) => deepEquals(left, right),
+	IsBoolean: (left, right) => right === (typeof left === "boolean"),
+	IsNull: (left, right) => right === (left === null),
+	IsNumeric: (left, right) => right === (typeof left === "number"),
+	IsPresent: (_left, right, input, jsonPath) => right === (jsonpath.query(input, jsonPath).length > 0),
+	IsString: (left, right) => right === (typeof left === "string"),
+	IsTimestamp: (left, right) => right === isIsoDateTime(left),
+	NumericEquals: (left, right) => typeof right === "number" && left === right,
+	NumericGreaterThan: (left, right) => typeof right === "number" && typeof left === "number" && left > right,
+	NumericGreaterThanEquals: (left, right) => typeof right === "number" && typeof left === "number" && left >= right,
+	NumericLessThan: (left, right) => typeof right === "number" && typeof left === "number" && left < right,
+	NumericLessThanEquals: (left, right) => typeof right === "number" && typeof left === "number" && left <= right,
+	StringEquals: (left, right) => typeof right === "string" && left === right,
+	StringGreaterThan: (left, right) => typeof right === "string" && typeof left === "string" && left.localeCompare(right) > 0,
+	StringGreaterThanEquals: (left, right) => typeof right === "string" && typeof left === "string" && left.localeCompare(right) >= 0,
+	StringLessThan: (left, right) => typeof right === "string" && typeof left === "string" && left.localeCompare(right) < 0,
+	StringLessThanEquals: (left, right) => typeof right === "string" && typeof left === "string" && left.localeCompare(right) <= 0,
+	StringMatches: (left, right) => typeof right === "string" && typeof left === "string" && simpleStarMatch(right, left),
+	TimestampEquals: (left, right) => isIsoDateTime(right) && isIsoDateTime(left) && Date.parse(left) === Date.parse(right),
+	TimestampGreaterThan: (left, right) => isIsoDateTime(right) && isIsoDateTime(left) && Date.parse(left) > Date.parse(right),
+	TimestampGreaterThanEquals: (left, right) => isIsoDateTime(right) && isIsoDateTime(left) && Date.parse(left) >= Date.parse(right),
+	TimestampLessThan: (left, right) => isIsoDateTime(right) && isIsoDateTime(left) && Date.parse(left) < Date.parse(right),
+	TimestampLessThanEquals: (left, right) => isIsoDateTime(right) && isIsoDateTime(left) && Date.parse(left) <= Date.parse(right),
+};
 
 /**
  * Evaluate a Choice Rule in a JSONPath context.
@@ -28,7 +42,7 @@ export const evaluateJSONPathChoice = async (
 	context: {
 		input: JSONSerializable;
 		options: RunStateMachineOptions;
-		state: State;
+		state: ChoiceState;
 		stateName: StateIdentifier;
 	},
 ): Promise<boolean> => {
@@ -62,68 +76,26 @@ export const evaluateJSONPathChoice = async (
 		if (exprNames.length !== 1) {
 			throw new SyntaxError(`State ${ stateName } Choice Rule must have exactly 1 Data Test Expression, found ${ exprNames.length === 0 ? "0" : exprNames.join(" ") }`);
 		}
-		let exprName = exprNames[ 0 ]!;
-		const value: JSONSerializable = evaluateJSONPath(choice.Variable, context);
-		let right = choice[ exprName ];
+		const exprName = exprNames[ 0 ]!;
+		let fnName: keyof DataTestLiteralExpressions;
+		const left: JSONSerializable = evaluateJSONPath(choice.Variable, context);
+		let right: JSONSerializable;
+		if (isDataTestLiteralExpressionKey(exprName)) {
+			fnName = exprName;
+			right = choice[ exprName ]!;
+		} else {
+			fnName = toDataTestLiteralExpressionKey(exprName);
+			const jsonPath = expectJSONPath(choice[ exprName ]!, exprName);
+			right = evaluateJSONPath(jsonPath, context);
+		}
 		if (right === undefined) {
 			throw new SyntaxError(`State ${ stateName } Choice Rule with ${ exprName } must have a value`);
 		}
-		if (!isDataTestLiteralExpressionKey(exprName)) {
-			exprName = toDataTestLiteralExpressionKey(exprName);
-			right = evaluateJSONPath(expectJSONPath(right, "BooleanEqualsPath"), context);
+		const handler = DATA_TEST_HANDLERS[ fnName ];
+		if (handler == null) {
+			throw new SyntaxError(`State ${ stateName } Choice Rule with ${ exprName } handler is unknown`);
 		}
-		// TODO: Pull this out into a static structure.
-		switch (exprName) {
-			case "BooleanEquals":
-				return deepEquals(value, right);
-			case "IsBoolean":
-				return right === (typeof value === "boolean");
-			case "IsNull":
-				return right === (value === null);
-			case "IsNumeric":
-				return right === (typeof value === "number");
-			case "IsPresent":
-				return right === (jsonpath.query(input, choice.Variable).length > 0);
-			case "IsString":
-				return right === (typeof value === "string");
-			case "IsTimestamp":
-				return right === isIsoDateTime(value);
-			case "NumericEquals":
-				return typeof right === "number" && value === right;
-			case "NumericGreaterThan":
-				return typeof right === "number" && typeof value === "number" && value > right;
-			case "NumericLessThan":
-				return typeof right === "number" && typeof value === "number" && value < right;
-			case "NumericLessThanEquals":
-				return typeof right === "number" && typeof value === "number" && value <= right;
-			case "NumericGreaterThanEquals":
-				return typeof right === "number" && typeof value === "number" && value >= right;
-			case "StringEquals":
-				return typeof right === "string" && value === right;
-			case "StringGreaterThan":
-				return typeof right === "string" && typeof value === "string" && value.localeCompare(right) > 0;
-			case "StringLessThan":
-				return typeof right === "string" && typeof value === "string" && value.localeCompare(right) < 0;
-			case "StringGreaterThanEquals":
-				return typeof right === "string" && typeof value === "string" && value.localeCompare(right) >= 0;
-			case "StringLessThanEquals":
-				return typeof right === "string" && typeof value === "string" && value.localeCompare(right) <= 0;
-			case "StringMatches":
-				return typeof right === "string" && typeof value === "string" && simpleStarMatch(right, value);
-			case "TimestampEquals":
-				return isIsoDateTime(right) && isIsoDateTime(value) && Date.parse(value) === Date.parse(right);
-			case "TimestampGreaterThan":
-				return isIsoDateTime(right) && isIsoDateTime(value) && Date.parse(value) > Date.parse(right);
-			case "TimestampGreaterThanEquals":
-				return isIsoDateTime(right) && isIsoDateTime(value) && Date.parse(value) >= Date.parse(right);
-			case "TimestampLessThan":
-				return isIsoDateTime(right) && isIsoDateTime(value) && Date.parse(value) < Date.parse(right);
-			case "TimestampLessThanEquals":
-				return isIsoDateTime(right) && isIsoDateTime(value) && Date.parse(value) <= Date.parse(right);
-			default: {
-				throw new SyntaxError(`State ${ stateName } has unknown Data Test Expression: ${ JSON.stringify(exprName) }`);
-			}
-		}
+		return handler(left, right, input, choice.Variable);
 	}
 	throw new SyntaxError(`Unhandled JSONPath Choice Rule: ${ JSON.stringify(choice) }`);
 };

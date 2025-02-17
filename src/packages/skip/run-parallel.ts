@@ -1,10 +1,11 @@
 import type { JSONSerializable } from "@rickosborne/typical";
 import { assignThenContinue } from "./assign-then-continue.js";
+import { errorOutputFromError } from "./error-output-from-error.js";
 import { getLanguage } from "./get-language.js";
 import { processArgs } from "./process-args.js";
-import { runLocal } from "./run-local.js";
+import { runStateMachine } from "./run-state-machine.js";
 import type { RunStateContext } from "./run-types.js";
-import { type ErrorOutput, errorOutputFromError, type ParallelState, STATES_BRANCH_FAILED } from "./sfn-types.js";
+import { type ErrorOutput, type ParallelState, STATES_BRANCH_FAILED } from "./sfn-types.js";
 import { shouldRetry } from "./should-retry.js";
 
 /**
@@ -30,7 +31,7 @@ export const runParallel = async (
 		const settled = await Promise.all(branches.map(async ({ branch, index, branchRetries }) => {
 			let success = true;
 			let reason: unknown;
-			const output = await runLocal(branch, {
+			const output = await runStateMachine(branch, {
 				...options,
 				language,
 				input: args,
