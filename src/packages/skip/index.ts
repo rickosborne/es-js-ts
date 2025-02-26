@@ -6,6 +6,8 @@ export * from "./assert-string.js";
 export * from "./assert-valid-state-name.js";
 export * from "./assign-json-path.js";
 export * from "./assign-then-continue.js";
+export * from "./cli.js";
+export * from "./definition-from-source.js";
 export * from "./error-output-from-error.js";
 export * from "./evaluate-choice.js";
 export * from "./evaluate-expression.js";

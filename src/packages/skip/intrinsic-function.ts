@@ -1,6 +1,6 @@
-import { arrayUnique, deepEquals, deepMerge, FILL_BATCHES, intRange, randomNumberGenerator, toBatches } from "@rickosborne/foundation";
-import { assertJSONSerializable } from "@rickosborne/guard";
-import type { JSONArray, JSONObject, JSONSerializable, Predicate } from "@rickosborne/typical";
+import { arrayUnique, deepEquals, deepMerge, FILL_BATCHES, intRange, randomNumberGenerator, StringTokenizer, toBatches } from "@rickosborne/foundation";
+import { assertJSONSerializable, isDigit } from "@rickosborne/guard";
+import type { JSONArray, JSONObject, JSONSerializable } from "@rickosborne/typical";
 import * as jsonpath from "jsonpath";
 import { createHash, randomUUID } from "node:crypto";
 import { STATES_ARRAY, STATES_ARRAY_CONTAINS, STATES_ARRAY_GET_ITEM, STATES_ARRAY_LENGTH, STATES_ARRAY_PARTITION, STATES_ARRAY_RANGE, STATES_ARRAY_UNIQUE, STATES_BASE64_DECODE, STATES_BASE64_ENCODE, STATES_FORMAT, STATES_HASH, STATES_HASH_ALGORITHMS, STATES_INTRINSIC_FAILURE, STATES_JSON_MERGE, STATES_JSON_TO_STRING, STATES_MATH_ADD, STATES_MATH_RANDOM, STATES_STRING_SPLIT, STATES_STRING_TO_JSON, STATES_UUID, type StatesHashAlgorithm } from "./sfn-types.js";
@@ -42,45 +42,24 @@ export interface IntrinsicFunctionCall {
 const INTRINSIC_FUNCTION_NAME_PATTERN = /^[A-Za-z0-9._]+$/;
 const MAYBE_PATH_TERM = Object.freeze([ ",", ")", " ", "\t" ]);
 
-/**
- * Try to parse an Intrinsic Function call expression.
- * This is a very basic pull parser.
- * It's a little flaky, as the JSONPath expressions aren't quoted,
- * and the `jsonpath` library's `parse` function can't handle trailing
- * text like `,` or `)`.  And, of course, both `,` and `)` are
- * perfectly valid at places inside a JSONPath expression, so we can't
- * just look for the first one of those, either.
- */
-export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctionCall => {
-	/**
-	 * Convert into Unicode characters, so we can pull them one at a time.
-	 */
-	const chars = Array.from(expr);
-	/**
-	 * Current pointer/index into the `chars` array.
-	 */
-	let at = 0;
-	/**
-	 * Offset at which we're out of text, and we're done or need to give up.
-	 */
-	const stop = chars.length;
+class IntrinsicFunctionTokenizer extends StringTokenizer {
 	/**
 	 * Try to consume a number, int or double, starting at the current offset.
 	 */
-	const consumeNumber = (): number => {
+	public consumeNumber(): number {
 		let sign = 1;
-		if (tryConsume("-")) {
+		if (this.tryConsume("-")) {
 			sign = -1;
-		} else if (tryConsume("+")) {
+		} else if (this.tryConsume("+")) {
 			// do nothing
 		}
-		const intDigits = consumeWhile((t) => /^[0-9]$/.test(t));
+		const intDigits = this.consumeWhile(isDigit);
 		if (intDigits === "") {
-			throw new SyntaxError(`Expected a number at offset ${ at }: ${ expr }`);
+			throw new SyntaxError(`Expected a number at offset ${ this.at }: ${ this.text }`);
 		}
 		let result = Number.parseInt(intDigits, 10);
-		if (tryConsume(".")) {
-			const fracDigits = consumeWhile((t) => /^[0-9]$/.test(t));
+		if (this.tryConsume(".")) {
+			const fracDigits = this.consumeWhile(isDigit);
 			if (fracDigits !== "") {
 				result += Number.parseFloat("0.".concat(fracDigits));
 			}
@@ -89,21 +68,21 @@ export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctio
 			result = -result;
 		}
 		return result;
-	};
+	}
+
 	/**
 	 * Consume a single-quoted string from the current offset, paying
 	 * careful attention to escapes.
 	 */
-	const consumeString = (): string => {
-		consumeText("'");
+	public consumeString = (): string => {
+		this.consumeExact("'");
 		let text: string[] = [];
 		let escapeNext = false;
-		do {
-			const char = chars.at(at);
-			if (char == null) {
-				throw new SyntaxError(`Missing string terminator: ${ expr }`);
+		while (!this.done) {
+			const char = this.consumeCount(1);
+			if (char === "") {
+				throw new SyntaxError(`Missing string terminator: ${ this.text }`);
 			}
-			at++;
 			if (escapeNext) {
 				text.push(char);
 				escapeNext = false;
@@ -117,9 +96,10 @@ export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctio
 				continue;
 			}
 			text.push(char);
-		} while (at < stop);
+		}
 		return text.join("");
 	};
+
 	/**
 	 * So ... yeah.  This ... cheats.
 	 * We have a list of characters which _could_ appear in a JSONPath
@@ -129,11 +109,11 @@ export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctio
 	 * we see a valid expression.  It's ugly ... but it _should_
 	 * mean we don't need to write our own JSONPath expression parser.
 	 */
-	const consumePath = (): string => {
-		let pathExpr = consumeText("$");
-		const isDouble = tryConsume("$");
-		do {
-			const exprPart = consumeWhile((t) => !MAYBE_PATH_TERM.includes(t));
+	public consumePath = (): string => {
+		let pathExpr = this.consumeExact("$");
+		const isDouble = this.tryConsume("$");
+		while (!this.done) {
+			const exprPart = this.consumeWhile((t) => !MAYBE_PATH_TERM.includes(t));
 			if (exprPart === "") {
 				// We ran out of string.
 				break;
@@ -146,31 +126,17 @@ export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctio
 				}
 				return pathExpr;
 			} catch (err: unknown) {
-				const stops = consumeWhile((t) => MAYBE_PATH_TERM.includes(t));
+				const stops = this.consumeWhile((t) => MAYBE_PATH_TERM.includes(t));
 				if (stops === "") {
 					// We ran out of string here, too.
 					break;
 				}
 				pathExpr = pathExpr.concat(stops);
 			}
-		} while (at < stop);
-		throw new SyntaxError(`Unexpected end of string while parsing JSONPath expression: ${ expr }`);
-	};
-	/**
-	 * Try to match the given text at the current offset.
-	 * Update the `at` index only if successful.
-	 */
-	const tryConsume = (maybe: string): boolean => {
-		const expected = Array.from(maybe);
-		if (expected.every((char, offset) => {
-			const actual = chars.at(at + offset);
-			return char === actual;
-		})) {
-			at += expected.length;
-			return true;
 		}
-		return false;
+		throw new SyntaxError(`Unexpected end of string while parsing JSONPath expression: ${ this.text }`);
 	};
+
 	/**
 	 * Try to read an entire argument from the current offset.
 	 * At this point, the type of the arg isn't known, so this function
@@ -178,106 +144,97 @@ export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctio
 	 * and closing parent.  Other than that, it peeks at the next
 	 * character and delegates to the actual consumer.
 	 */
-	const consumeArg = (): IntrinsicFunctionArg | undefined => {
-		consumeSpace();
-		const char = chars.at(at);
+	public consumeArg = (): IntrinsicFunctionArg | undefined => {
+		const char = this.peek();
 		if (char == null) {
-			throw new SyntaxError(`Expected closing paren or another function argument at ${ at }: ${ expr }`);
+			throw new SyntaxError(`Expected closing paren or another function argument at ${ this.at }: ${ this.text }`);
 		}
 		if (char === ")") return undefined;
 		let result: IntrinsicFunctionArg;
 		if (/^[-+0-9]$/.test(char)) {
 			result = {
 				type: "literal",
-				value: consumeNumber(),
+				value: this.consumeNumber(),
 			};
 		} else if (char === "'") {
 			result = {
 				type: "literal",
-				value: consumeString(),
+				value: this.consumeString(),
 			};
 		} else if (char === "$") {
 			result = {
 				type: "path",
-				value: consumePath(),
+				value: this.consumePath(),
 			};
-		} else if (tryConsume("null")) {
+		} else if (this.tryConsume("null")) {
 			result = {
 				type: "literal",
 				value: null,
 			};
-		} else if (tryConsume("true")) {
+		} else if (this.tryConsume("true")) {
 			result = {
 				type: "literal",
 				value: true,
 			};
-		} else if (tryConsume("false")) {
+		} else if (this.tryConsume("false")) {
 			result = {
 				type: "literal",
 				value: false,
 			};
 		} else if (INTRINSIC_FUNCTION_NAME_PATTERN.test(char)) {
-			result = consumeCall();
+			result = this.consumeCall();
 		} else {
-			throw new SyntaxError(`Not sure how to parse the arg at offset ${ at } of: ${ expr }`);
+			throw new SyntaxError(`Not sure how to parse the arg at offset ${ this.at } of: ${ this.text }`);
 		}
-		consumeSpace();
-		if (tryConsume(",")) {
-			consumeSpace();
+		this.consumeSpace();
+		if (this.tryConsume(",")) {
+			this.consumeSpace();
 		}
 		return result;
 	};
-	/**
-	 * Helper for "skip past anything which would be considered whitespace".
-	 */
-	const consumeSpace = () => {
-		consumeWhile((t) => /^\s$/.test(t));
-	};
-	/**
-	 * Match and skip past an exact sequence of text.
-	 */
-	const consumeText = (expected: string) => {
-		consumeSpace();
-		if (tryConsume(expected)) {
-			return expected;
-		}
-		throw new SyntaxError(`Expected ${ JSON.stringify(expected) } at offset ${ at } of: ${ expr }`);
-	};
-	/**
-	 * Consume characters as long as the given predicate is true, returning
-	 * the accumulated text.
-	 */
-	const consumeWhile = (predicate: Predicate<string>): string => {
-		const result: string[] = [];
-		while (at < stop) {
-			const char = chars.at(at);
-			if (char == null || !predicate(char)) break;
-			result.push(char);
-			at++;
-		}
-		return result.join("");
-	};
+
 	/**
 	 * Consume an entire Intrinsic Function call.  These may be nested.
 	 */
-	const consumeCall = (): IntrinsicFunctionCall => {
-		const fnName = consumeWhile((t) => INTRINSIC_FUNCTION_NAME_PATTERN.test(t));
+	public consumeCall = (): IntrinsicFunctionCall => {
+		const fnName = this.consumeWhile((t) => INTRINSIC_FUNCTION_NAME_PATTERN.test(t));
 		if (fnName === "") {
-			throw new SyntaxError(`Intrinsic Function name expected: ${ expr }`);
+			throw new SyntaxError(`Intrinsic Function name expected: ${ this.text }`);
 		}
-		consumeText("(");
+		this.consumeSpace();
+		this.consumeExact("(");
 		const args: IntrinsicFunctionArg[] = [];
 		let arg: IntrinsicFunctionArg | undefined;
 		do {
-			arg = consumeArg();
+			this.consumeSpace();
+			arg = this.consumeArg();
 			if (arg !== undefined) {
 				args.push(arg);
 			}
 		} while (arg !== undefined);
-		consumeText(")");
+		this.consumeSpace();
+		this.consumeExact(")");
+		this.consumeSpace();
 		return { args, fnName, type: "call" };
 	};
-	return consumeCall();
+}
+
+/**
+ * Try to parse an Intrinsic Function call expression.
+ * This is a very basic pull parser.
+ * It's a little flaky, as the JSONPath expressions aren't quoted,
+ * and the `jsonpath` library's `parse` function can't handle trailing
+ * text like `,` or `)`.  And, of course, both `,` and `)` are
+ * perfectly valid at places inside a JSONPath expression, so we can't
+ * just look for the first one of those, either.
+ */
+export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctionCall => {
+	const tokenizer = new IntrinsicFunctionTokenizer(expr);
+	const call = tokenizer.consumeCall();
+	if (!tokenizer.done) {
+		throw intrinsicFailure(`Extra garbage after Intrinsic Function call: ${JSON.stringify(expr.substring(tokenizer.at))}`);
+	}
+	return call;
 };
 
 /**

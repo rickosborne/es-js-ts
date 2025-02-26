@@ -1,7 +1,8 @@
 import { expect } from "chai";
-import { describe, test } from "mocha";
+import { describe, it, test } from "mocha";
 import { evaluateIntrinsicFunction, type IntrinsicFunctionCall, parseIntrinsicFunctionExpression } from "../intrinsic-function.js";
 import { STATES_ARRAY, STATES_ARRAY_CONTAINS, STATES_ARRAY_GET_ITEM, STATES_ARRAY_LENGTH, STATES_ARRAY_PARTITION, STATES_ARRAY_RANGE, STATES_ARRAY_UNIQUE, STATES_BASE64_DECODE, STATES_BASE64_ENCODE, STATES_FORMAT, STATES_HASH, STATES_JSON_MERGE, STATES_JSON_TO_STRING, STATES_MATH_ADD, STATES_MATH_RANDOM, STATES_STRING_SPLIT, STATES_STRING_TO_JSON, STATES_UUID } from "../sfn-types.js";
+import { StatesError } from "../states-error.js";
 
 describe("intrinsic-function", () => {
 	describe(parseIntrinsicFunctionExpression.name, () => {
@@ -15,6 +16,9 @@ describe("intrinsic-function", () => {
 				fnName: "States.Format",
 				type: "call",
 			} satisfies IntrinsicFunctionCall);
+		});
+		it("throws for extra garbage", () => {
+			expect(() => parseIntrinsicFunctionExpression("States.Format() garbage")).throws(StatesError, "garbage");
 		});
 	});
 

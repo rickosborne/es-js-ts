@@ -1,9 +1,10 @@
+import { StringTokenizer } from "@rickosborne/foundation";
+import { isDigit, isHexDigit } from "@rickosborne/guard";
 import type { CSSColorName } from "./colors.js";
 import { toCSSColorName } from "./colors.js";
 import type { CSSErrorOptions } from "./css-error.js";
 import { CSSError } from "./css-error.js";
 import { HREF_COLOR, HREF_COLOR_FN } from "./href.js";
-import { readFromCSS } from "./tokenizer.js";
 import type { DimensionPair } from "./units.js";
 
 export interface HexColorToken {
@@ -35,111 +36,134 @@ export type CSSColorTokens = NameColorToken | HexColorToken | FunctionColorToken
 export type CSSColorFunction = "color" | "rgb" | "rgba" | "hsl" | "hsla" | "hwb";
 export const COLOR_FUNCTIONS: Readonly<CSSColorFunction[]> = Object.freeze([ "color", "rgb", "rgba", "hsl", "hsla", "hwb" ]);
 
-export const colorTokensFromCSS = (
-	text: string,
-): CSSColorTokens | undefined => {
-	if (text.trim() === "") {
-		return undefined;
-	}
-	const reader = readFromCSS(text);
-	const kwOrFn = reader.pull(
-		"hex",
-		{
-			match: COLOR_FUNCTIONS,
-			type: "function",
-		},
-		"keyword",
-	);
-	if (kwOrFn == null) return undefined;
-	if (kwOrFn.type === "keyword") {
-		const keyword = kwOrFn.keyword;
-		const name = toCSSColorName(keyword);
+class CSSColorTokenizer extends StringTokenizer {
+	public consumeColor(): CSSColorTokens | undefined {
+		this.consumeSpace();
+		const char = this.peek();
+		if (char == null) {
+			return undefined;
+		}
+		if (char === "#") {
+			return this.consumeHex();
+		}
+		const literal = this.consumeLiteral();
+		if (COLOR_FUNCTIONS.includes(literal as CSSColorFunction)) {
+			return this.consumeFunctionCall(literal);
+		}
+		const name = toCSSColorName(literal);
 		if (name == null) {
-			throw new CSSError(text, { expected: "Color name", href: HREF_COLOR, message: `Unknown keyword: ${ keyword }` });
+			throw this.fail(`Unknown keyword: ${ literal }`, { expected: "Color name", href: HREF_COLOR });
 		}
 		return { name };
 	}
-	if (kwOrFn.type === "hex") {
-		return { hex: kwOrFn.hex };
-	}
-	const functionName = kwOrFn.name;
-	let space: string | undefined = undefined;
-	const fail = (message: string, options: Partial<CSSErrorOptions> = {}): never => {
-		throw new CSSError(text, { ...options, message });
-	};
-	if (kwOrFn.name === "color") {
-		const spaceKw = reader.pull({
-			type: "keyword",
-		});
-		if (spaceKw == null) {
-			return fail(`Missing color space`, { href: HREF_COLOR_FN });
+
+	public consumeFunctionCall(functionName: string): FunctionColorToken {
+		this.consumeSpace();
+		this.consumeExact("(");
+		let space: string | undefined = undefined;
+		if (functionName === "color") {
+			space = this.consumeLiteral(() => this.fail("Missing color space", { href: HREF_COLOR_FN }));
 		}
-		space = spaceKw.keyword;
-	}
-	let functionDone = false;
-	const components: DimensionPair[] = [];
-	const breakAfterNumber = (): boolean => {
-		if (components.length === 3) {
-			// Try to consume a comma or slash
-			reader.pull({ match: [ ",", "/" ], type: "literal" });
-		} else {
-			// Try to consume a comma
-			reader.pull({ match: [ "," ], type: "literal" });
-		}
-		if (components.length >= 3) {
-			const paren = reader.pull({ match: [ ")" ], type: "literal" });
-			if (paren != null) {
-				functionDone = true;
-				return true;
+		const components: DimensionPair[] = [];
+		const breakAfterComponent = (): boolean => {
+			this.consumeSpace();
+			if (components.length === 3) {
+				// Try to consume a comma or slash
+				if (!this.tryConsume(",")) {
+					this.tryConsume("/");
+				}
+			} else {
+				// Try to consume a comma
+				this.tryConsume(",");
 			}
-		}
-		return false;
-	};
-	while (!functionDone) {
-		if (components.length >= 4) {
-			return fail(`Malformed ${ functionName }() color`);
-		}
-		const token = reader.pull(
-			"number",
-			{ match: [ "none" ], type: "keyword" },
-		);
-		if (token == null) {
-			return fail(`Malformed ${ functionName }() color`);
-		}
-		if (token.type === "keyword") {
-			if (token.keyword === "none") {
-				components.push([ 0, undefined ]);
-				if (breakAfterNumber()) {
+			if (components.length >= 3) {
+				if (this.tryConsume(")")) {
+					return true;
+				}
+			}
+			return false;
+		};
+		while (!this.done) {
+			if (components.length >= 4) {
+				throw this.fail(`Malformed ${ functionName }() color`);
+			}
+			this.consumeSpace();
+			const component = this.tryConsumeColorComponent();
+			if (component != null) {
+				components.push(component);
+				if (breakAfterComponent()) {
 					break;
 				}
-				continue;
-			}
-			// return fail(`Unknown keyword: ${ token.keyword }`);
-		}
-		if (token.type === "number") {
-			const unitToken = reader.pull(
-				"keyword",
-				{ match: [ "%" ], type: "literal" },
-			);
-			let unit: string | undefined;
-			if (unitToken?.type === "literal") {
-				unit = unitToken.literal;
-			} else if (unitToken?.type === "keyword") {
-				unit = unitToken.keyword;
 			} else {
-				unit = undefined;
+				throw this.fail(`Malformed ${ functionName }() color`);
 			}
-			components.push([ token.value, unit ]);
-			if (breakAfterNumber()) {
-				break;
-			}
-			// continue;
 		}
-		// return fail(`Unexpected token type: ${ token.type }`);
+		return {
+			components,
+			functionName,
+			...(space == null ? {} : { space }),
+		};
 	}
-	return {
-		components,
-		functionName,
-		...(space == null ? {} : { space }),
-	};
+
+	public consumeHex(): HexColorToken {
+		return { hex: this.consumeWhile((t, i) => i === 0 ? t === "#" : isHexDigit(t)) };
+	}
+
+	public consumeLiteral(errorProvider: () => Error = () => new SyntaxError(`Expected a literal at ${ this.at }`)): string {
+		const literal = this.tryConsumeLiteral();
+		if (literal != null) {
+			return literal;
+		}
+		throw errorProvider();
+	}
+
+	protected fail(message: string, options: Partial<CSSErrorOptions> = {}): CSSError {
+		return new CSSError(this.text, { ...options, message });
+	}
+
+	protected tryConsumeColorComponent(): DimensionPair | undefined {
+		if (this.tryConsume("none")) {
+			return [ 0, undefined ];
+		}
+		const maybeNumber = this.tryConsumeNumber();
+		if (maybeNumber == null) {
+			return undefined;
+		}
+		this.consumeSpace();
+		let unit: string | undefined;
+		if (this.tryConsume("%")) {
+			unit = "%";
+		} else {
+			unit = this.tryConsumeLiteral();
+		}
+		this.consumeSpace();
+		return [ maybeNumber, unit ];
+	}
+
+	public tryConsumeLiteral(): string | undefined {
+		const literal = this.consumeWhile((t, i) => i === 0 ? /^\p{ID_Start}$/u.test(t) : /^[-\p{ID_Continue}]$/u.test(t));
+		return literal === "" ? undefined : literal;
+	}
+
+	public tryConsumeNumber(): number | undefined {
+		const sign = this.tryConsume("-") ? -1 : 1;
+		const intText = this.consumeWhile(isDigit);
+		if (intText === "") {
+			if (sign < 0) {
+				throw this.fail(`Expected a number at ${ this.at }`);
+			}
+			return undefined;
+		}
+		if (this.tryConsume(".")) {
+			const fracText = this.consumeWhile(isDigit);
+			return sign * Number.parseFloat(`${ intText }.${ fracText }`);
+		}
+		return sign * Number.parseInt(intText, 10);
+	}
+}
+
+export const colorTokensFromCSS = (
+	text: string,
+): CSSColorTokens | undefined => {
+	return new CSSColorTokenizer(text).consumeColor();
 };

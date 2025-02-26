@@ -67,8 +67,7 @@ import addStateMachine from "../state-machines/add.json" with { type: "json" };
 describe(add.name, () => {
 	test("valid inputs", async () => {
 		// The runner is always asynchronous.  There is no synchronous API.
-		const result = await runStateMachine(adderStateMachine, {
-			// You could also just use a literal here.
+		const result = await runStateMachine(addStateMachine, {
 			input: {
 				val1: 3,
 				val2: 4,
@@ -78,7 +77,7 @@ describe(add.name, () => {
 			// You can do this as a simple Record, or you could provide a
 			// resolver function.
 			fnForResource: {
-				[adderStateMachine.States.Add.Resource]: add,
+				[addStateMachine.States.Add.Resource]: add,
 			}
 		});
 		// Assert the correct result was returned.

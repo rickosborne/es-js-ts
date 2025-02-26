@@ -1,6 +1,6 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { assertInt, expectInt, isInt, maybeInt } from "../is-int.js";
+import { assertInt, expectInt, isDigit, isInt, maybeInt } from "../is-int.js";
 
 const testIsInt = (expected: boolean, ...values: unknown[]): void => {
 	for (const value of values) {
@@ -61,5 +61,18 @@ describe(maybeInt.name, () => {
 	it("is undefined for non- or ambiguous ints", () => {
 		expect(maybeInt("nope"), "nope").eq(undefined);
 		expect(maybeInt("4,000"), "nope").eq(undefined);
+	});
+});
+
+describe(isDigit.name, () => {
+	it("accepts numbers", () => {
+		[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ].map(String).forEach((digit) => {
+			expect(isDigit(digit), digit).eq(true);
+		});
+	});
+	it("rejects everything else", () => {
+		[ "/", ":", "00", "99" ].forEach((nonDigit) => {
+			expect(isDigit(nonDigit), nonDigit).eq(false);
+		});
 	});
 });

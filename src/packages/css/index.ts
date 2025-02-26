@@ -5,5 +5,4 @@ export * from "./css-error.js";
 export * from "./distance.js";
 export * from "./format.js";
 export * from "./href.js";
-export * from "./tokenizer.js";
 export * from "./units.js";

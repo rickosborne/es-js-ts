@@ -1,0 +1,5 @@
+{
+	"scripts": {
+		"adder": "tsx ../cli.ts def adder-def.ts addStateMachine"
+	}
+}
