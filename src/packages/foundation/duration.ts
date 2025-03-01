@@ -60,7 +60,7 @@ export const parseDuration = (text: string): DurationWithText => {
 	const duration: DurationWithText = { text };
 	const chars = Array.from(text);
 	const count = chars.length;
-	const tokenizer = new StringTokenizer(text);
+	const tokenizer = StringTokenizer.forText(text);
 	const allSign = tokenizer.tryConsume("-") ? -1 : 1;
 	if (count < 1 || !tokenizer.tryConsume("P")) {
 		throw new SyntaxError("Invalid Duration at 0");

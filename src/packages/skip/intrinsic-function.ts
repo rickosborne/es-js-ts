@@ -43,6 +43,10 @@ const INTRINSIC_FUNCTION_NAME_PATTERN = /^[A-Za-z0-9._]+$/;
 const MAYBE_PATH_TERM = Object.freeze([ ",", ")", " ", "\t" ]);
 
 class IntrinsicFunctionTokenizer extends StringTokenizer {
+	public static override forText(text: string): IntrinsicFunctionTokenizer {
+		return new IntrinsicFunctionTokenizer(text[Symbol.iterator](), text);
+	}
+
 	/**
 	 * Try to consume a number, int or double, starting at the current offset.
 	 */
@@ -229,7 +233,7 @@ class IntrinsicFunctionTokenizer extends StringTokenizer {
  * just look for the first one of those, either.
  */
 export const parseIntrinsicFunctionExpression = (expr: string): IntrinsicFunctionCall => {
-	const tokenizer = new IntrinsicFunctionTokenizer(expr);
+	const tokenizer = IntrinsicFunctionTokenizer.forText(expr);
 	const call = tokenizer.consumeCall();
 	if (!tokenizer.done) {
 		throw intrinsicFailure(`Extra garbage after Intrinsic Function call: ${JSON.stringify(expr.substring(tokenizer.at))}`);

@@ -37,6 +37,10 @@ export type CSSColorFunction = "color" | "rgb" | "rgba" | "hsl" | "hsla" | "hwb"
 export const COLOR_FUNCTIONS: Readonly<CSSColorFunction[]> = Object.freeze([ "color", "rgb", "rgba", "hsl", "hsla", "hwb" ]);
 
 class CSSColorTokenizer extends StringTokenizer {
+	public static override forText(text: string): CSSColorTokenizer {
+		return new CSSColorTokenizer(text[Symbol.iterator](), text);
+	}
+
 	public consumeColor(): CSSColorTokens | undefined {
 		this.consumeSpace();
 		const char = this.peek();
@@ -165,5 +169,5 @@ class CSSColorTokenizer extends StringTokenizer {
 export const colorTokensFromCSS = (
 	text: string,
 ): CSSColorTokens | undefined => {
-	return new CSSColorTokenizer(text).consumeColor();
+	return CSSColorTokenizer.forText(text).consumeColor();
 };

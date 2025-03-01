@@ -1,0 +1,10 @@
+{
+	"city": [
+		"Paris",
+		"London"
+	],
+	"count": -2.5,
+	"missing": null,
+	"ordered": false,
+	"present": true
+}
