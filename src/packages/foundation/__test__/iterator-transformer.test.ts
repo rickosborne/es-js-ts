@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { describe, test } from "mocha";
+import { arrayFromAsync } from "../array-from-async.js";
 import type { IteratorTransformerBase, IteratorTransformerMapResult } from "../iterator-transformer.js";
 import { asyncIteratorTransformer, iteratorTransformer } from "../iterator-transformer.js";
 import { asyncIteratorOf, iteratorOf } from "../iterator.js";
@@ -27,7 +28,7 @@ describe("iterator transformers", () => {
 		) {
 			const builder = asyncIteratorTransformer((inputs: T[], inputIsDone: boolean) => Promise.resolve(map(inputs, inputIsDone)));
 			const transformer = builder(asyncIteratorOf(inputs));
-			const outputs = await Array.fromAsync(transformer);
+			const outputs = await arrayFromAsync(transformer);
 			return {
 				transformer,
 				outputs,
@@ -39,7 +40,7 @@ describe("iterator transformers", () => {
 		) {
 			const builder = asyncIteratorTransformer((inputs: T[], inputIsDone: boolean) => Promise.resolve(map(inputs, inputIsDone)), { proactive: true });
 			const transformer = builder(asyncIteratorOf(inputs));
-			const outputs = await Array.fromAsync(transformer);
+			const outputs = await arrayFromAsync(transformer);
 			return {
 				transformer,
 				outputs,

@@ -1,5 +1,6 @@
 export * from "./add-property.js";
 export * from "./array-eq.js";
+export * from "./array-from-async.js";
 export * from "./array-unique.js";
 export * from "./as-fraction.js";
 export * from "./binary-heap.js";

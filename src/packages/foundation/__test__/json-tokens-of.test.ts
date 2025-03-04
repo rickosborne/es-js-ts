@@ -3,6 +3,7 @@ import { describe, test } from "mocha";
 import { createReadStream, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join as pathJoin } from "node:path";
+import { arrayFromAsync } from "../array-from-async.js";
 import type { JsonToken } from "../json-token.js";
 import { jsonTokensOf, jsonTokensOfAsync } from "../json-tokens-of.js";
 import { memoizeSupplier } from "../memoize.js";
@@ -29,6 +30,6 @@ describe(jsonTokensOfAsync.name, () => {
 				}
 			}
 		}
-		expect(await Array.fromAsync(jsonTokensOfAsync(asyncJson()))).eql(expected());
+		expect(await arrayFromAsync(jsonTokensOfAsync(asyncJson()))).eql(expected());
 	});
 });

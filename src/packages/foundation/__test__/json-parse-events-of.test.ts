@@ -3,6 +3,7 @@ import { describe, test } from "mocha";
 import { createReadStream, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join as pathJoin } from "node:path";
+import { arrayFromAsync } from "../array-from-async.js";
 import { jsonParseEventsOf, jsonParseEventsOfAsync } from "../json-parse-events-of.js";
 import type { JsonParseEvent } from "../json-parse-type.js";
 import { memoizeSupplier } from "../memoize.js";
@@ -33,7 +34,7 @@ describe(jsonParseEventsOfAsync.name, () => {
 			}
 			jsonStream.close();
 		};
-		const events = await Array.fromAsync(jsonParseEventsOfAsync(asyncJson()));
+		const events = await arrayFromAsync(jsonParseEventsOfAsync(asyncJson()));
 		expect(events).eql(expected());
 	});
 });
