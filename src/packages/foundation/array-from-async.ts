@@ -9,6 +9,9 @@ const isArrayLike = <T>(value: unknown): value is ArrayLike<T> => Array.isArray(
 export const arrayFromAsync = async <T>(
 	iterableOrArrayLike: AsyncIterable<T> | Iterable<T | PromiseLike<T>> | ArrayLike<T | PromiseLike<T>>,
 ): Promise<T[]> => {
+	if (typeof Array.fromAsync === "function") {
+		return Array.fromAsync(iterableOrArrayLike);
+	}
 	const values: T[] = [];
 	if (isArrayLike<T | PromiseLike<T>>(iterableOrArrayLike)) {
 		// noinspection UnnecessaryLocalVariableJS
