@@ -7,6 +7,8 @@ export * from "./has-own.js";
 export * from "./has-string.js";
 export * from "./is-defined.js";
 export * from "./is-int.js";
+export * from "./is-iterable-like.js";
+export * from "./is-iterator-like.js";
 export * from "./is-list-of.js";
 export * from "./is-object.js";
 export * from "./is-predicate.js";

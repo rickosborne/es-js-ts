@@ -71,6 +71,8 @@ export type FunctionLike<Params extends unknown[], Return> = (...params: Params)
  * accepts the given parameter type(s) and produces the given instance type.
  */
 export type ConstructorLike<Params extends unknown[], Instance> = new (...params: Params) => Instance;
+export type AbstractConstructorLike<Params extends unknown[], Instance> = abstract new (...params: Params) => Instance;
+export type AnyConstructorLike<Params extends unknown[], Instance> = ConstructorLike<Params, Instance> | AbstractConstructorLike<Params, Instance>;
 
 /**
  * Infer the types of the given function's parameters, in a tuple.

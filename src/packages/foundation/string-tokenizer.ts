@@ -1,6 +1,6 @@
 import { ValidationError } from "@rickosborne/guard";
 import type { BiPredicate } from "@rickosborne/typical";
-import { asyncIteratorFor } from "./iterator.js";
+import { asyncIteratorFrom } from "./iterator.js";
 
 abstract class AStringTokenizer {
 	protected _at: number;
@@ -204,7 +204,7 @@ export class StringTokenizer extends AStringTokenizer {
 
 export class AsyncStringTokenizer extends AStringTokenizer {
 	public static forText(text: string, at = 0): AsyncStringTokenizer {
-		return new AsyncStringTokenizer(asyncIteratorFor(text[Symbol.iterator]()), text, at);
+		return new AsyncStringTokenizer(asyncIteratorFrom(text[Symbol.iterator]()), text, at);
 	}
 
 	private readonly iterator: AsyncIterator<string, undefined, undefined>;

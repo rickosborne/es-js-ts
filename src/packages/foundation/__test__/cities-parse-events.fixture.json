@@ -1,0 +1,206 @@
+[
+	{
+		"at": 0,
+		"length": 0,
+		"line": 1,
+		"path": "$",
+		"pos": 1,
+		"transition": "begin",
+		"type": "root"
+	},
+	{
+		"at": 0,
+		"length": 0,
+		"line": 1,
+		"path": "$",
+		"pos": 1,
+		"transition": "begin",
+		"type": "object"
+	},
+	{
+		"at": 3,
+		"key": "city",
+		"length": 0,
+		"line": 2,
+		"path": "$.city",
+		"pos": 2,
+		"transition": "begin",
+		"type": "property"
+	},
+	{
+		"at": 11,
+		"count": 0,
+		"length": 0,
+		"line": 2,
+		"path": "$.city",
+		"pos": 10,
+		"transition": "begin",
+		"type": "array"
+	},
+	{
+		"at": 15,
+		"index": 0,
+		"length": 0,
+		"line": 3,
+		"path": "$.city[0]",
+		"pos": 3,
+		"primitive": "Paris",
+		"transition": "begin",
+		"type": "item"
+	},
+	{
+		"at": 15,
+		"index": 0,
+		"length": 0,
+		"line": 3,
+		"path": "$.city[0]",
+		"pos": 3,
+		"primitive": "Paris",
+		"transition": "end",
+		"type": "item"
+	},
+	{
+		"at": 26,
+		"index": 1,
+		"length": 0,
+		"line": 4,
+		"path": "$.city[1]",
+		"pos": 3,
+		"primitive": "London",
+		"transition": "begin",
+		"type": "item"
+	},
+	{
+		"at": 26,
+		"index": 1,
+		"length": 0,
+		"line": 4,
+		"path": "$.city[1]",
+		"pos": 3,
+		"primitive": "London",
+		"transition": "end",
+		"type": "item"
+	},
+	{
+		"at": 11,
+		"count": 2,
+		"length": 25,
+		"line": 2,
+		"path": "$.city",
+		"pos": 10,
+		"transition": "end",
+		"type": "array"
+	},
+	{
+		"at": 3,
+		"key": "city",
+		"length": 29,
+		"line": 2,
+		"path": "$.city",
+		"pos": 2,
+		"transition": "end",
+		"type": "property"
+	},
+	{
+		"at": 40,
+		"key": "count",
+		"length": 0,
+		"line": 6,
+		"path": "$.count",
+		"pos": 2,
+		"transition": "begin",
+		"type": "property"
+	},
+	{
+		"at": 40,
+		"key": "count",
+		"length": 6,
+		"line": 6,
+		"path": "$.count",
+		"pos": 2,
+		"primitive": -2.5,
+		"transition": "end",
+		"type": "property"
+	},
+	{
+		"at": 56,
+		"key": "missing",
+		"length": 0,
+		"line": 7,
+		"path": "$.missing",
+		"pos": 2,
+		"transition": "begin",
+		"type": "property"
+	},
+	{
+		"at": 56,
+		"key": "missing",
+		"length": 6,
+		"line": 7,
+		"path": "$.missing",
+		"pos": 2,
+		"primitive": null,
+		"transition": "end",
+		"type": "property"
+	},
+	{
+		"at": 74,
+		"key": "ordered",
+		"length": 0,
+		"line": 8,
+		"path": "$.ordered",
+		"pos": 2,
+		"transition": "begin",
+		"type": "property"
+	},
+	{
+		"at": 74,
+		"key": "ordered",
+		"length": 7,
+		"line": 8,
+		"path": "$.ordered",
+		"pos": 2,
+		"primitive": false,
+		"transition": "end",
+		"type": "property"
+	},
+	{
+		"at": 93,
+		"key": "present",
+		"length": 0,
+		"line": 9,
+		"path": "$.present",
+		"pos": 2,
+		"transition": "begin",
+		"type": "property"
+	},
+	{
+		"at": 93,
+		"key": "present",
+		"length": 6,
+		"line": 9,
+		"path": "$.present",
+		"pos": 2,
+		"primitive": true,
+		"transition": "end",
+		"type": "property"
+	},
+	{
+		"at": 0,
+		"length": 109,
+		"line": 1,
+		"path": "$",
+		"pos": 1,
+		"transition": "end",
+		"type": "object"
+	},
+	{
+		"at": 0,
+		"length": 110,
+		"line": 1,
+		"path": "$",
+		"pos": 1,
+		"transition": "end",
+		"type": "root"
+	}
+]
