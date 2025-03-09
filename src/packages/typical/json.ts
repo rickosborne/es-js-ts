@@ -18,3 +18,9 @@ export interface JSONObject extends Record<string, JSONSerializable> {}
  * Any value which can be serialized as JSON.
  */
 export type JSONSerializable = JSONPrimitive | JSONObject | JSONArray;
+
+export type JSONSerializableOf<T> = T extends JSONPrimitive ? T
+	: T extends (infer U)[] ? JSONSerializableOf<U>[]
+		: T extends undefined ? never
+			: T extends object ? { [K in keyof T]: JSONSerializableOf<T[K]> }
+			: never;

@@ -1,5 +1,6 @@
 export * from "./assigned.js";
 export * from "./battery-level.js";
+export * from "./bt-value-reader.js";
 export * from "./cross-trainer-data.js";
 export * from "./csc-feature.js";
 export * from "./csc-measurement.js";
