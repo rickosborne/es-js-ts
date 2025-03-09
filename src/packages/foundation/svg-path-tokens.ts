@@ -76,6 +76,9 @@ export interface ArcSvgPathToken extends SvgPathTokenBase<"arc"> {
 	ry: number;
 	sweep: boolean;
 	x: number;
+	/**
+	 * x-angle rotation, in degrees.
+	 */
 	xar: number;
 	y: number;
 }
