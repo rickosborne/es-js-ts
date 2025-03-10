@@ -1,4 +1,4 @@
-import { catchAnd } from "@rickosborne/foundation";
+import { catchAnd, zeroPad } from "@rickosborne/foundation";
 import { writeFile } from "node:fs/promises";
 import { resolve as pathResolve } from "node:path";
 import { fetchAndCacheText } from "./fetch-and-cache-text.js";
@@ -6,6 +6,7 @@ import { fetchAndCacheText } from "./fetch-and-cache-text.js";
 interface GattIds {
 	fileName: string;
 	id: number;
+	label?: string | undefined,
 	lineNum: number;
 	name: string;
 	uuid: string;
@@ -14,6 +15,61 @@ interface GattIds {
 const registryUrl = (fileName: string): string => {
 	return `https://raw.githubusercontent.com/WebBluetoothCG/registries/refs/heads/master/${ fileName }`;
 };
+
+const sigUrl = (fileName: string): string => {
+	return `https://bitbucket.org/bluetooth-SIG/public/raw/main/assigned_numbers/uuids/${fileName}`;
+};
+
+const gattIdsComparator = (a: GattIds, b: GattIds) => a.name.localeCompare(b.name);
+
+/**
+ * Because I'm too lazy to integrate a YAML library, and these are simple enough.
+ */
+const idsFromYaml = (text: string, fileName: string): GattIds[] => {
+	const ids: GattIds[] = [];
+	let currentId: Partial<GattIds> = {};
+	let lineNum = 0;
+	for (const full of text.split("\n")) {
+		lineNum++;
+		let line = full.trim();
+		if (line.startsWith("#") || line.startsWith("uuids:")) {
+			continue;
+		}
+		if (line.startsWith("-")) {
+			if (currentId.id != null && currentId.uuid != null && currentId.name) {
+				ids.push({
+					...currentId as GattIds,
+					fileName,
+					lineNum,
+				});
+				currentId = {};
+			}
+			line = line.replace(/^-\s+/, "");
+		}
+		const kv = /^(\w+):\s+(.*)$/.exec(line);
+		if (kv == null) {
+			continue;
+		}
+		const [ , key, value ] = kv as unknown as [string, string, string];
+		if (key === "uuid") {
+			currentId.id = Number.parseInt(value.replace("0x", ""), 16);
+			currentId.uuid = "0000".concat(value.replace("0x", "").toLocaleLowerCase(), "-0000-1000-8000-00805f9b34fb");
+		} else if (key === "name") {
+			currentId.label = value;
+		} else if (key === "id") {
+			currentId.name = value.replace(/^org\.bluetooth\.[^.]+\./, "");
+		}
+	}
+	return ids.sort(gattIdsComparator);
+};
+
+const fetchYaml = async (fileName: string): Promise<GattIds[]> => {
+	const url = sigUrl(fileName);
+	const text = await fetchAndCacheText(url);
+	return idsFromYaml(text, fileName);
+};
+
+const reservedWords: string[] = [ "boolean" ];
 
 const fetchIds = async (fileName: string): Promise<GattIds[]> => {
 	const url = registryUrl(fileName);
@@ -32,7 +88,7 @@ const fetchIds = async (fileName: string): Promise<GattIds[]> => {
 			return { fileName, id, lineNum, name, uuid: uuid.toLocaleLowerCase() };
 		})
 		.filter((ids) => ids != null)
-		.sort((a, b) => a.name.localeCompare(b.name));
+		.sort(gattIdsComparator);
 };
 
 interface GattIdGroups {
@@ -41,57 +97,56 @@ interface GattIdGroups {
 	services: GattIds[];
 }
 
+const mergeIds = (dest: GattIds[], source: GattIds[]): void => {
+	const ids = new Set(dest.map((c) => c.id));
+	const lengthBefore = dest.length;
+	for (const char of source) {
+		if (!ids.has(char.id)) {
+			dest.push(char);
+		}
+	}
+	if (lengthBefore !== dest.length) {
+		dest.sort(gattIdsComparator);
+	}
+};
+
 const fetchData = async (): Promise<GattIdGroups> => {
-	const services = await fetchIds("gatt_assigned_services.txt");
-	const descriptors = await fetchIds("gatt_assigned_descriptors.txt");
-	const characteristics = await fetchIds("gatt_assigned_characteristics.txt");
+	const outdatedServices = await fetchIds("gatt_assigned_services.txt");
+	const outdatedDescriptors = await fetchIds("gatt_assigned_descriptors.txt");
+	const outdatedCharacteristics = await fetchIds("gatt_assigned_characteristics.txt");
+	const characteristics = await fetchYaml("characteristic_uuids.yaml");
+	const descriptors = await fetchYaml("descriptors.yaml");
+	const services = await fetchYaml("service_uuids.yaml");
+	mergeIds(characteristics, outdatedCharacteristics);
+	mergeIds(descriptors, outdatedDescriptors);
+	mergeIds(services, outdatedServices);
 	return { characteristics, descriptors, services };
 };
 
-const generateAssignedTS = (groups: GattIdGroups): string => {
-	const asObject = (ids: GattIds[], valueFormatter: (id: GattIds) => string): string => {
-		const lines: string[] = [ "{" ];
-		for (const id of ids) {
-			let key: string;
-			if (/^\p{ID_Start}\p{ID_Continue}+$/u.test(id.name)) {
-				key = id.name;
-			} else {
-				key = JSON.stringify(id.name);
-			}
-			const value = valueFormatter(id);
-			lines.push(`\t${ key }: ${ value },`);
+const asTable = (ids: GattIds[]): string => {
+	const lines = ids.map(({ id, label, name }): string => {
+		let key: string;
+		if (/^\p{ID_Start}\p{ID_Continue}+$/u.test(name) && !reservedWords.includes(name)) {
+			key = name;
+		} else {
+			key = JSON.stringify(name);
 		}
-		lines.push("}");
-		return lines.join("\n");
-	};
+		const hex = zeroPad(id, 4, 16);
+		return `\t${key}: [ 0x${hex}, ${label == null ? "undefined" : JSON.stringify(label)} ],`;
+	});
+	return lines.join("\n").concat("\n");
+};
+
+const generateAssignedTS = (groups: GattIdGroups): string => {
 	return [
 		"// This file is automatically generated.  Do not edit by hand.",
 		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_SERVICE_UUID = Object.freeze(${ asObject(groups.services, (id) => JSON.stringify(id.uuid)) } as const);`,
+		`export const GATT_SERVICE_TABLE = Object.freeze({\n${asTable(groups.services)}} as const);`,
 		"",
-		`export type GattServiceName = keyof typeof GATT_SERVICE_UUID;`,
+		`export const GATT_CHARACTERISTIC_TABLE = Object.freeze({\n${asTable(groups.characteristics)}} as const);`,
 		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_SERVICE_ID = Object.freeze(${ asObject(groups.services, (id) => "0x".concat(id.id.toString(16))) } as const);`,
-		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_CHARACTERISTIC_UUID = Object.freeze(${ asObject(groups.characteristics, (id) => JSON.stringify(id.uuid)) } as const);`,
-		"",
-		`export type GattCharacteristicName = keyof typeof GATT_CHARACTERISTIC_UUID;`,
-		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_CHARACTERISTIC_ID = Object.freeze(${ asObject(groups.characteristics, (id) => "0x".concat(id.id.toString(16))) } as const);`,
-		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_DESCRIPTOR_UUID = Object.freeze(${ asObject(groups.descriptors, (id) => JSON.stringify(id.uuid)) } as const);`,
-		"",
-		`export type GattDescriptorName = keyof typeof GATT_DESCRIPTOR_UUID;`,
-		"",
-		"// noinspection SpellCheckingInspection",
-		`export const GATT_DESCRIPTOR_ID = Object.freeze(${ asObject(groups.descriptors, (id) => "0x".concat(id.id.toString(16))) } as const);`,
-		"",
-	].join("\n");
+		`export const GATT_DESCRIPTOR_TABLE = Object.freeze({\n${asTable(groups.descriptors)}} as const);`,
+	].join("\n").concat("\n");
 };
 
 const gattAssigned = async (): Promise<void> => {

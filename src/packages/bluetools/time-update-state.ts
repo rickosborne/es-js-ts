@@ -57,7 +57,25 @@ export class TimeUpdateStateImpl implements TimeUpdateState {
 /** Parse from a DataView into {@link TimeUpdateState}. */
 export function timeUpdateStateFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): TimeUpdateState {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description    |
+     * | ----- | -------------- |
+     * | 0     | Idle           |
+     * | 1     | Update Pending |
+     */
     const currentState = $dvr.uint8();
+    /** */
+    /**
+     * | value | description                       |
+     * | ----- | --------------------------------- |
+     * | 0     | Successful                        |
+     * | 1     | Canceled                          |
+     * | 2     | No Connection To Reference        |
+     * | 3     | Reference responded with an error |
+     * | 4     | Timeout                           |
+     * | 5     | Update not attempted after reset  |
+     */
     const result = $dvr.uint8();
     return { currentState, result };
 }

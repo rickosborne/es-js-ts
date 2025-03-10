@@ -106,9 +106,48 @@ export class GattCharacteristicPresentationFormatImpl implements GattCharacteris
 /** Parse from a DataView into {@link GattCharacteristicPresentationFormat}. */
 export function gattCharacteristicPresentationFormatFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): GattCharacteristicPresentationFormat {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description                    |
+     * | ----- | ------------------------------ |
+     * | 0     | Reserved For Future Use        |
+     * | 1     | Boolean                        |
+     * | 2     | unsigned 2-bit integer         |
+     * | 3     | unsigned 4-bit integer         |
+     * | 4     | unsigned 8-bit integer         |
+     * | 5     | unsigned 12-bit integer        |
+     * | 6     | unsigned 16-bit integer        |
+     * | 7     | unsigned 24-bit integer        |
+     * | 8     | unsigned 32-bit integer        |
+     * | 9     | unsigned 48-bit integer        |
+     * | 10    | unsigned 64-bit integer        |
+     * | 11    | unsigned 128-bit integer       |
+     * | 12    | signed 8-bit integer           |
+     * | 13    | signed 12-bit integer          |
+     * | 14    | signed 16-bit integer          |
+     * | 15    | signed 24-bit integer          |
+     * | 16    | signed 32-bit integer          |
+     * | 17    | signed 48-bit integer          |
+     * | 18    | signed 64-bit integer          |
+     * | 19    | signed 128-bit integer         |
+     * | 20    | IEEE-754 32-bit floating point |
+     * | 21    | IEEE-754 64-bit floating point |
+     * | 22    | IEEE-11073 16-bit SFLOAT       |
+     * | 23    | IEEE-11073 32-bit FLOAT        |
+     * | 24    | IEEE-20601 format              |
+     * | 25    | UTF-8 string                   |
+     * | 26    | UTF-16 string                  |
+     * | 27    | Opaque Structure               |
+     */
     const format = $dvr.uint8();
     const exponent = $dvr.int8();
     const unit = $dvr.uint16();
+    /** */
+    /**
+     * | value | description                    |
+     * | ----- | ------------------------------ |
+     * | 1     | Bluetooth SIG Assigned Numbers |
+     */
     const namespace = $dvr.uint8();
     const description = $dvr.uint16();
     return { description, exponent, format, namespace, unit };

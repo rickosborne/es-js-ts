@@ -552,111 +552,111 @@ export function plxFeaturesFromDataView(dataView: DataView | DataViewReader, ind
      * | 0     | False       |
      * | 1     | True        |
      */
-    const extendedDisplayUpdateOngoingBitSupported = deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0000_0001;
+    const extendedDisplayUpdateOngoingBitSupported = deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0001;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const equipmentMalfunctionDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0000_0010) >> 1;
+    const equipmentMalfunctionDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0010) >> 1;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const signalProcessingIrregularityDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0000_0100) >> 2;
+    const signalProcessingIrregularityDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0100) >> 2;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const inadequiteSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0000_1000) >> 3;
+    const inadequiteSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_1000) >> 3;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const poorSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0001_0000) >> 4;
+    const poorSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0001_0000) >> 4;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const lowPerfusionDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0010_0000) >> 5;
+    const lowPerfusionDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0010_0000) >> 5;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const erraticSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_0100_0000) >> 6;
+    const erraticSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0100_0000) >> 6;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const nonpulsatileSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0000_1000_0000) >> 7;
+    const nonpulsatileSignalDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_1000_0000) >> 7;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const questionablePulseDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0001_0000_0000) >> 8;
+    const questionablePulseDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0001_0000_0000) >> 8;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const signalAnalysisOngoingBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0010_0000_0000) >> 9;
+    const signalAnalysisOngoingBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0010_0000_0000) >> 9;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorInterfaceDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_0100_0000_0000) >> 10;
+    const sensorInterfaceDetectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0100_0000_0000) >> 10;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorUnconnectedToUserBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0000_1000_0000_0000) >> 11;
+    const sensorUnconnectedToUserBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_1000_0000_0000) >> 11;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const unknownSensorConnectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0001_0000_0000_0000) >> 12;
+    const unknownSensorConnectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0001_0000_0000_0000) >> 12;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorDisplacedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0010_0000_0000_0000) >> 13;
+    const sensorDisplacedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0010_0000_0000_0000) >> 13;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorMalfunctioningBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_0100_0000_0000_0000) >> 14;
+    const sensorMalfunctioningBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0100_0000_0000_0000) >> 14;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorDisconnectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_0000_0000_1000_0000_0000_0000) >> 15;
+    const sensorDisconnectedBitSupported = (deviceAndSensorStatusSupport & 0b0000_0000_1000_0000_0000_0000) >> 15;
     return { calibrationOngoingBitSupported, dataForDemonstrationBitSupported, dataForTestingBitSupported, dataFromMeasurementStorageBitSupported, deviceAndSensorStatusSupport, earlyEstimatedDataBitSupported, equipmentMalfunctionDetectedBitSupported, erraticSignalDetectedBitSupported, extendedDisplayUpdateOngoingBitSupported, fullyQualifiedDataBitSupported, inadequiteSignalDetectedBitSupported, invalidMeasurementDetectedBitSupported, lowPerfusionDetectedBitSupported, measurementOngoingBitSupported, measurementStatusSupport, measurementStorageForSpotCheckMeasurementsIsSupported, measurementUnavailableBitSupported, multipleBondsSupported, nonpulsatileSignalDetectedBitSupported, poorSignalDetectedBitSupported, pulseAmplitudeIndexFieldIsSupported, questionableMeasurementDetectedBitSupported, questionablePulseDetectedBitSupported, sensorDisconnectedBitSupported, sensorDisplacedBitSupported, sensorInterfaceDetectedBitSupported, sensorMalfunctioningBitSupported, sensorUnconnectedToUserBitSupported, signalAnalysisOngoingBitSupported, signalProcessingIrregularityDetectedBitSupported, spo2prFastMetricIsSupported, spo2prSlowMetricIsSupported, supportedFeatures, timestampForSpotCheckMeasurementsIsSupported, unknownSensorConnectedBitSupported, validatedDataBitSupported };
 }

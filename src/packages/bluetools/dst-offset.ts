@@ -41,6 +41,15 @@ export class DstOffsetImpl implements DstOffset {
 /** Parse from a DataView into {@link DstOffset}. */
 export function dstOffsetFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): DstOffset {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description                        |
+     * | ----- | ---------------------------------- |
+     * | 0     | Standard Time                      |
+     * | 2     | Half An Hour Daylight Time (+0.5h) |
+     * | 4     | Daylight Time (+1h)                |
+     * | 8     | Double Daylight Time (+2h)         |
+     */
     const dstOffset = $dvr.uint8();
     return { dstOffset };
 }

@@ -419,8 +419,8 @@ export function plxSpotCheckMeasurementFromDataView(dataView: DataView | DataVie
      * | 1     | True        |
      */
     const deviceClockIsNotSet = (flags & 0b0001_0000) >> 4;
-    const spo2prSpotCheckSpO2 = $dvr.sFloat();
-    const spo2prSpotCheckPR = $dvr.sFloat();
+    const spo2prSpotCheckSpO2 = $dvr.float16();
+    const spo2prSpotCheckPR = $dvr.float16();
     let timestamp: DateTime | undefined = undefined;
     if (timestampFieldIsPresent) {
         timestamp = DateTimeImpl.fromDataView($dvr);
@@ -519,115 +519,115 @@ export function plxSpotCheckMeasurementFromDataView(dataView: DataView | DataVie
      * | 0     | False       |
      * | 1     | True        |
      */
-    const extendedDisplayUpdateOngoing = deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0000_0001;
+    const extendedDisplayUpdateOngoing = deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0001;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const equipmentMalfunctionDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0000_0010) >> 1;
+    const equipmentMalfunctionDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0010) >> 1;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const signalProcessingIrregularityDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0000_0100) >> 2;
+    const signalProcessingIrregularityDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0100) >> 2;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const inadequiteSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0000_1000) >> 3;
+    const inadequiteSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_1000) >> 3;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const poorSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0001_0000) >> 4;
+    const poorSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0001_0000) >> 4;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const lowPerfusionDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0010_0000) >> 5;
+    const lowPerfusionDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0010_0000) >> 5;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const erraticSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_0100_0000) >> 6;
+    const erraticSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0100_0000) >> 6;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const nonpulsatileSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0000_1000_0000) >> 7;
+    const nonpulsatileSignalDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_1000_0000) >> 7;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const questionablePulseDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0001_0000_0000) >> 8;
+    const questionablePulseDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0001_0000_0000) >> 8;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const signalAnalysisOngoing = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0010_0000_0000) >> 9;
+    const signalAnalysisOngoing = (deviceAndSensorStatus & 0b0000_0000_0000_0010_0000_0000) >> 9;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorInterfaceDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_0100_0000_0000) >> 10;
+    const sensorInterfaceDetected = (deviceAndSensorStatus & 0b0000_0000_0000_0100_0000_0000) >> 10;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorUnconnectedToUser = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0000_1000_0000_0000) >> 11;
+    const sensorUnconnectedToUser = (deviceAndSensorStatus & 0b0000_0000_0000_1000_0000_0000) >> 11;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const unknownSensorConnected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0001_0000_0000_0000) >> 12;
+    const unknownSensorConnected = (deviceAndSensorStatus & 0b0000_0000_0001_0000_0000_0000) >> 12;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorDisplaced = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0010_0000_0000_0000) >> 13;
+    const sensorDisplaced = (deviceAndSensorStatus & 0b0000_0000_0010_0000_0000_0000) >> 13;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorMalfunctioning = (deviceAndSensorStatus & 0b0000_0000_0000_0000_0100_0000_0000_0000) >> 14;
+    const sensorMalfunctioning = (deviceAndSensorStatus & 0b0000_0000_0100_0000_0000_0000) >> 14;
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | False       |
      * | 1     | True        |
      */
-    const sensorDisconnected = (deviceAndSensorStatus & 0b0000_0000_0000_0000_1000_0000_0000_0000) >> 15;
+    const sensorDisconnected = (deviceAndSensorStatus & 0b0000_0000_1000_0000_0000_0000) >> 15;
     let pulseAmplitudeIndex: number | undefined = undefined;
     if (pulseAmplitudeIndexFieldIsPresent) {
-        pulseAmplitudeIndex = $dvr.sFloat();
+        pulseAmplitudeIndex = $dvr.float16();
     }
 
     return { calibrationOngoing, dataForDemonstration, dataForTesting, dataFromMeasurementStorage, deviceAndSensorStatus, deviceClockIsNotSet, earlyEstimatedData, equipmentMalfunctionDetected, erraticSignalDetected, extendedDisplayUpdateOngoing, flags, fullyQualifiedData, inadequiteSignalDetected, invalidMeasurementDetected, lowPerfusionDetected, measurementOngoing, measurementStatus, measurementUnavailable, nonpulsatileSignalDetected, poorSignalDetected, pulseAmplitudeIndex, questionableMeasurementDetected, questionablePulseDetected, sensorDisconnected, sensorDisplaced, sensorInterfaceDetected, sensorMalfunctioning, sensorUnconnectedToUser, signalAnalysisOngoing, signalProcessingIrregularityDetected, spo2prSpotCheckPR, spo2prSpotCheckSpO2, timestamp, unknownSensorConnected, validatedData };

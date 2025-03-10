@@ -103,12 +103,12 @@ export function temperatureMeasurementFromDataView(dataView: DataView | DataView
     const temperatureTypeFlag = !!((flags & 0b0000_0100) >> 2);
     let temperatureMeasurementValueCelsius: number | undefined = undefined;
     if (!temperatureUnitsFlag) {
-        temperatureMeasurementValueCelsius = $dvr.float();
+        temperatureMeasurementValueCelsius = $dvr.float32();
     }
 
     let temperatureMeasurementValueFahrenheit: number | undefined = undefined;
     if (temperatureUnitsFlag) {
-        temperatureMeasurementValueFahrenheit = $dvr.float();
+        temperatureMeasurementValueFahrenheit = $dvr.float32();
     }
 
     let timeStamp: DateTime | undefined = undefined;

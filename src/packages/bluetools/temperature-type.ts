@@ -48,6 +48,20 @@ export class TemperatureTypeImpl implements TemperatureType {
 /** Parse from a DataView into {@link TemperatureType}. */
 export function temperatureTypeFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): TemperatureType {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description             |
+     * | ----- | ----------------------- |
+     * | 1     | Armpit                  |
+     * | 2     | Body (general)          |
+     * | 3     | Ear (usually ear lobe)  |
+     * | 4     | Finger                  |
+     * | 5     | Gastro-intestinal Tract |
+     * | 6     | Mouth                   |
+     * | 7     | Rectum                  |
+     * | 8     | Toe                     |
+     * | 9     | Tympanum (ear drum)     |
+     */
     const temperatureTextDescription = $dvr.uint8();
     return { temperatureTextDescription };
 }

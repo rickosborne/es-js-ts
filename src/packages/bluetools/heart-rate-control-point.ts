@@ -37,6 +37,12 @@ export class HeartRateControlPointImpl implements HeartRateControlPoint {
 /** Parse from a DataView into {@link HeartRateControlPoint}. */
 export function heartRateControlPointFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): HeartRateControlPoint {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description                                                                                                            |
+     * | ----- | ---------------------------------------------------------------------------------------------------------------------- |
+     * | 1     | Reset Energy Expended: resets the value of the Energy Expended field in the Heart Rate Measurement characteristic to 0 |
+     */
     const heartRateControlPoint = $dvr.uint8();
     return { heartRateControlPoint };
 }

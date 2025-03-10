@@ -40,6 +40,13 @@ export class TimeUpdateControlPointImpl implements TimeUpdateControlPoint {
 /** Parse from a DataView into {@link TimeUpdateControlPoint}. */
 export function timeUpdateControlPointFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): TimeUpdateControlPoint {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description             |
+     * | ----- | ----------------------- |
+     * | 1     | Get Reference Update    |
+     * | 2     | Cancel Reference Update |
+     */
     const timeUpdateControlPoint = $dvr.uint8();
     return { timeUpdateControlPoint };
 }

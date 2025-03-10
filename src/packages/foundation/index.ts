@@ -62,3 +62,4 @@ export * from "./unknown-error.js";
 export * from "./window.js";
 export * from "./with-lazy-property.js";
 export * from "./with-timeout.js";
+export * from "./zero-pad.js";

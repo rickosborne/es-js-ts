@@ -44,6 +44,18 @@ export class TimeSourceImpl implements TimeSource {
 /** Parse from a DataView into {@link TimeSource}. */
 export function timeSourceFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): TimeSource {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description           |
+     * | ----- | --------------------- |
+     * | 0     | Unknown               |
+     * | 1     | Network Time Protocol |
+     * | 2     | GPS                   |
+     * | 3     | Radio Time Signal     |
+     * | 4     | Manual                |
+     * | 5     | Atomic Clock          |
+     * | 6     | Cellular Network      |
+     */
     const timeSource = $dvr.uint8();
     return { timeSource };
 }

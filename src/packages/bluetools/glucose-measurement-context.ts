@@ -278,6 +278,19 @@ export function glucoseMeasurementContextFromDataView(dataView: DataView | DataV
         extendedFlags = $dvr.uint8();
     }
 
+    /** */
+    /**
+     * | value | description             |
+     * | ----- | ----------------------- |
+     * | 0     | Reserved for future use |
+     * | 1     | Breakfast               |
+     * | 2     | Lunch                   |
+     * | 3     | Dinner                  |
+     * | 4     | Snack                   |
+     * | 5     | Drink                   |
+     * | 6     | Supper                  |
+     * | 7     | Brunch                  |
+     */
     let carbohydrateID: number | undefined = undefined;
     if (carbohydrateIDAndCarbohydratePresent) {
         carbohydrateID = $dvr.uint8();
@@ -285,24 +298,63 @@ export function glucoseMeasurementContextFromDataView(dataView: DataView | DataV
 
     let carbohydrateUnitsOfKilograms: number | undefined = undefined;
     if (carbohydrateIDAndCarbohydratePresent) {
-        carbohydrateUnitsOfKilograms = $dvr.sFloat();
+        carbohydrateUnitsOfKilograms = $dvr.float16();
     }
 
+    /** */
+    /**
+     * | value | description                   |
+     * | ----- | ----------------------------- |
+     * | 0     | Reserved for future use       |
+     * | 1     | Preprandial (before meal)     |
+     * | 2     | Postprandial (after meal)     |
+     * | 3     | Fasting                       |
+     * | 4     | Casual (snacks, drinks, etc.) |
+     * | 5     | Bedtime                       |
+     */
     let meal: number | undefined = undefined;
     if (mealPresent) {
         meal = $dvr.uint8();
     }
 
+    /** */
+    /**
+     * | value | description                |
+     * | ----- | -------------------------- |
+     * | 0     | Reserved for future use    |
+     * | 1     | Self                       |
+     * | 2     | Health Care Professional   |
+     * | 3     | Lab test                   |
+     * | 15    | Tester value not available |
+     */
     let tester: number | undefined = undefined;
     if (testerHealthPresent) {
         tester = $dvr.nibble();
     }
 
+    /** */
+    /**
+     * | value | description                |
+     * | ----- | -------------------------- |
+     * | 0     | Reserved for future use    |
+     * | 1     | Minor health issues        |
+     * | 2     | Major health issues        |
+     * | 3     | During menses              |
+     * | 4     | Under stress               |
+     * | 5     | No health issues           |
+     * | 15    | Health value not available |
+     */
     let health: number | undefined = undefined;
     if (testerHealthPresent) {
         health = $dvr.nibble();
     }
 
+    /** */
+    /**
+     * | value | description |
+     * | ----- | ----------- |
+     * | 65535 | Overrun     |
+     */
     let exerciseDuration: number | undefined = undefined;
     if (exerciseDurationAndExerciseIntensityPresent) {
         exerciseDuration = $dvr.uint16();
@@ -313,6 +365,17 @@ export function glucoseMeasurementContextFromDataView(dataView: DataView | DataV
         exerciseIntensity = $dvr.uint8();
     }
 
+    /** */
+    /**
+     * | value | description                 |
+     * | ----- | --------------------------- |
+     * | 0     | Reserved for future use     |
+     * | 1     | Rapid acting insulin        |
+     * | 2     | Short acting insulin        |
+     * | 3     | Intermediate acting insulin |
+     * | 4     | Long acting insulin         |
+     * | 5     | Pre-mixed insulin           |
+     */
     let medicationID: number | undefined = undefined;
     if (medicationIDAndMedicationPresent) {
         medicationID = $dvr.uint8();
@@ -320,17 +383,17 @@ export function glucoseMeasurementContextFromDataView(dataView: DataView | DataV
 
     let medicationUnitsOfKilograms: number | undefined = undefined;
     if (medicationIDAndMedicationPresent && !medicationValueUnits) {
-        medicationUnitsOfKilograms = $dvr.sFloat();
+        medicationUnitsOfKilograms = $dvr.float16();
     }
 
     let medicationUnitsOfLiters: number | undefined = undefined;
     if (medicationIDAndMedicationPresent && medicationValueUnits) {
-        medicationUnitsOfLiters = $dvr.sFloat();
+        medicationUnitsOfLiters = $dvr.float16();
     }
 
     let hba1c: number | undefined = undefined;
     if (hba1cPresent) {
-        hba1c = $dvr.sFloat();
+        hba1c = $dvr.float16();
     }
 
     return { carbohydrateID, carbohydrateUnitsOfKilograms, exerciseDuration, exerciseIntensity, extendedFlags, flags, hba1c, health, meal, medicationID, medicationUnitsOfKilograms, medicationUnitsOfLiters, sequenceNumber, tester };

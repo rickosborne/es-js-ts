@@ -311,19 +311,46 @@ export function glucoseMeasurementFromDataView(dataView: DataView | DataViewRead
 
     let glucoseConcentrationUnitsOfKgL: number | undefined = undefined;
     if (glucoseConcentrationTypeAndSampleLocationPresent && !glucoseConcentrationUnits) {
-        glucoseConcentrationUnitsOfKgL = $dvr.sFloat();
+        glucoseConcentrationUnitsOfKgL = $dvr.float16();
     }
 
     let glucoseConcentrationUnitsOfMolL: number | undefined = undefined;
     if (glucoseConcentrationTypeAndSampleLocationPresent && glucoseConcentrationUnits) {
-        glucoseConcentrationUnitsOfMolL = $dvr.sFloat();
+        glucoseConcentrationUnitsOfMolL = $dvr.float16();
     }
 
+    /** */
+    /**
+     * | value | description              |
+     * | ----- | ------------------------ |
+     * | 0     | Reserved for future use  |
+     * | 1     | Capillary Whole blood    |
+     * | 2     | Capillary Plasma         |
+     * | 3     | Venous Whole blood       |
+     * | 4     | Venous Plasma            |
+     * | 5     | Arterial Whole blood     |
+     * | 6     | Arterial Plasma          |
+     * | 7     | Undetermined Whole blood |
+     * | 8     | Undetermined Plasma      |
+     * | 9     | Interstitial Fluid (ISF) |
+     * | 10    | Control Solution         |
+     */
     let type: number | undefined = undefined;
     if (glucoseConcentrationTypeAndSampleLocationPresent) {
         type = $dvr.nibble();
     }
 
+    /** */
+    /**
+     * | value | description                         |
+     * | ----- | ----------------------------------- |
+     * | 0     | Reserved for future use             |
+     * | 1     | Finger                              |
+     * | 2     | Alternate Site Test (AST)           |
+     * | 3     | Earlobe                             |
+     * | 4     | Control solution                    |
+     * | 15    | Sample Location value not available |
+     */
     let sampleLocation: number | undefined = undefined;
     if (glucoseConcentrationTypeAndSampleLocationPresent) {
         sampleLocation = $dvr.nibble();

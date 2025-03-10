@@ -44,6 +44,18 @@ export class DayOfWeekImpl implements DayOfWeek {
 /** Parse from a DataView into {@link DayOfWeek}. */
 export function dayOfWeekFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): DayOfWeek {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description |
+     * | ----- | ----------- |
+     * | 1     | Monday      |
+     * | 2     | Tuesday     |
+     * | 3     | Wednesday   |
+     * | 4     | Thursday    |
+     * | 5     | Friday      |
+     * | 6     | Saturday    |
+     * | 7     | Sunday      |
+     */
     const dayOfWeek = $dvr.uint8();
     return { dayOfWeek };
 }

@@ -53,6 +53,28 @@ export class SensorLocationImpl implements SensorLocation {
 /** Parse from a DataView into {@link SensorLocation}. */
 export function sensorLocationFromDataView(dataView: DataView | DataViewReader, indexStart: number = 0): SensorLocation {
     const $dvr: DataViewReader = dataViewReader(dataView, indexStart);
+    /** */
+    /**
+     * | value | description  |
+     * | ----- | ------------ |
+     * | 0     | Other        |
+     * | 1     | Top of shoe  |
+     * | 2     | In shoe      |
+     * | 3     | Hip          |
+     * | 4     | Front Wheel  |
+     * | 5     | Left Crank   |
+     * | 6     | Right Crank  |
+     * | 7     | Left Pedal   |
+     * | 8     | Right Pedal  |
+     * | 9     | Front Hub    |
+     * | 10    | Rear Dropout |
+     * | 11    | Chainstay    |
+     * | 12    | Rear Wheel   |
+     * | 13    | Rear Hub     |
+     * | 14    | Chest        |
+     * | 15    | Spider       |
+     * | 16    | Chain Ring   |
+     */
     const sensorLocation = $dvr.uint8();
     return { sensorLocation };
 }

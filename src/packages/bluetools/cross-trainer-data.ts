@@ -232,7 +232,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     |     | True        |
      * <p>Requirements: C1</p>
      */
-    const moreData = !!(flags & 0b0000_0000_0000_0000_0000_0000_0000_0001);
+    const moreData = !!(flags & 0b0000_0000_0000_0000_0000_0001);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -240,7 +240,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C2  | True        |
      * <p>Requirements: C2</p>
      */
-    const averageSpeedPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0000_0010) >> 1);
+    const averageSpeedPresent = !!((flags & 0b0000_0000_0000_0000_0000_0010) >> 1);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -248,7 +248,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C3  | True        |
      * <p>Requirements: C3</p>
      */
-    const totalDistancePresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0000_0100) >> 2);
+    const totalDistancePresent = !!((flags & 0b0000_0000_0000_0000_0000_0100) >> 2);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -256,7 +256,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C4  | True        |
      * <p>Requirements: C4</p>
      */
-    const stepCountPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0000_1000) >> 3);
+    const stepCountPresent = !!((flags & 0b0000_0000_0000_0000_0000_1000) >> 3);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -264,7 +264,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C5  | True        |
      * <p>Requirements: C5</p>
      */
-    const strideCountPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0001_0000) >> 4);
+    const strideCountPresent = !!((flags & 0b0000_0000_0000_0000_0001_0000) >> 4);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -272,7 +272,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C6  | True        |
      * <p>Requirements: C6</p>
      */
-    const elevationGainPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0010_0000) >> 5);
+    const elevationGainPresent = !!((flags & 0b0000_0000_0000_0000_0010_0000) >> 5);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -280,7 +280,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C7  | True        |
      * <p>Requirements: C7</p>
      */
-    const inclinationAndRampAngleSettingPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_0100_0000) >> 6);
+    const inclinationAndRampAngleSettingPresent = !!((flags & 0b0000_0000_0000_0000_0100_0000) >> 6);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -288,7 +288,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C8  | True        |
      * <p>Requirements: C8</p>
      */
-    const resistanceLevelPresent = !!((flags & 0b0000_0000_0000_0000_0000_0000_1000_0000) >> 7);
+    const resistanceLevelPresent = !!((flags & 0b0000_0000_0000_0000_1000_0000) >> 7);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -296,7 +296,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C9  | True        |
      * <p>Requirements: C9</p>
      */
-    const instantaneousPowerPresent = !!((flags & 0b0000_0000_0000_0000_0000_0001_0000_0000) >> 8);
+    const instantaneousPowerPresent = !!((flags & 0b0000_0000_0000_0001_0000_0000) >> 8);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -304,7 +304,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C10 | True        |
      * <p>Requirements: C10</p>
      */
-    const averagePowerPresent = !!((flags & 0b0000_0000_0000_0000_0000_0010_0000_0000) >> 9);
+    const averagePowerPresent = !!((flags & 0b0000_0000_0000_0010_0000_0000) >> 9);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -312,7 +312,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C11 | True        |
      * <p>Requirements: C11</p>
      */
-    const expendedEnergyPresent = !!((flags & 0b0000_0000_0000_0000_0000_0100_0000_0000) >> 10);
+    const expendedEnergyPresent = !!((flags & 0b0000_0000_0000_0100_0000_0000) >> 10);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -320,7 +320,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C12 | True        |
      * <p>Requirements: C12</p>
      */
-    const heartRatePresent = !!((flags & 0b0000_0000_0000_0000_0000_1000_0000_0000) >> 11);
+    const heartRatePresent = !!((flags & 0b0000_0000_0000_1000_0000_0000) >> 11);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -328,7 +328,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C13 | True        |
      * <p>Requirements: C13</p>
      */
-    const metabolicEquivalentPresent = !!((flags & 0b0000_0000_0000_0000_0001_0000_0000_0000) >> 12);
+    const metabolicEquivalentPresent = !!((flags & 0b0000_0000_0001_0000_0000_0000) >> 12);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -336,7 +336,7 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C14 | True        |
      * <p>Requirements: C14</p>
      */
-    const elapsedTimePresent = !!((flags & 0b0000_0000_0000_0000_0010_0000_0000_0000) >> 13);
+    const elapsedTimePresent = !!((flags & 0b0000_0000_0010_0000_0000_0000) >> 13);
     /**
      * | value | req | description |
      * | ----- | --- | ----------- |
@@ -344,14 +344,14 @@ export function crossTrainerDataFromDataView(dataView: DataView | DataViewReader
      * | 1     | C15 | True        |
      * <p>Requirements: C15</p>
      */
-    const remainingTimePresent = !!((flags & 0b0000_0000_0000_0000_0100_0000_0000_0000) >> 14);
+    const remainingTimePresent = !!((flags & 0b0000_0000_0100_0000_0000_0000) >> 14);
     /**
      * | value | description |
      * | ----- | ----------- |
      * | 0     | Forward     |
      * | 1     | Backward    |
      */
-    const movementDirection = (flags & 0b0000_0000_0000_0000_1000_0000_0000_0000) >> 15;
+    const movementDirection = (flags & 0b0000_0000_1000_0000_0000_0000) >> 15;
     let instantaneousSpeed: number | undefined = undefined;
     if (!moreData) {
         instantaneousSpeed = $dvr.uint16();

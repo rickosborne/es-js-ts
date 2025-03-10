@@ -13,12 +13,6 @@ Indeed, I probably got a bunch of stuff wrong, as the source XML files for the d
 I've tested it on a few of my own devices (heart rate monitors, mostly), but I don't claim that all the fiddly stuff will actually work.
 Use at your own risk.  YMMV.  All that.
 
-Some things I guarantee won't work until I get some examples for unit tests:
-
-- Float values (both `FLOAT` and `SFLOAT`).  How many bytes are these?  Are they little endian, too, or some custom encoding?
-- Nibble values.  Their sub-byte-size makes them annoying to use with the `DataView` type which underpins the Web Bluetooth API.
-- What the actual frak are `Uint24` and `Int24`?  24?!?!  What's the byte order here?  What's a sane and reasonable way to read one from a DataView?  How do the signs work?  And an `Int40?`?  wat?
-
 As most of the code in this library is auto-generated, it all follows the same pattern:
 
 - An interface for the fields parsed from the Characteristic / Descriptor.
@@ -29,3 +23,13 @@ I have not converted _all_ the Characteristics or Descriptors.
 If you have access to one of the XML sources you'd like to see added, file a GitHub issue.
 You can also try generating them on your own using the `scripts/from-xml.ts` and `scripts/gatt-assigned.ts` scripts.
 The former does most of the code generation, while the latter just adds to the UUID records.
+
+> ⚠️⚠️⚠️ The code here is based off the circa 2017 XML specs, ***not*** the circa 2020 YAML specs.  The code may be out of date.  ⚠️⚠️⚠️
+
+The YAML specs don't have nearly as much detail, and would be much harder to convert.
+You can see them here:
+
+https://bitbucket.org/bluetooth-SIG/public/src/main/gss/
+
+Sadly, the XML versions have been removed.
+Though, if you were industrious, you could find them.
