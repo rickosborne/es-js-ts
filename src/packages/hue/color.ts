@@ -2,7 +2,6 @@ import { cssFormatHex, cssNameFromHex } from "@rickosborne/css";
 import type { CSSColorName } from "@rickosborne/css";
 import { real01From255, real255From01, toReal01 } from "@rickosborne/rebound";
 import type { Int360, Real01, Real255 } from "@rickosborne/rebound";
-import { config } from "chai";
 import { ColorConversionError } from "./color-conversion-error.js";
 import { hslFromHSV, hslFromRGB, hsvFromHSL, hsvFromRGB, rgbFromHSL, rgbFromHSV } from "./color-conversion.js";
 import { colorFromCSS } from "./color-from-css.js";
@@ -237,7 +236,7 @@ export class Color implements ColorParts {
 		hsv ??= hsvFromHSL(hsl) ?? hsvFromRGB(rgb);
 		rgb ??= rgb255From01(rgbFromHSV(hsv) ?? rgbFromHSL(hsl));
 		if (rgb == null || hsl == null || hsv == null) {
-			throw new ColorConversionError("Unknown", config, { message: "Could not derive color" });
+			throw new ColorConversionError("Unknown", { message: "Could not derive color" });
 		}
 		const hex = hexFromRGB(rgb, "long");
 		return new Color({

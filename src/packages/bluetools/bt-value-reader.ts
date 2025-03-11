@@ -386,9 +386,16 @@ export const btValueReaderFor = (idOrName: string | number): BtReaderClass | und
 	if (fromId != null) {
 		return fromId;
 	}
-	const fromOther = Array.from(BT_READERS.values()).filter((r) => r.UUID_PREFIX === id || r.NAME === name || r.TYPE_NAME === name || r.TYPE_NAME.endsWith(name));
-	if (fromOther.length > 1) {
-		throw new Error(`More than one match: ${ fromOther.map((r) => r.name).join(" ") }`);
+	const btReaderClasses: BtReaderClass[] = Array.from(BT_READERS.values());
+	const fromOther = btReaderClasses.find((r) => r.UUID_PREFIX === id || r.NAME === name || r.TYPE_NAME === name);
+	if (fromOther != null) {
+		return fromOther;
 	}
-	return fromOther.at(0);
+	const lastResort = btReaderClasses.filter((r) => r.TYPE_NAME.endsWith(".".concat(name)));
+	if (lastResort.length === 1) {
+		return lastResort[ 0 ]!;
+	} else if (lastResort.length > 1) {
+		throw new Error(`More than one match: ${ lastResort.map((r) => r.name).join(" ") }`);
+	}
+	return undefined;
 };

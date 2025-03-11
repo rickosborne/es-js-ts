@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { describe, test } from "mocha";
+import { AgeImpl } from "../age.js";
 import { btValueReaderFor } from "../bt-value-reader.js";
 import { gatt } from "../gatt.js";
 import { HeartRateMeasurementImpl } from "../heart-rate-measurement.js";
@@ -15,6 +16,9 @@ describe(btValueReaderFor.name, () => {
 		expect(btValueReaderFor("heart_rate_measurement")).eq(HeartRateMeasurementImpl);
 	});
 	test("invalid", () => {
-		expect(() => btValueReaderFor("measurement")).throws(Error, "More than one");
+		expect(btValueReaderFor("measurement")).eq(undefined);
+	});
+	test("age", () => {
+		expect(btValueReaderFor("age")).eq(AgeImpl);
 	});
 });
