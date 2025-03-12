@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Function which evaluates a value against a condition.
  */
@@ -57,7 +58,6 @@ export type BinaryOperator<T> = (left: T, right: T) => T;
 /**
  * Anything which could be called like a function.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyFunction = (...params: any) => unknown;
 
 /**
@@ -70,16 +70,36 @@ export type FunctionLike<Params extends unknown[], Return> = (...params: Params)
  * A constructor-like value which, when invoked via <kbd>new</kbd>,
  * accepts the given parameter type(s) and produces the given instance type.
  */
-export type ConstructorLike<Params extends unknown[], Instance> = new (...params: Params) => Instance;
+export type ConcreteConstructorLike<Params extends unknown[], Instance> = new (...params: Params) => Instance;
 export type AbstractConstructorLike<Params extends unknown[], Instance> = abstract new (...params: Params) => Instance;
-export type AnyConstructorLike<Params extends unknown[], Instance> = ConstructorLike<Params, Instance> | AbstractConstructorLike<Params, Instance>;
+export type AnyConstructorLike<Params extends unknown[], Instance> = ConcreteConstructorLike<Params, Instance> | AbstractConstructorLike<Params, Instance>;
+/**
+ * Note that this *will not* match classes with protected constructors.
+ * As near as the author can tell, this is impossible to accomplish in TS.
+ * Yes, this is infuriating if all you want is a type which would be the
+ * equivalent of an `instanceof` check.
+ */
+export type AnyConstructor = AnyConstructorLike<any, any>;
+/**
+ * A concrete class with a public constructor.
+ * This will *not* match an abstract class, or one with a private/protected constructor.
+ */
+export type ConcreteConstructorOf<Instance> = new (...params: any) => Instance;
+/**
+ * An abstract *or concrete* class with a public constructor.
+ * This will *not* match a class with a private/protected constructor.
+ */
+export type AbstractConstructorOf<Instance> = abstract new (...params: any) => Instance;
+/**
+ * A class with a public constructor which would create instances of the `Instance` type.
+ * Because TS considers `class A` to be a narrower version of `abstract class A`, this
+ * is functionally equivalent to using `AbstractConstructorOf`.  However,
+ * it's included here as an option for readability.
+ */
+export type AnyConstructorOf<Instance> = ConcreteConstructorOf<Instance> | AbstractConstructorOf<Instance>;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Infer the types of the given function's parameters, in a tuple.
  */
 export type FunctionParams<F> = F extends FunctionLike<infer P, unknown> ? P : never;
-
-/**
- * Infer the types of the given constructor's parameters, in a tuple.
- */
-export type ConstructorParams<C> = C extends ConstructorLike<infer P, unknown> ? P : never;
