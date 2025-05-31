@@ -51,6 +51,7 @@ export type GetSetPropertyDescriptor<T> = PropertyDescriptorFlags & { get(): T; 
  * Union for reasonable configurations of property descriptors which
  * could affect the type for the property.
  */
+// eslint-disable-next-line no-shadow
 export type TypedPropertyDescriptor<T> = ValuePropertyDescriptor<T> | GetPropertyDescriptor<T> | SetPropertyDescriptor<T> | GetSetPropertyDescriptor<T>;
 
 /**

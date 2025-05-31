@@ -52,31 +52,31 @@ const makePoints = (arrows: string): [ Point, Point, Point ] => {
 };
 
 describe(measureAngle.name, () => {
-	for (const [ label, angle ] of examples) {
+	for (const [ label, ang ] of examples) {
 		it(label, () => {
 			const [ a, b, c ] = makePoints(label);
 			const actual = measureAngle(a, b, c);
-			expect(actual.area, "area").closeTo(angle.area, 0.0001);
-			expect(actual.orientation, "orientation").eq(angle.orientation);
-			expect(actual.rad, "rad").closeTo(angle.rad, 0.0001);
+			expect(actual.area, "area").closeTo(ang.area, 0.0001);
+			expect(actual.orientation, "orientation").eq(ang.orientation);
+			expect(actual.rad, "rad").closeTo(ang.rad, 0.0001);
 		});
 	}
 });
 
 describe(measureAngles.name, () => {
-	for (const [ label, angle ] of examples) {
+	for (const [ label, ang ] of examples) {
 		it(label, () => {
 			const [ a, b, c ] = makePoints(label);
 			const radA = Math.atan2(Math.abs(c.y), Math.abs(c.x));
-			const radC = PI - radA - angle.rad;
+			const radC = PI - radA - ang.rad;
 			const withoutAngles: Polygon = { points: [ a, b, c ] };
 			const poly = measureAngles(withoutAngles);
 			expect(poly.points.every((p, n) => pointEq(p, withoutAngles.points[ n ]!)));
 			const [ angleA, angleB, angleC ] = poly.points;
 			expect(prettyRad(angleA!.rad), "A.rad").eq(prettyRad(radA));
-			expect(prettyRad(angleB!.rad), "B.rad").eq(prettyRad(angle.rad));
-			expect(angleB!.area, "B.area").closeTo(angle.area, 0.0001);
-			expect(angleB!.orientation, "B.orientation").eq(angle.orientation);
+			expect(prettyRad(angleB!.rad), "B.rad").eq(prettyRad(ang.rad));
+			expect(angleB!.area, "B.area").closeTo(ang.area, 0.0001);
+			expect(angleB!.orientation, "B.orientation").eq(ang.orientation);
 			expect(prettyRad(angleC!.rad), "C.rad").eq(prettyRad(radC));
 		});
 	}

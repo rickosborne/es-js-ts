@@ -55,7 +55,7 @@ for (const moduleName of moduleNames) {
 		pkg.version = bumped.toString();
 		anyBumps = true;
 	}
-	deps.forEach((version, packageName) => {
+	deps.forEach((semVer, packageName) => {
 		let target: Record<string, string> | undefined = undefined;
 		for (const key of DEPENDENCIES_KEYS) {
 			if (pkg[ key ] != null && packageName in pkg[ key ]) {
@@ -64,7 +64,7 @@ for (const moduleName of moduleNames) {
 			if (target == null) {
 				throw new Error(`Cannot find dependency ${ packageName } in ${ moduleName }package.json`);
 			}
-			if (version != null && version.toString() !== bumped) {
+			if (semVer != null && semVer.toString() !== bumped) {
 				target[ packageName ] = bumped;
 				anyBumps = true;
 			}

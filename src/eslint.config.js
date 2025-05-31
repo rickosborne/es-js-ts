@@ -148,6 +148,7 @@ module.exports = [
 			"linebreak-style": [ "error", "unix" ],
 			"no-mixed-spaces-and-tabs": "error",
 			"no-multi-spaces": [ "error", { ignoreEOLComments: true } ],
+			"no-shadow": [ "error", { allow: [ "console", "process" ], builtinGlobals: true, hoist: "all" } ],
 			"no-trailing-spaces": "error",
 			"no-unused-vars": "off",
 			"object-curly-spacing": [ "error", "always" ],

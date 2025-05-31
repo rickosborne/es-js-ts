@@ -19,9 +19,9 @@ export function deepEquals<T>(actual: unknown, expected: T): actual is T {
 		if (!compare(Object.getPrototypeOf(left), Object.getPrototypeOf(right))) return false;
 		if (left instanceof Map) {
 			if (!(right instanceof Map)) return false;
-			const leftKeys = new Set(left.keys());
-			const rightKeys = new Set(right.keys());
-			if (!compare(leftKeys, rightKeys)) return false;
+			const lk = new Set(left.keys());
+			const rk = new Set(right.keys());
+			if (!compare(lk, rk)) return false;
 			for (const [ key, leftValue ] of left.entries()) {
 				if (!compare(leftValue, right.get(key))) return false;
 			}

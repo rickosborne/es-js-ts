@@ -4,7 +4,7 @@
 export const arrayEq = <T>(
 	a: T[],
 	b: T[],
-	predicate: ((a: T, b: T, index: number) => boolean) = ((a, b) => a === b),
+	predicate: ((_a: T, _b: T, index: number) => boolean) = ((aa, bb) => aa === bb),
 ): boolean => {
 	if (a === b) {
 		return true;

@@ -64,7 +64,7 @@ export class ReboundBuilder<
 > {
 	constructor(
 		private readonly config: BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>,
-		private readonly toRebound: <Config extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(config: Config, range: NumberRange) => Rebound<BoundedNumber<Config>>,
+		private readonly toRebound: <Config extends BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>(_config: Config, range: NumberRange) => Rebound<BoundedNumber<Config>>,
 	) {
 	}
 

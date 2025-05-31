@@ -1,5 +1,6 @@
 import { deepSort } from "@rickosborne/foundation";
 import type { JSONArray, JSONSerializable } from "@rickosborne/typical";
+// eslint-disable-next-line no-shadow
 import { type ArrowFunction, type Block, type CallExpression, canHaveModifiers, createProgram, type Expression, forEachChild, type FunctionDeclaration, type FunctionExpression, type Identifier, type IfStatement, type ImportClause, isArrowFunction, isBinaryExpression, isBlock, isCallExpression, isExportDeclaration, isExpression, isFunctionDeclaration, isFunctionExpression, isIdentifier, isIfStatement, isImportClause, isNamedImports, isNewExpression, isOptionalTypeNode, isReturnStatement, isStringLiteral, isThrowStatement, isVariableDeclaration, isVariableStatement, type Node, type ParameterDeclaration, type Program, type ReturnStatement, type SourceFile, type Statement, SyntaxKind, type ThrowStatement, type TypeChecker, type VariableStatement } from "typescript";
 
 import type { ChoiceRule, ChoiceState, EndState, FailState, JSONataChoiceRule, JSONataChoiceState, JSONataPassState, JSONataString, JSONataTaskState, NonTerminalState, ParallelState, PassState, State, StateIdentifier, StateMachine, SucceedState } from "./sfn-types.js";
@@ -9,7 +10,7 @@ type StateMachineFunction = FunctionDeclaration | FunctionExpression | ArrowFunc
 let program: Program;
 let typeChecker: TypeChecker;
 
-const findMatches = <N extends Node>(node: Node, predicate: (node: Node) => node is N): N[] => {
+const findMatches = <N extends Node>(node: Node, predicate: (n: Node) => n is N): N[] => {
 	const nodes: N[] = [];
 	const recurse = (n: Node): void => {
 		if (predicate(n)) {
@@ -71,12 +72,12 @@ const findTargetFunction = (sourceFile: SourceFile, fnName: string | undefined):
 		targetFn = functions[ 0 ]!;
 		targetName = functionName(targetFn);
 	} else {
-		const exported = functions.filter((f) => isExported(f));
-		if (exported.length === 1) {
-			targetFn = exported[ 0 ]!;
+		const exp = functions.filter((f) => isExported(f));
+		if (exp.length === 1) {
+			targetFn = exp[ 0 ]!;
 			targetName = functionName(targetFn);
 		} else {
-			throw new Error(`No function name specified and ${ exported.length } exported found.`);
+			throw new Error(`No function name specified and ${ exp.length } exported found.`);
 		}
 	}
 	const exported = isExported(targetFn);

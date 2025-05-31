@@ -135,26 +135,26 @@ export const runMap = async (
 		// This isn't the cleverest promise pool implementation, but it'll work.
 		const batch = inputs.slice(0, batchSize);
 		const done = await Promise.all(batch.map(async ({ inputValue, index }) => {
-			let errorOutput: ErrorOutput | undefined;
+			let errorOut: ErrorOutput | undefined;
 			const result = await runStateMachine(itemProcessor, {
 				...options,
 				input: inputValue,
 				language,
 			}).catch((err: unknown) => {
-				errorOutput = err instanceof Error ? errorOutputFromError(err) : {
+				errorOut = err instanceof Error ? errorOutputFromError(err) : {
 					Cause: String(err),
 					Error: STATES_BRANCH_FAILED,
 				};
 				return null;
 			});
 			return {
-				errorOutput,
+				errorOutput: errorOut,
 				index,
 				result,
 			};
 		}));
-		for await (const { errorOutput, index, result } of done) {
-			if (errorOutput != null) {
+		for await (const { errorOutput: errOut, index, result } of done) {
+			if (errOut != null) {
 				failureCount++;
 				if (failureCount > toleratedFailureCount) {
 					/**
@@ -163,7 +163,7 @@ export const runMap = async (
 					 * If the error is not handled by the Map State, the interpreter should terminate the machine
 					 * execution with an error.
 					 */
-					return assignThenContinue({ ...context, errorOutput: { Cause: `${ errorOutput.Error } in #${ index }`, Error: STATES_EXCEED_TOLERATED_FAILURE_THRESHOLD }, output: null });
+					return assignThenContinue({ ...context, errorOutput: { Cause: `${ errOut.Error } in #${ index }`, Error: STATES_EXCEED_TOLERATED_FAILURE_THRESHOLD }, output: null });
 				}
 			} else {
 				outputs[ index ] = result;

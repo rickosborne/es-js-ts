@@ -9,7 +9,7 @@ export const sameBounds = (left: TypedCheckedBounds, right: TypedCheckedBounds):
 export function assertSameBounds(
 	left: TypedCheckedBounds,
 	right: TypedCheckedBounds,
-	errorSupplier?: undefined | ((mismatchedKeys: (keyof TypedCheckedBounds)[], left: TypedCheckedBounds, right: TypedCheckedBounds) => Error),
+	errorSupplier?: undefined | ((mismatchedKeys: (keyof TypedCheckedBounds)[], _left: TypedCheckedBounds, _right: TypedCheckedBounds) => Error),
 ): void {
 	const mismatched = TYPED_CHECKED_BOUNDS_KEYS.filter((key) => left[key] !== right[key]);
 	if (mismatched.length > 0) {

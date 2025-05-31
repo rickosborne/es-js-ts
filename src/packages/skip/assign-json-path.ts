@@ -33,6 +33,7 @@ interface JSONPathNode {
 	expression: JSONPathExpression;
 }
 
+// eslint-disable-next-line no-shadow
 interface ChildNode extends JSONPathNode {
 	operation: string;
 	scope: "child";

@@ -59,10 +59,10 @@ describe("color-conversion", () => {
 
 	describe(rgbFromHSL.name, () => {
 		it("matches wikipedia", () => {
-			for (const { hex, hsl, rgb, rgb01 } of WIKI_COLORS) {
+			for (const { hex, hsl, rgb: rgb255, rgb01 } of WIKI_COLORS) {
 				const converted = rgbFromHSL(hsl);
 				compareRGB(rgb01, converted, hex);
-				expect(rgbEq(rgb01, converted, { g: 2.5 }), `${JSON.stringify(rgb)} -> ${JSON.stringify(converted)}`).eq(true);
+				expect(rgbEq(rgb01, converted, { g: 2.5 }), `${JSON.stringify(rgb255)} -> ${JSON.stringify(converted)}`).eq(true);
 			}
 			const rgb = WIKI_COLORS[ 0 ]!.rgb;
 			expect(rgbEq(rgb, undefined)).eq(false);

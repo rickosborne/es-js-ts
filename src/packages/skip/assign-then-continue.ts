@@ -24,10 +24,10 @@ export const assignThenContinue = async (
 		error?: Error | undefined;
 		errorOutput: ErrorOutput | undefined;
 		evalOutput?: boolean | undefined;
-		evaluateOutput: (context: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
+		evaluateOutput: (ctx: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
 		input: JSONSerializable;
 		nextStateName?: StateIdentifier | undefined;
-		onNextState: (context: RunStateContext<State>) => Promise<JSONSerializable>;
+		onNextState: (ctx: RunStateContext<State>) => Promise<JSONSerializable>;
 		options: RunStateMachineOptions;
 		output: JSONSerializable;
 		retryCount: number;

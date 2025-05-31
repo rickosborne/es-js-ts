@@ -57,56 +57,56 @@ export class Bound<T> {
 
 	public static gt<S extends string>(value: string): Bound<S>;
 
-	public static gt<T>(value: T, comparator: Comparator<T>): Bound<T>;
+	public static gt<U>(value: U, comparator: Comparator<U>): Bound<U>;
 
-	public static gt<T>(value: T, comparator?: Comparator<T>): Bound<T> {
-		const cmp: Comparator<T> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<T> : typeof value === "string" ? stringAsc as Comparator<T> : undefined);
+	public static gt<U>(value: U, comparator?: Comparator<U>): Bound<U> {
+		const cmp: Comparator<U> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<U> : typeof value === "string" ? stringAsc as Comparator<U> : undefined);
 		if (cmp == null) {
 			throw new Error("Comparator required");
 		}
-		return new Bound<T>(value, BOUND_GT, cmp);
+		return new Bound<U>(value, BOUND_GT, cmp);
 	}
 
 	public static gte<N extends number>(value: number): Bound<N>;
 
 	public static gte<S extends string>(value: string): Bound<S>;
 
-	public static gte<T>(value: T, comparator: Comparator<T>): Bound<T>;
+	public static gte<U>(value: U, comparator: Comparator<U>): Bound<U>;
 
-	public static gte<T>(value: T, comparator?: Comparator<T>): Bound<T> {
-		const cmp: Comparator<T> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<T> : typeof value === "string" ? stringAsc as Comparator<T> : undefined);
+	public static gte<U>(value: U, comparator?: Comparator<U>): Bound<U> {
+		const cmp: Comparator<U> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<U> : typeof value === "string" ? stringAsc as Comparator<U> : undefined);
 		if (cmp == null) {
 			throw new Error("Comparator required");
 		}
-		return new Bound<T>(value, BOUND_GTE, cmp);
+		return new Bound<U>(value, BOUND_GTE, cmp);
 	}
 
 	public static lt<N extends number>(value: number): Bound<N>;
 
 	public static lt<S extends string>(value: string): Bound<S>;
 
-	public static lt<T>(value: T, comparator: Comparator<T>): Bound<T>;
+	public static lt<U>(value: U, comparator: Comparator<U>): Bound<U>;
 
-	public static lt<T>(value: T, comparator?: Comparator<T>): Bound<T> {
-		const cmp: Comparator<T> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<T> : typeof value === "string" ? stringAsc as Comparator<T> : undefined);
+	public static lt<U>(value: U, comparator?: Comparator<U>): Bound<U> {
+		const cmp: Comparator<U> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<U> : typeof value === "string" ? stringAsc as Comparator<U> : undefined);
 		if (cmp == null) {
 			throw new Error("Comparator required");
 		}
-		return new Bound<T>(value, BOUND_LT, cmp);
+		return new Bound<U>(value, BOUND_LT, cmp);
 	}
 
 	public static lte<N extends number>(value: number): Bound<N>;
 
 	public static lte<S extends string>(value: string): Bound<S>;
 
-	public static lte<T>(value: T, comparator: Comparator<T>): Bound<T>;
+	public static lte<U>(value: U, comparator: Comparator<U>): Bound<U>;
 
-	public static lte<T>(value: T, comparator?: Comparator<T>): Bound<T> {
-		const cmp: Comparator<T> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<T> : typeof value === "string" ? stringAsc as Comparator<T> : undefined);
+	public static lte<U>(value: U, comparator?: Comparator<U>): Bound<U> {
+		const cmp: Comparator<U> | undefined = comparator ?? (typeof value === "number" ? numberAsc as Comparator<U> : typeof value === "string" ? stringAsc as Comparator<U> : undefined);
 		if (cmp == null) {
 			throw new Error("Comparator required");
 		}
-		return new Bound<T>(value, BOUND_LTE, cmp);
+		return new Bound<U>(value, BOUND_LTE, cmp);
 	}
 
 	public readonly boundType: BoundType;

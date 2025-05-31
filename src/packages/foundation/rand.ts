@@ -80,7 +80,7 @@ function linearCongruentialEngine(options: RNGOptions): LinearCongruentialEngine
  * https://en.wikipedia.org/wiki/Linear_congruential_generator
  */
 export const randomNumberGenerator = (seedOrOptions?: number | RNGOptions, presetName?: LCEPresetName | undefined): RNG => {
-	let preset: undefined | ((seed?: number | bigint | undefined) => RNGOptions);
+	let preset: undefined | ((s?: number | bigint | undefined) => RNGOptions);
 	let seed: number | bigint = Date.now();
 	let options = LCE_PRESETS.java(seed);
 	let name = "custom";

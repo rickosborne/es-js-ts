@@ -73,7 +73,7 @@ const gattGuards = <N extends GattName>(
 				return undefined;
 			}
 			if (typeof idOrName === "number") {
-				nameByValue ??= new Map(entriesOf(table).map(([ name, [ id ] ]) => [ id, name ]));
+				nameByValue ??= new Map(entriesOf(table).map(([ n, [ id ] ]) => [ id, n ]));
 				return nameByValue.get(idOrName);
 			}
 			let text: string = idOrName;
@@ -83,17 +83,17 @@ const gattGuards = <N extends GattName>(
 			if (isGuard(text)) {
 				return text;
 			}
-			nameByUuid ??= new Map(entriesOf(table).map(([ name, [ value ] ]) => [ gattUuidFromValue(value), name ]));
+			nameByUuid ??= new Map(entriesOf(table).map(([ n, [ value ] ]) => [ gattUuidFromValue(value), n ]));
 			const fromUuid: N | undefined = nameByUuid.get(text);
 			if (fromUuid != null) {
 				return fromUuid;
 			}
-			nameByLabel ??= new Map(entriesOf(table).filter(([ _name, [ , label ] ]) => label != null).map(([ name, [ , label ] ]) => [ label!, name ]));
+			nameByLabel ??= new Map(entriesOf(table).filter(([ _name, [ , label ] ]) => label != null).map(([ n, [ , label ] ]) => [ label!, n ]));
 			const fromLabel = nameByLabel.get(text);
 			if (fromLabel != null) {
 				return fromLabel;
 			}
-			nameByHex ??= new Map(entriesOf(table).map(([ name, [ value ] ]) => [ zeroPad(value, 4, 16), name ]));
+			nameByHex ??= new Map(entriesOf(table).map(([ n, [ value ] ]) => [ zeroPad(value, 4, 16), n ]));
 			return nameByHex.get(text);
 		},
 	}[ converterName ]!;

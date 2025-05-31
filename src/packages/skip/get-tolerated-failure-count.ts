@@ -12,7 +12,7 @@ import { isJSONataString, JSONATA, JSONPATH, type MapState, type QueryLanguageId
  */
 export const getToleratedFailureCount = async (
 	context: {
-		assertionBuilder: (fieldName: string, stateName: StateIdentifier) => EvaluationAssertion<number>;
+		assertionBuilder: (fieldName: string, stateIdent: StateIdentifier) => EvaluationAssertion<number>;
 		input: JSONSerializable;
 		itemCount: number;
 		language: QueryLanguageIdentifier;

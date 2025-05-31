@@ -7,6 +7,7 @@ import { type DataViewReader, dataViewReader } from "./data-view-reader.js";
  * <p>The Report characteristic is used to exchange data between a HID Device and a HID Host.</p>
  * <p>The Report characteristic value contains Input Report, Output Report or Feature Report data to be transferred between the HID Device and HID Host.</p>
  */
+// eslint-disable-next-line no-shadow
 export interface Report {
     /** <p>Format: `uint8`</p> */
     reportValue: number;

@@ -135,6 +135,7 @@ C extends { upperInc: infer UpperInc extends UpperInEx } ? UpperInc : never
 }`;
 
 export interface BoundsWithRange<
+	// eslint-disable-next-line no-shadow
 	Range extends BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>,
 	LowerInc extends LowerInEx,
 	Lower extends number,
@@ -149,6 +150,7 @@ export interface BoundsWithRange<
  * Nice, short, human-readable signature which will show up in the IDE.
  */
 export interface Rebounded<
+	// eslint-disable-next-line no-shadow
 	Range extends BoundsLabel<BoundsConfig<LowerInc, Lower, Int, Upper, UpperInc>>,
 	LowerInc extends LowerInEx,
 	Lower extends number,

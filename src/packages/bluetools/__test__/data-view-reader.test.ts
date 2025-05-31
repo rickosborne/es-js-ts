@@ -6,7 +6,7 @@ import { DataViewReader } from "../data-view-reader.js";
 const testOne = (
 	hex: string,
 	expected: number,
-	accessor: (dvr: DataViewReader) => number,
+	accessor: (reader: DataViewReader) => number,
 ): void => {
 	const dataView = dataViewFromHex(hex);
 	const dvr = DataViewReader.forDataView(dataView);
@@ -20,7 +20,7 @@ const testOne = (
 
 const testMany = (
 	hex: string,
-	...pairs: [expected: number, accessor: (dvr: DataViewReader) => number][]
+	...pairs: [expected: number, accessor: (reader: DataViewReader) => number][]
 ): void => {
 	const dataView = dataViewFromHex(hex);
 	const dvr = DataViewReader.forDataView(dataView);

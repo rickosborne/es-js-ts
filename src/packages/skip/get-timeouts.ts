@@ -30,7 +30,7 @@ type TimedWrapper<T> = (promise: Promise<T>) => Promise<T>;
  */
 export const getTimeouts = async <T>(
 	context: {
-		assertionBuilder: (fieldName: string, stateName: string) => EvaluationAssertion<number>;
+		assertionBuilder: (fieldName: string, stateIdent: string) => EvaluationAssertion<number>;
 		input: JSONSerializable;
 		language: QueryLanguageIdentifier;
 		options: RunStateMachineOptions;

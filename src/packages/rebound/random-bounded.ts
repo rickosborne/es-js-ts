@@ -16,7 +16,7 @@ export const randomBounded = <
 	isInt: boolean,
 	upper: number,
 	isUpperInc: boolean,
-	rng: ({ float01(): number; range(low: number, high: number): number; }) = randomNumberGenerator(),
+	rng: ({ float01(): number; range(_low: number, _high: number): number; }) = randomNumberGenerator(),
 	fnName: string = `random${ typeName }`,
 ): RandomBounded<N> => {
 	if (!Number.isFinite(upper) || !Number.isFinite(lower)) {

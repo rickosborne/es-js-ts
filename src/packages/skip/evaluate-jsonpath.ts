@@ -16,7 +16,7 @@ export const evaluateJSONPath = <T extends JSONSerializable>(
 	assertion?: {
 		expected: string;
 		fieldName: string;
-		predicate: (value: JSONSerializable) => value is T;
+		predicate: (v: JSONSerializable) => v is T;
 		stateName: StateIdentifier;
 	},
 ): T => {

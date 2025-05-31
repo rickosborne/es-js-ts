@@ -48,9 +48,9 @@ export const reQuote = (text: string, options: ReQuoteOptions = {}) => {
 			return text;
 		}
 		if (first === last && (first === DQ || first === SQ)) {
-			const escaped = new RegExp(`(?<!\\\\)\\\\${rq}`, "g");
+			const esc = new RegExp(`(?<!\\\\)\\\\${rq}`, "g");
 			unquoted = text.substring(1, text.length - 1)
-				.replace(escaped, last);
+				.replace(esc, last);
 			if (auto && !unquoted.includes(last)) {
 				// Already quoted and acceptable.
 				return text;

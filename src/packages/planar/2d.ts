@@ -7,6 +7,17 @@ export type Point = {
 };
 
 /**
+ * Measure of the turn of an angle, based on the order of the
+ * three points which define it.
+ */
+// eslint-disable-next-line no-shadow
+export enum Orientation {
+	Counter = 1,
+	Straight = 0,
+	Clockwise = -1,
+}
+
+/**
  * An angle between two line segments, often as an interior angle for a polygon.
  */
 export type Angle = {
@@ -87,16 +98,6 @@ export type Circle = Point & {
  * For algorithms which work on basic shapes.
  */
 export type Shape = Polygon | Rect | Circle;
-
-/**
- * Measure of the turn of an angle, based on the order of the
- * three points which define it.
- */
-export enum Orientation {
-	Counter = 1,
-	Straight = 0,
-	Clockwise = -1,
-}
 
 /**
  * Shorter version of {@link Orientation.Counter}.

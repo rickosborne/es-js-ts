@@ -971,13 +971,13 @@ async function convertSpec(specName: GattCharacteristicName | GattDescriptorName
 				]);
 			}
 			// const statements = ifStatement(reqIds.join(" && "), mapDecls(readStatements, (v) => `${propName} = ${v}`));
-			const statements = f.getStructure().statements;
+			const stmts = f.getStructure().statements;
 			if (statements == null) {
 				throw new Error(`No if statements found: ${ propName }`);
-			} else if (Array.isArray(statements)) {
-				fromFnStatements.push(...statements);
+			} else if (Array.isArray(stmts)) {
+				fromFnStatements.push(...stmts);
 			} else {
-				fromFnStatements.push(statements);
+				fromFnStatements.push(stmts!);
 			}
 		}
 		let docDesc: string[] = [];

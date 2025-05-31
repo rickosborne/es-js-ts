@@ -22,7 +22,7 @@ describe("colors", () => {
 	});
 
 	test(cssNameFromHex.name, () => {
-		for (const [ name, hex ] of entriesOf(HEX_FROM_NAME).filter(([ , hex ]) => hex.length === 7)) {
+		for (const [ name, hex ] of entriesOf(HEX_FROM_NAME).filter(([ , h ]) => h.length === 7)) {
 			const expected = RENAMED_COLORS[ name ] ?? name;
 			expect(cssNameFromHex(hex)).eq(expected);
 			expect(cssNameFromHex(hex.toLowerCase())).eq(expected);

@@ -49,9 +49,9 @@ export const runParallel = async (
 				trimBranch(index);
 			} else {
 				const error = reason instanceof Error ? reason : undefined;
-				const errorOutput = error != null ? errorOutputFromError(error) : { Cause: String(reason), Error: STATES_BRANCH_FAILED };
+				const errorOut = error != null ? errorOutputFromError(error) : { Cause: String(reason), Error: STATES_BRANCH_FAILED };
 				const parallelName = `${ stateName }[${ index }]`;
-				const retry = await shouldRetry({ stateName: parallelName, state, errorOutput, options, retryCount: branchRetries });
+				const retry = await shouldRetry({ stateName: parallelName, state, errorOutput: errorOut, options, retryCount: branchRetries });
 				if (retry) {
 					const original = branches.find(({ index: idx }) => idx === index);
 					if (original == null) {

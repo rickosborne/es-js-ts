@@ -32,9 +32,9 @@ export const evaluateOutput = async (
 	context: {
 		catcher?: JSONataCatcher | JSONPathCatcher | undefined;
 		errorOutput?: ErrorOutput | undefined;
-		evaluateOutput: (context: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
+		evaluateOutput: (ctx: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
 		input: JSONSerializable;
-		onNextState: (context: RunStateContext<State>) => Promise<JSONSerializable>;
+		onNextState: (ctx: RunStateContext<State>) => Promise<JSONSerializable>;
 		options: RunStateMachineOptions;
 		output: JSONSerializable;
 		retryCount: number;

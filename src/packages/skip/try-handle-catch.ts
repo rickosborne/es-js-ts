@@ -19,9 +19,9 @@ export const tryHandleCatch = async (
 		input: JSONSerializable;
 		error?: Error | undefined;
 		errorOutput: ErrorOutput;
-		evaluateOutput: (context: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
+		evaluateOutput: (ctx: RunStateContext<State> & { catcher?: Catcher; output: JSONSerializable }) => Promise<JSONSerializable>;
 		options: RunStateMachineOptions;
-		onNextState: (context: RunStateContext<State>) => Promise<JSONSerializable>;
+		onNextState: (ctx: RunStateContext<State>) => Promise<JSONSerializable>;
 		retryCount: number;
 		state: State;
 		stateMachine: StateMachine;

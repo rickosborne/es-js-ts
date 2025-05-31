@@ -7,11 +7,11 @@ import { asyncIteratorOf, iteratorOf } from "../iterator.js";
 
 describe("iterator transformers", () => {
 	const transformers: (<T, U>(
-		map: (inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
+		map: (_inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
 		inputs: T[],
 	) => Promise<({ transformer: IteratorTransformerBase<T, U>, outputs: U[] })>)[] = [
 		function testIteratorTransformer<T, U>(
-			map: (inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
+			map: (_inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
 			inputs: T[],
 		) {
 			const builder = iteratorTransformer(map);
@@ -23,10 +23,10 @@ describe("iterator transformers", () => {
 			});
 		},
 		async function testAsyncIteratorTransformer<T, U>(
-			map: (inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
+			map: (_inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
 			inputs: T[],
 		) {
-			const builder = asyncIteratorTransformer((inputs: T[], inputIsDone: boolean) => Promise.resolve(map(inputs, inputIsDone)));
+			const builder = asyncIteratorTransformer((i: T[], inputIsDone: boolean) => Promise.resolve(map(i, inputIsDone)));
 			const transformer = builder(asyncIteratorOf(inputs));
 			const outputs = await arrayFromAsync(transformer);
 			return {
@@ -35,10 +35,10 @@ describe("iterator transformers", () => {
 			};
 		},
 		async function testProactiveAsyncIteratorTransformer<T, U>(
-			map: (inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
+			map: (_inputs: T[], inputIsDone: boolean) => IteratorTransformerMapResult<U>,
 			inputs: T[],
 		) {
-			const builder = asyncIteratorTransformer((inputs: T[], inputIsDone: boolean) => Promise.resolve(map(inputs, inputIsDone)), { proactive: true });
+			const builder = asyncIteratorTransformer((i: T[], inputIsDone: boolean) => Promise.resolve(map(i, inputIsDone)), { proactive: true });
 			const transformer = builder(asyncIteratorOf(inputs));
 			const outputs = await arrayFromAsync(transformer);
 			return {
@@ -71,19 +71,19 @@ describe("iterator transformers", () => {
 			test("more + always returns one", async () => {
 				const inputs = [ "a", "b", "c", "d", "e" ];
 				const inputBatches: unknown[][] = [];
-				const map = <T>(inputs: T[], inputDone: boolean) => {
-					inputBatches.push(inputs.slice());
+				const map = <T>(items: T[], inputDone: boolean) => {
+					inputBatches.push(items.slice());
 					let inputsProcessed = 0;
-					const outputs: [ T, T | undefined ][] = [];
-					for (let i = 1; i < inputs.length; i += 2) {
+					const outs: [ T, T | undefined ][] = [];
+					for (let i = 1; i < items.length; i += 2) {
 						inputsProcessed += 2;
-						outputs.push([ inputs[ i - 1 ]!, inputs[ i ]! ]);
+						outs.push([ items[ i - 1 ]!, items[ i ]! ]);
 					}
-					if (inputDone && inputsProcessed < inputs.length) {
-						outputs.push([ inputs[inputsProcessed]!, undefined ]);
+					if (inputDone && inputsProcessed < items.length) {
+						outs.push([ items[inputsProcessed]!, undefined ]);
 						inputsProcessed++;
 					}
-					return { inputsProcessed, outputs };
+					return { inputsProcessed, outputs: outs };
 				};
 				const { transformer, outputs } = await tester(map, inputs);
 				expect(outputs).eql([ [ "a", "b" ], [ "c", "d" ], [ "e", undefined ] ]);
@@ -95,14 +95,14 @@ describe("iterator transformers", () => {
 			});
 			test("more may return multiple", async () => {
 				const inputs = [ "a", "b", "c", "d", "e" ];
-				const map = <T>(inputs: T[], inputIsDone: boolean): IteratorTransformerMapResult<T> => {
-					if (inputs.length === 0 || (inputs.length === 1 && !inputIsDone)) {
+				const map = <T>(items: T[], inputIsDone: boolean): IteratorTransformerMapResult<T> => {
+					if (items.length === 0 || (items.length === 1 && !inputIsDone)) {
 						return { inputsProcessed: 0, outputs: [] };
 					}
-					if (inputs.length === 1) {
-						return { inputsProcessed: 1, outputs: [ inputs[ 0 ]! ] };
+					if (items.length === 1) {
+						return { inputsProcessed: 1, outputs: [ items[ 0 ]! ] };
 					}
-					return { inputsProcessed: 2, outputs: [ inputs[ 1 ]!, inputs[ 0 ]! ] };
+					return { inputsProcessed: 2, outputs: [ items[ 1 ]!, items[ 0 ]! ] };
 				};
 				const { outputs, transformer } = await tester(map, inputs);
 				expect(outputs).eql([ "b", "a", "d", "c", "e" ]);

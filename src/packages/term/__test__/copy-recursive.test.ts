@@ -39,12 +39,12 @@ describe(copyRecursiveSync.name, () => {
 			log: (msg) => {
 				logged.push(msg);
 			},
-			onCopy(dirEnt: Dirent, destination: string): void {
-				notified.push(`${ dirEnt.parentPath }!${ dirEnt.name } => ${ destination }`);
+			onCopy(de: Dirent, destination: string): void {
+				notified.push(`${ de.parentPath }!${ de.name } => ${ destination }`);
 			},
-			keepIf(dirEnt: Dirent): boolean {
-				checked.push(`${ dirEnt.parentPath }!${ dirEnt.name }`);
-				return !dirEnt.name.startsWith(".");
+			keepIf(de: Dirent): boolean {
+				checked.push(`${ de.parentPath }!${ de.name }`);
+				return !de.name.startsWith(".");
 			},
 			mkdirSync(path: string, options): void {
 				expect(options, `mkdir:options:${ path }`).eql({ recursive: true });

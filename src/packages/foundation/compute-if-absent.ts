@@ -4,7 +4,7 @@
 export const computeIfAbsent = <T, K>(
 	key: K,
 	map: Map<K, T>,
-	compute: (key: K) => T,
+	compute: (k: K) => T,
 ): T => {
 	let item: T | undefined = map.get(key);
 	if (item == null) {

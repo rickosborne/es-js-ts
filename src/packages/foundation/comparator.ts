@@ -95,7 +95,7 @@ export const chainableComparator = <T>(comparator: Comparator<T>): ChainableComp
 			}
 			return Object.getOwnPropertyDescriptor(target, p);
 		},
-		has<T>(target: ChainableComparator<T>, p: string | symbol): boolean {
+		has<U>(target: ChainableComparator<U>, p: string | symbol): boolean {
 			return added.includes(p) || Object.hasOwn(target, p);
 		},
 		ownKeys(target: ChainableComparator<T>): ArrayLike<string | symbol> {
@@ -160,7 +160,7 @@ export type ComparatorBuilder<T> = {
  */
 export const comparatorBuilder = <T>(): ComparatorBuilder<T> => {
 	const ops: [ (t: T) => unknown, Comparator<unknown> ][] = [];
-	const withPrevious = (modifier: (comparator: Comparator<unknown>) => Comparator<unknown>): void => {
+	const withPrevious = (modifier: (cmp: Comparator<unknown>) => Comparator<unknown>): void => {
 		const lastIndex = ops.length - 1;
 		const comparator = ops[ lastIndex ]![ 1 ];
 		assertDefined(comparator, "Prior comparator");

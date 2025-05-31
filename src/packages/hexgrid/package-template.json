@@ -1,0 +1,31 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation",
+		"@rickosborne/guard": "file:../guard",
+		"@rickosborne/typical": "file:../typical"
+	},
+	"description": "Rick Osborne's collection of hexagonal grid-related code.",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"hexagons",
+		"hexgrid",
+		"hex grid"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/hexgrid",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/hexgrid",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2025.3.12"
+}

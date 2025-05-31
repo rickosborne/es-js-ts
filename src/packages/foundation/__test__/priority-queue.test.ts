@@ -11,7 +11,7 @@ type Config = {
 }
 
 const testType = <T>(
-	fn: ((comparator: Comparator<T>) => Queue<T>) & { name: string },
+	fn: ((_comparator: Comparator<T>) => Queue<T>) & { name: string },
 	comparator: Comparator<T>,
 	items: [ T, T, T, T, T ],
 	config: Partial<Config>,
@@ -19,10 +19,10 @@ const testType = <T>(
 	const queue = fn(comparator);
 	const [ a, b, c, d, e ] = config.reverse ? items.reverse() as typeof items : items;
 
-	const expectArrayToBe = (items: T[], extra = ""): void => {
-		expect(queue.length, `expectArrayToBe:length${ extra }`).eq(items.length);
-		expect(queue.toArray(), `expectArrayToBe:toArray${ extra }`).eql(items);
-		expect(queue.peek(), `expectArrayToBe:peek${ extra }`).eql(items[0]);
+	const expectArrayToBe = (ins: T[], extra = ""): void => {
+		expect(queue.length, `expectArrayToBe:length${ extra }`).eq(ins.length);
+		expect(queue.toArray(), `expectArrayToBe:toArray${ extra }`).eql(ins);
+		expect(queue.peek(), `expectArrayToBe:peek${ extra }`).eql(ins[0]);
 	};
 
 	it("starts empty", () => {

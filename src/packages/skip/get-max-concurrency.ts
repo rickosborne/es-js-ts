@@ -19,7 +19,7 @@ import {
  */
 export const getMaxConcurrency = async (
 	context: {
-		assertionBuilder: (fieldName: string, stateName: string) => EvaluationAssertion<number>;
+		assertionBuilder: (fieldName: string, stateIdent: string) => EvaluationAssertion<number>;
 		input: JSONSerializable;
 		language: QueryLanguageIdentifier;
 		options: RunStateMachineOptions;

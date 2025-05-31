@@ -1,4 +1,5 @@
 import { describe, expect, it } from "tstyche";
+// eslint-disable-next-line no-shadow
 import type { GetPropertyDescriptor, GetSetPropertyDescriptor, IfReadOnlyDescriptor, IfReadWriteDescriptor, IfWriteOnlyDescriptor, ReadOnlyPropertyDescriptor, SetPropertyDescriptor, TypedPropertyDescriptor, ValuePropertyDescriptor } from "../add-property.js";
 
 const valueReadWrite = {
