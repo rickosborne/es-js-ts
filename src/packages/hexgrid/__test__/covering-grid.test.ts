@@ -21,10 +21,10 @@ describe(coverRect.name, () => {
 		const grid = coverRect(width, height, layout);
 		const pointMap = new Set<string>(grid.map(({ q, r }) => `<${ q },${ r }>`));
 		const boundaryPoints: PointXY[] = [
-			...intRange.from(0).by(1).toInclusive(width).map((x) => ({ x, y: 0 })),
-			...intRange.from(0).by(1).toInclusive(width).map((x) => ({ x, y: height })),
-			...intRange.from(0).by(1).toInclusive(height).map((y) => ({ x: 0, y })),
-			...intRange.from(0).by(1).toInclusive(height).map((y) => ({ x: width, y })),
+			...intRange.from(0).by(1).toInclusive(width).toArray().map((x) => ({ x, y: 0 })),
+			...intRange.from(0).by(1).toInclusive(width).toArray().map((x) => ({ x, y: height })),
+			...intRange.from(0).by(1).toInclusive(height).toArray().map((y) => ({ x: 0, y })),
+			...intRange.from(0).by(1).toInclusive(height).toArray().map((y) => ({ x: width, y })),
 		];
 		for (const point of boundaryPoints) {
 			const { q, r } = cubeRound(qrsFromPixel(point, layout, cubeFromQR));
