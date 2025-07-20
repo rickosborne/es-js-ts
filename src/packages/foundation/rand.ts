@@ -86,6 +86,7 @@ export const randomNumberGenerator = (seedOrOptions?: number | RNGOptions, prese
 	let name = "custom";
 	if (typeof seedOrOptions === "number") {
 		seed = seedOrOptions;
+		options = { ...options, seed };
 	} else if (seedOrOptions != null) {
 		options = { ...options, ...seedOrOptions };
 		if (seedOrOptions.seed != null) {
