@@ -4,14 +4,14 @@
 		"url": "https://rickosborne.org"
 	},
 	"dependencies": {
-		"jsonata": "2.0.6",
+		"jsonata": "2.1.0",
 		"jsonpath": "1.1.1"
 	},
 	"description": "Rick Osborne's JS/ES/TS Tools",
 	"devDependencies": {
 		"@eslint/js": "8.57.1",
-		"@microsoft/api-extractor": "7.52.8",
-		"@microsoft/api-extractor-model": "7.30.6",
+		"@microsoft/api-extractor": "7.52.11",
+		"@microsoft/api-extractor-model": "7.30.7",
 		"@stylistic/eslint-plugin-js": "1.8.1",
 		"@tsconfig/node22": "22.0.2",
 		"@types/chai": "4.3.16",
@@ -20,13 +20,13 @@
 		"@types/jsonata": "1.5.1",
 		"@types/jsonpath": "0.2.4",
 		"@types/mocha": "10.0.10",
-		"@types/node": "24.0.15",
+		"@types/node": "24.3.0",
 		"@typescript-eslint/eslint-plugin": "6.21.0",
 		"@typescript-eslint/parser": "6.21.0",
 		"chai": "4.5.0",
-		"chai-as-promised": "8.0.1",
+		"chai-as-promised": "8.0.2",
 		"cpr": "3.0.1",
-		"esbuild": "0.25.8",
+		"esbuild": "0.25.9",
 		"eslint": "8.57.1",
 		"eslint-plugin-editorconfig": "4.0.3",
 		"eslint-plugin-jsonc": "2.20.1",
@@ -38,16 +38,16 @@
 		"fast-xml-parser": "5.2.5",
 		"globals": "16.3.0",
 		"mocha": "11.7.1",
-		"npm-check-updates": "18.0.1",
+		"npm-check-updates": "18.0.3",
 		"nyc": "17.1.0",
-		"p-limit": "6.2.0",
+		"p-limit": "7.1.1",
 		"rimraf": "6.0.1",
 		"semver": "7.7.2",
 		"source-map-support": "0.5.21",
 		"ts-morph": "26.0.0",
 		"tstyche": "3.5.0",
-		"tsx": "4.20.3",
-		"typescript": "5.8.3"
+		"tsx": "4.20.5",
+		"typescript": "5.9.2"
 	},
 	"engines": {
 		"node": ">=14"
