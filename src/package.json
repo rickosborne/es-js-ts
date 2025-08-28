@@ -84,5 +84,5 @@
 		"type-check": "tsc --noEmit",
 		"upgrade:check": "npm-check-updates"
 	},
-	"version": "2025.7.19"
+	"version": "2025.8.28"
 }
