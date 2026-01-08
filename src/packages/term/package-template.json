@@ -29,5 +29,5 @@
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},
 	"types": "./index.ts",
-	"version": "2026.1.8"
+	"version": "2026.1.9"
 }
