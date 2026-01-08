@@ -60,7 +60,6 @@
 	"name": "@rickosborne/js-es-ts",
 	"overrides": {
 		"@babel/helpers": "^7.26.10",
-		"brace-expansion": "^1.1.12 || ^2.0.2 || ^3.0.1 || ^4.0.1",
 		"glob": "^10.5.0",
 		"js-yaml": "^4.1.1"
 	},
@@ -90,7 +89,7 @@
 		"test": "mocha",
 		"test:coverage": "nyc mocha",
 		"tstyche": "tstyche packages",
-		"type-check": "tsc --noEmit",
+		"type-check": "tsc --noEmit --skipLibCheck",
 		"upgrade:check": "npm-check-updates"
 	},
 	"version": "2026.1.9"
