@@ -6,6 +6,7 @@ Individual packages are published under [@rickosborne/*](https://www.npmjs.com/~
 * [@rickosborne/typical](https://www.npmjs.com/package/@rickosborne/typical) — Useful type helpers and type declarations.
 * [@rickosborne/guard](https://www.npmjs.com/package/@rickosborne/guard) — Type guards for some of those types.
 * [@rickosborne/foundation](https://www.npmjs.com/package/@rickosborne/foundation) — Basic data structures and algorithms, like priority queues, binary searches, and sorting.
+* [@rickosborne/roid](https://www.npmjs.com/package/@rickosborne/roid) — Alternative to UUID or ULID, which uses a Snowflake ID-like 64-bit value, base56-encoded to 11 URL-safe and human-friendly characters.
 * [@rickosborne/css](https://www.npmjs.com/package/@rickosborne/css) — Tools for working with CSS, such as CSS Color parsers and formatters.
 * [@rickosborne/hue](https://www.npmjs.com/package/@rickosborne/hue) — General color-handling tools for RGB, HSV, and HSL/HWB.
 * [@rickosborne/planar](https://www.npmjs.com/package/@rickosborne/planar) — 2D Cartesian and graphics related data structures and algorithms, like polygon convex testing, line segment intersections, etc.
