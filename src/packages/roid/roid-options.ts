@@ -103,6 +103,11 @@ export interface RoidStateManagement {
 
 	set machineId(machineId: number);
 
+	/**
+	 * Intended for testing, you can get duplicate IDs if you reset tracking.
+	 */
+	resetTracking(): void;
+
 	get sequenceStarter(): SequenceStarter;
 
 	set sequenceStarter(starter: SequenceStarter);

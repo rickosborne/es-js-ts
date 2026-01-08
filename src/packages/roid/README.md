@@ -8,6 +8,9 @@ This fixed length, combined with the Base56 character set, means both the number
 Does not need any runtime dependencies.
 Works as either CJS or ESM.
 
+Canonically, you can pronounce `roid` like "row I.D." or like `steroid`.
+Up to you.
+
 ## Fields
 
 Differences from standard Snowflake IDs:
@@ -67,7 +70,7 @@ The smallest roid is `HDU8U8Pz8Na`, while the largest is `YQwEwEmyEj9`.
 
 ## Base56
 
-The Base56 characters set used is:
+The Base56 character set used is:
 
 ```
 23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz
@@ -75,6 +78,9 @@ The Base56 characters set used is:
 
 This omits letters and numbers which may be easily confused, such as `1` vs `l` and `0` vs `O` or `o`.
 The lack of punctuation means roids are both URL-safe and filesystem-safe.
+
+Why not base64?
+Because you'd still need 11 characters to encode 62 to 64 bits, but you'd then have to worry about punctuation chars `-`, `_`, `+`, or `/`, which don't play nice in various places.
 
 ## Usage
 
@@ -87,7 +93,7 @@ const id = roid();  // 11-character string
 ```
 
 If you are running in a long-lived environment, like EC2, you may want to set the machine identifier to some fixed number you control.
-It allows up to 12 bits, so the number should be between `0` and `4095`.
+It allows up to 12 bits, so the number should be between `0` and `4095`, inclusive.
 Otherwise, a random number will be generated and memoized.
 
 ```typescript
@@ -96,6 +102,7 @@ roid.machineId = 1234;
 // Later calls use that saved machine identifier.
 const id = roid();
 ```
+
 The `roid()` call also accepts options object you can provide if you want really fine-grained control:
 
 ```typescript
@@ -139,7 +146,7 @@ interface RoidOptions {
 }
 ```
 
-So that same specific-machine-identifier call could also look like:
+That same specific-machine-identifier call could also look like:
 
 ```typescript
 const id = roid({ machineId: 1234 });
@@ -148,7 +155,8 @@ const id = roid({ machineId: 1234 });
 The randomly generated machine identifier can also be read from `roid.machineId`, if you want to add it to logs.
 Similarly, `roid.machineIdProvider`, `roid.epoch` and `roid.timeProvider` are also available to read and write.
 
-There is no way to manipulate the internal state for sequence number and previous-time tracking.
+As of v2026.1.9, there is a `roid.resetTracking()` method, intended to help with tests.
+You probably don't ever want to use it unless you are okay with potentially generating duplicate IDs.
 
 ## Parsing a roid
 
@@ -198,13 +206,15 @@ See the `RoidFoundations` type for more details.
 
 ## Sequence Numbers
 
-When generating sequence numbers, the default behavior is to generate a random in the range `[0..127]`, which is the lower half of the full sequence number range.
+When generating sequence numbers, the default behavior is to generate a random int in the range `[0..127]`, which is the lower half of the full sequence number range.
+A new random number is generated each time the timestamp changes.
+While the timestamp stays the same, the sequence number is incremented.
 You can override this by setting a `roid.sequenceStarter` function, or providing a function to the `sequenceStarter` option.
 
 There's also a `ROID_SEQUENCE_FROM_ZERO` constant you can use which does exactly what it says:
 
 ```typescript
-// Closer to original Snowflake ID behavior:
+// Useful if you get high system load spikes:
 roid.sequenceStarter = ROID_SEQUENCE_FROM_ZERO;
 // Closer to ULID behavior:
 roid.sequenceStarter = ROID_SEQUENCE_FROM_RANDOM;
@@ -213,7 +223,19 @@ roid.sequenceStarter = () => Date.now() & 0b00010101;
 ```
 
 Keep in mind that the generator will error out if the sequence number goes over 255.
-It will _not_ just silently roll over.
+
+### Rollover/overflow behavior
+
+As of v2026.1.9, an overflow of the sequence number (over 255) will bump the timestamp and reset the sequence number back to zero.
+The sequence number will continue to increment, generating semi-sequential IDs until a call where the time/now value passes the bumped timestamp.
+
+This means your timestamps can be a little off, by a ms or two, under heavy system usage.
+But the per-machine order and uniqueness will still be preserved.
+
+If you're on a beefy enough system that this overflow behavior triggers frequently, you probably want a different Snowflake ID implementation, or maybe ULID or UUIDv7.
+Or you could fork this implementation and steal bits from the machineId.
+
+Anecdotally, this implementation can generate ~120 roids per ms on a 2020 mac Air (M1), hence the default sequence starter (`[0..127]`) and sequence number size (8 bits).
 
 ## License
 

@@ -17,8 +17,8 @@ export const roid: RoidFunction = (() => {
 	let _machineId: number = Math.floor(Math.random() * (ROID_MAX_MACHINE_ID + 1));
 	let _timeProvider: NowProvider = Date.now;
 	let _sequenceStarter: SequenceStarter = ROID_SEQUENCE_FROM_RANDOM;
-	let lastTime: number = 0;
-	let lastSequenceNumber: number = 0;
+	let lastTime: number = -1;
+	let lastSequenceNumber: number = -1;
 	const isSafeMachineId = (machineId: number): boolean => Number.isInteger(machineId) && machineId >= 0 && machineId <= ROID_MAX_MACHINE_ID;
 	const isSafeSequenceNumber = (sequenceNumber: number): boolean => Number.isInteger(sequenceNumber) && sequenceNumber >= 0 && sequenceNumber <= ROID_MAX_SEQUENCE_NUMBER;
 	const isSafeTimestamp = (timestamp: number): boolean => Number.isInteger(timestamp) && timestamp >= 0 && timestamp <= ROID_MAX_TIMESTAMP;
@@ -80,16 +80,21 @@ export const roid: RoidFunction = (() => {
 			timeProvider = _timeProvider,
 			timestamp: providedTimestamp,
 		} = options;
-		const timestamp = providedTimestamp ?? ((time ?? timeProvider()) - epoch);
+		let timestamp = providedTimestamp ?? ((time ?? timeProvider()) - epoch);
 		const machineId = providedMachineId ?? machineIdProvider?.() ?? _machineId;
 		let sequenceNumber: number;
 		if (providedSequenceNumber != null) {
 			sequenceNumber = providedSequenceNumber;
-		} else if (timestamp === lastTime) {
-			sequenceNumber = lastSequenceNumber + 1;
-		} else {
+		} else if (timestamp > lastTime) {
 			sequenceNumber = sequenceStarter();
 			lastTime = timestamp;
+		} else if (lastSequenceNumber >= ROID_MAX_SEQUENCE_NUMBER) {
+			lastTime++;
+			timestamp = lastTime;
+			sequenceNumber = 0;
+		} else {
+			timestamp = lastTime;
+			sequenceNumber = lastSequenceNumber + 1;
 		}
 		lastSequenceNumber = sequenceNumber;
 		return safePack(timestamp, machineId, sequenceNumber);
@@ -145,6 +150,10 @@ export const roid: RoidFunction = (() => {
 		set machineId(machineId: number) {
 			assertSafeMachineId(machineId);
 			_machineId = machineId;
+		},
+		resetTracking(): void {
+			lastSequenceNumber = -1;
+			lastTime = -1;
 		},
 		get sequenceStarter(): SequenceStarter {
 			return _sequenceStarter;

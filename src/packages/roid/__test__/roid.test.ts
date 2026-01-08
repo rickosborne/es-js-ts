@@ -9,6 +9,7 @@ describe(roid.name, () => {
 			expect(roid().length).eq(ROID_LENGTH);
 		});
 		test("first id", () => {
+			roid.resetTracking();
 			expect(roid({ machineId: 0, sequenceNumber: 0, timestamp: 0 })).eq("HDU8U8Pz8Na");
 			expect(roid({ machineId: 0, sequenceStarter: ROID_SEQUENCE_FROM_ZERO, timestamp: 0 })).eq("HDU8U8Pz8Na");
 			expect(roid.pack(0, 0, 0)).eq("HDU8U8Pz8Na");
@@ -49,6 +50,7 @@ describe(roid.name, () => {
 				sequenceCalls++;
 				return 0;
 			};
+			roid.resetTracking();
 			expect(roid({
 				machineId: 0,
 				sequenceStarter,
@@ -161,11 +163,12 @@ describe(roid.name, () => {
 				return 123;
 			};
 			try {
+				roid.resetTracking();
 				roid.sequenceStarter = start123;
 				expect(roid.sequenceStarter).eq(start123);
 				const withGlobal = roid({ machineId: 0, time: 2468 + ROID_EPOCH });
 				roid.sequenceStarter = ROID_SEQUENCE_FROM_RANDOM;
-				roid();  // reset the incrementer
+				roid.resetTracking();  // reset the incrementer
 				expect(roid.sequenceStarter).eq(ROID_SEQUENCE_FROM_RANDOM);
 				const withLocal = roid({ machineId: 0, sequenceStarter: start123, time: 2468 + ROID_EPOCH });
 				expect(withGlobal).eq(withLocal);
