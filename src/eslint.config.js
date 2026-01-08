@@ -28,7 +28,7 @@ ignores.push("**/package-lock.json");
 
 // console.debug("eslint ignores: ", ignores);
 
-/** @type {import("eslint").Linter.FlatConfig} */
+/** @type {import("eslint").Linter.FlatConfig[]} */
 module.exports = [
 	{
 		ignores,
