@@ -55,7 +55,7 @@ const usage = (message?: string | undefined): never => {
 	}
 	process.stderr.write(`
 # version: ${version}
-usage: npx --package @rickosborne/jsonbomb jsonbomb [--verbose] [--quiet]
+usage: npx @rickosborne/jsonbomb@latest [--verbose] [--quiet]
  [--max-size ${Math.floor(maxOutputBytes / 1024)}K]
  [--permute-strings | --no-permute-strings]
  [--max-object-keys ${maxObjectKeys}]
