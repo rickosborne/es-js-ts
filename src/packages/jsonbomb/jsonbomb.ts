@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // This is a port of jwz's original perl script: https://www.jwz.org/hacks/jsonbomb.pl
 
 // (comments from the original script)
@@ -54,7 +55,7 @@ const usage = (message?: string | undefined): never => {
 	}
 	process.stderr.write(`
 # version: ${version}
-usage: npx @rickosborne/jsonbomb [--verbose] [--quiet]
+usage: npx --package @rickosborne/jsonbomb jsonbomb [--verbose] [--quiet]
  [--max-size ${Math.floor(maxOutputBytes / 1024)}K]
  [--permute-strings | --no-permute-strings]
  [--max-object-keys ${maxObjectKeys}]

@@ -3,6 +3,7 @@
 		"name": "Rick Osborne",
 		"url": "https://rickosborne.org"
 	},
+	"bin": "./jsonbomb.js",
 	"dependencies": {},
 	"description": "Rick Osborne's port of jwz's jsonbomb.pl script.",
 	"engines": {
