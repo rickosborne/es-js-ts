@@ -3,8 +3,7 @@
 		"name": "Rick Osborne",
 		"url": "https://rickosborne.org"
 	},
-	"dependencies": {
-	},
+	"dependencies": {},
 	"description": "Rick Osborne's port of jwz's jsonbomb.pl script.",
 	"engines": {
 		"node": ">=14"
@@ -23,5 +22,5 @@
 		"type": "git",
 		"url": "git+https://github.com/rickosborne/es-js-ts.git"
 	},
-	"version": "2026.2.10"
+	"version": "2026.2.11"
 }
