@@ -1,0 +1,35 @@
+{
+	"author": {
+		"name": "Rick Osborne",
+		"url": "https://rickosborne.org"
+	},
+	"dependencies": {
+		"@rickosborne/foundation": "file:../foundation"
+	},
+	"description": "Rick Osborne's collection of voting-related utilities",
+	"engines": {
+		"node": ">=14"
+	},
+	"homepage": "https://github.com/rickosborne/es-js-ts",
+	"keywords": [
+		"typescript",
+		"voting",
+		"vote",
+		"elections",
+		"election",
+		"star",
+		"plurality",
+		"ranked choice",
+		"first past the post",
+		"condorcet"
+	],
+	"license": "CC-BY-NC-SA-4.0",
+	"name": "@rickosborne/vote",
+	"private": true,
+	"repository": {
+		"directory": "src/packages/vote",
+		"type": "git",
+		"url": "git+https://github.com/rickosborne/es-js-ts.git"
+	},
+	"version": "2026.2.13"
+}
